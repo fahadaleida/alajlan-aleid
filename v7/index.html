@@ -1845,9 +1845,8 @@ function drawBrowse(g,now){LHIT=[];selChip=null;if(!inBrowse())return;g.save();g
   // التمييز: المحدد والممرَّر عليه
   const marks=[];
   for(const id of[SEL,HOV]){if(!id||!people[id])continue;const a=id===HOV?Math.min(1,(now-hovT)/220):1,q=posOf(id),S=w2s(q.x,q.y),rg=ringOf(id);
-    const pts=pathPts(id).map(([x,y])=>w2s(x,y));g.lineCap='round';g.lineJoin='round';g.strokeStyle=`rgba(255,200,70,${.35*a})`;g.lineWidth=Math.max(3,10*s);g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p.x,p.y):g.moveTo(p.x,p.y));g.stroke();
-    for(const k of kidsOf(id)){const kq=posOf(k.id);if(!kq)continue;const kp=[[q.x,q.y],...(k.via||[]).map(v=>[v[0],v[1]]),[kq.x,kq.y]].map(([x,y])=>w2s(x,y));
-      g.strokeStyle=`rgba(255,240,180,${.75*a})`;g.lineWidth=Math.max(2,6*s);g.setLineDash([8,10]);g.lineDashOffset=-now/40;g.beginPath();kp.forEach((p,i)=>i?g.lineTo(p.x,p.y):g.moveTo(p.x,p.y));g.stroke();g.setLineDash([]);
+    for(let p=people[people[id].father],n=0;p&&n<2;p=people[p.father],n++){const fq=posOf(p.id);if(!fq)continue;const fs=w2s(fq.x,fq.y),fr=Math.max(6,ringOf(p.id).rx*s);g.strokeStyle=`rgba(255,214,90,${(n?.4:.6)*a})`;g.lineWidth=2;g.beginPath();g.arc(fs.x,fs.y,fr+2,0,7);g.stroke();}   // الأب والجد: حلقة بدل خط مستقيم يقطع فوق البوستر
+    for(const k of kidsOf(id)){const kq=posOf(k.id);if(!kq)continue;   // العيال: حلقة ذهبية بس (الخط المستقيم كان يطلع برّا العروق)
       const ks=w2s(kq.x,kq.y),kr=Math.max(6,ringOf(k.id).rx*s);g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=2;g.beginPath();g.arc(ks.x,ks.y,kr+2,0,7);g.stroke();}
     const r=Math.max(10,Math.max(rg.rx,rg.ry)*s)+4;g.shadowColor='#ffc83a';g.shadowBlur=20;g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=id===SEL?4:3;g.beginPath();g.ellipse(S.x,S.y,Math.max(10,rg.rx*s)+4,Math.max(10,rg.ry*s)+4,0,0,7);g.stroke();g.shadowBlur=0;
     O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);const pp=!(id===SEL&&HOV===SEL&&id!==HOV)&&popNode(g,id,S,rg,s,now);if(id===SEL&&s<.3&&!pp)marks.push([people[id].name,S.x,S.y-r-14]);
