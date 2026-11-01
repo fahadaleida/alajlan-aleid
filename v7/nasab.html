@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شجرة النسب</title>
+<link rel="icon" type="image/png" href="bg/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Lalezar&family=Amiri:wght@700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* صفحة شجرة النسب: تُطبع A3 عمودي، وعلى الشاشة تتسع للنافذة وتقبل التكبير */
+:root{--ink:#2b1d10;--gold:#c9970f;--gold2:#f3d27a;--stage:#17110b}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--stage);color:#f4ead6;font-family:Tajawal,system-ui,sans-serif}
+.bar{position:fixed;top:0;inset-inline:0;z-index:10;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 16px;
+  background:linear-gradient(#17110bf2,#17110bcc);border-bottom:1px solid #f3d27a40;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.bar a,.bar button{font:700 15px Tajawal,sans-serif;color:#fff4dc;background:#ffffff12;border:1px solid #f3d27a66;border-radius:999px;padding:8px 14px;cursor:pointer;text-decoration:none;line-height:1}
+.bar button:hover,.bar a:hover{background:#f3d27a2a}
+.bar .pdf{background:linear-gradient(#fff0a8,#e2b545 45%,#b8861c);color:#2b1a03;border-color:#7a5208;font-weight:800;font-size:16px;padding:10px 20px;box-shadow:0 4px 16px #e2b54555}
+.bar .pdf:hover{filter:brightness(1.06);background:linear-gradient(#fff0a8,#e2b545 45%,#b8861c)}
+.bar .zoom{display:flex;gap:4px}
+.bar #uncles{font-weight:500;font-size:13px;opacity:.85}.bar #uncles[aria-pressed=true]{background:#f3d27a33;opacity:1}
+.bar .zoom button{min-width:40px;padding:8px 10px}
+.stage{position:fixed;inset:58px 0 0 0;overflow:auto;-webkit-overflow-scrolling:touch}
+.stage-in{padding:16px;display:flex;justify-content:center;min-width:min-content}
+.sheet{position:relative;flex:none;aspect-ratio:297/420;box-shadow:0 20px 60px #000a,0 0 0 1px #f3d27a33;background:#1b2850}
+.sheet svg{display:block;width:100%;height:100%}
+.msg{max-width:560px;margin:120px auto;text-align:center;font:500 18px Tajawal;line-height:1.8;color:#f4ead6}
+@media (max-width:600px){.bar{padding:8px}.bar a,.bar button{font-size:13px;padding:7px 10px}.bar .pdf{font-size:14px;padding:8px 14px}.bar .lg{display:none}.stage{inset:54px 0 0 0}.stage-in{padding:8px}}
+@page{size:A3 portrait;margin:0}
+@media print{
+  html,body{background:#fff;height:auto}
+  .bar{display:none!important}
+  .stage{position:static;overflow:visible;inset:auto}
+  .stage-in{padding:0;display:block}
+  .sheet{width:297mm!important;height:420mm!important;box-shadow:none;margin:0;page-break-inside:avoid;break-inside:avoid}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+</style>
+</head>
+<body>
+<div class="bar" id="bar">
+  <button class="pdf" id="print" type="button">تحميل PDF / طباعة</button>
+  <span class="zoom"><button id="zout" type="button" aria-label="تصغير">−</button><button id="zfit" type="button">ملاءمة</button><button id="zin" type="button" aria-label="تكبير">+</button></span>
+  <button id="uncles" type="button" aria-pressed="false">إظهار إخوان الأجداد</button>
+  <a id="back" href="index.html"><span class="lg">الرجوع </span>للشجرة</a>
+</div>
+<div class="stage" id="stage"><div class="stage-in"><div class="sheet" id="sheet"></div></div></div>
+<script>
+// ===================================================================
+// القرية: نطلع في سلسلة الآباء، وأول جد موجود في القائمة يحدد القرية
+// ===================================================================
+const VILLAGE_ROOTS={barra:[11 /* علي أمير البرة */, 12 /* سليمان أمير البرة */], ghubba:[/* TBD by client */]};
+const VILLAGES={barra:{name:'البرة',bg:'bg/village-barra.jpg'},ghubba:{name:'الغبة',bg:'bg/village-ghubba.jpg'}};
+const EDITION='شجرة عائلة العجلان والعيد — الطبعة الثالثة ١٤٤٧هـ';
+const KEY='ajlan-aleid-v7',AJLAN_ID=9,DEFAULT_ID=19;
+
+// نسخة احتياطية من SEED في index.html (الاسم والأب واللقب فقط). الصفحة تحاول أولاً تقرأ SEED من index.html نفسه
+const SEED_COPY=[
+ [1,'الهذلي','m',null,'نسبة إلى هذيل بن مدركة'],[2,'المطرفي','m',1],[3,'عيد','m',2],[4,'محمد','m',3,'قاضي ثرمداء'],[5,'سليمان','m',4],[6,'فهد','m',5],
+ [7,'علي','m',6,'الجد الجامع'],[8,'إبراهيم','m',7],[9,'حمد','m',7,'عجلان'],[10,'سليمان','m',7,'الطويل'],[11,'علي','m',8,'أمير البرة ١٢٨٨هـ'],[12,'سليمان','m',8,'أمير البرة ١٢٣٣هـ'],
+ [13,'راجح','m',11],[14,'عبدالله','m',11],[15,'فهد','m',11],[16,'محمد','m',11],[17,'سليمان','m',11],[18,'سعد','m',13],[20,'نورة','f',13],[21,'هيا','f',13],[24,'علي','m',13],
+ [25,'راجح','m',24],[26,'سعد','m',24],[19,'فهد','m',26],[27,'علي','m',26],[28,'عبدالرحمن','m',26],[29,'عبدالعزيز','m',26],[30,'محمد','m',26],[31,'ريما','f',26],[32,'مرام','f',26],
+ [33,'العنود','f',26],[34,'هنادي','f',26],[35,'سلطان','m',27],[36,'نورة','f',27],[37,'سعد','m',27],[22,'سعد','m',19],[23,'لينا','f',19]
+].map(([id,name,gender,father,title])=>title?{id,name,gender,father,title}:{id,name,gender,father});
+
+const QS=new URLSearchParams(location.search);
+const ar=n=>Number(n).toLocaleString('ar-SA',{useGrouping:false});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// SEED من index.html: نحوّل حرفية JS البسيطة إلى JSON بدون eval
+async function seedFromIndex(){
+  try{const t=await(await fetch('index.html',{cache:'no-store'})).text();const m=t.match(/const SEED=(\[[\s\S]*?\n\]);/);if(!m)return null;
+    const json=m[1].replace(/\/\/[^\n]*/g,'').replace(/([{,]\s*)([A-Za-z_]\w*)\s*:/g,'$1"$2":').replace(/'([^'\\]*)'/g,(_,s)=>JSON.stringify(s)).replace(/,(\s*[\]}])/g,'$1');
+    const a=JSON.parse(json);return Array.isArray(a)&&a.length&&a.every(p=>p&&p.id&&p.name)?a:null;}catch(e){return null;}}
+async function loadPeople(){
+  const seed=(await seedFromIndex())||SEED_COPY;let people=null;
+  try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);if(o&&typeof o==='object'){for(const p of seed)if(!o[p.id])o[p.id]={...p};people=o;}}}catch(e){}
+  if(!people)people=Object.fromEntries(seed.map(p=>[p.id,{...p}]));
+  if(people[26]&&people[26].father===25)people[26].father=24;   // نفس التصحيح في index.html
+  try{const r=await fetch('people_all.json',{cache:'no-store'});if(r.ok){const j=await r.json(),list=Array.isArray(j)?j:(j.people||Object.values(j));
+    for(const q of list){if(!q||q.id==null||q.id<1000||people[q.id])continue;people[q.id]={...q,_ext:true};}}}catch(e){}
+  return people;}
+
+// ===================================================================
+let P={},KIDX={};
+const kidsOf=id=>KIDX[id]||[];
+function chain(id){const o=[],seen=new Set();let p=P[id];while(p&&!seen.has(p.id)){seen.add(p.id);o.unshift(p);p=P[p.father];}return o;}
+const familyOf=c=>c.some(p=>p.id===AJLAN_ID)?'العجلان':'العيد';
+function fullNasab(c){const r=c.slice().reverse();return r.map((p,i)=>i===0?p.name:(r[i-1].gender==='f'?'بنت ':'بن ')+p.name).join(' ');}
+function villageOf(c){
+  const ov=(QS.get('village')||'').toLowerCase();if(VILLAGES[ov])return{key:ov,sure:true,forced:true};
+  for(let i=c.length-1;i>=0;i--){for(const k in VILLAGE_ROOTS)if(VILLAGE_ROOTS[k].includes(c[i].id))return{key:k,sure:true};}
+  return{key:'barra',sure:false};}
+
+// ===================================================================
+// الرسم: SVG متجه بمقاس A3 (٢٩٧×٤٢٠ ملم = ٢٩٧٠×٤٢٠٠ وحدة)
+// ===================================================================
+const W=2970,H=4200,CX=W/2;
+const svgEls=[];let defs='';
+const out=s=>svgEls.push(s);
+const f1=n=>Math.round(n*10)/10;
+function txt(t,x,y,{size=40,font='Amiri',weight=700,fill='#fff',fit=0,anchor='middle',extra='',cls=''}={}){
+  return `<text x="${f1(x)}" y="${f1(y)}" font-family="${font}" font-weight="${weight}" font-size="${f1(size)}" fill="${fill}" text-anchor="${anchor}" dominant-baseline="central" direction="rtl"${fit?` data-fit="${f1(fit)}"`:''}${cls?` class="${cls}"`:''} ${extra}>${esc(t)}</text>`;}
+// غصن متدرج العرض على منحنى بيزييه
+function limb(a,b,c1,c2,w0,w1,fill='url(#gBranch)',op=1){const n=24,L=[],R=[];
+  const bz=t=>{const u=1-t;return[u*u*u*a[0]+3*u*u*t*c1[0]+3*u*t*t*c2[0]+t*t*t*b[0],u*u*u*a[1]+3*u*u*t*c1[1]+3*u*t*t*c2[1]+t*t*t*b[1]];};
+  for(let i=0;i<=n;i++){const t=i/n,p=bz(t),q=bz(Math.min(1,t+.01)),p0=t>=1?bz(.99):p,dx=(t>=1?p[0]-p0[0]:q[0]-p[0]),dy=(t>=1?p[1]-p0[1]:q[1]-p[1]),l=Math.hypot(dx,dy)||1,w=(w0+(w1-w0)*t)/2;
+    L.push([p[0]-dy/l*w,p[1]+dx/l*w]);R.push([p[0]+dy/l*w,p[1]-dx/l*w]);}
+  const pts=[...L,...R.reverse()].map(p=>f1(p[0])+','+f1(p[1])).join(' ');
+  return `<polygon points="${pts}" fill="${fill}" opacity="${op}"/>`;}
+function shadow(x,y,r){return `<ellipse cx="${f1(x+r*.06)}" cy="${f1(y+r*.14)}" rx="${f1(r*1.04)}" ry="${f1(r*1.0)}" fill="#000" opacity=".28"/>`;}
+// ولد: دائرة خضراء بإطار ذهبي (غامقة لمن له ذرية)
+function boy(p,x,y,r,{elder=false,photo=null,cap=''}={}){let s=shadow(x,y,r);
+  s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r+Math.max(3,r*.09))}" fill="url(#gGold)"/>`;
+  if(photo){const id='ph'+(++clipN);defs+=`<clipPath id="${id}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}"/></clipPath>`;
+    s+=`<image href="${esc(photo)}" x="${f1(x-r)}" y="${f1(y-r)}" width="${f1(r*2)}" height="${f1(r*2)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
+    s+=nameTag(p.name,x,y+r*1.12,Math.max(22,r*.36),'#1f5a2a');}
+  else{s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#${elder?'gElder':'gBoy'})"/>`;
+    s+=`<ellipse cx="${f1(x-r*.18)}" cy="${f1(y-r*.42)}" rx="${f1(r*.62)}" ry="${f1(r*.34)}" fill="#fff" opacity=".13"/>`;
+    s+=nameIn(p.name,x,y,r);}
+  if(cap)s+=txt(cap,x,y+r+Math.max(22,r*.46),{size:Math.max(26,r*.52),font:'Tajawal',weight:800,fill:'#fff4d6',fit:r*3.2,cls:'halo'});
+  return s;}
+// بنت: وردة وردية باسمها
+function girl(p,x,y,r){let s=shadow(x,y,r*.92);
+  for(let k=0;k<5;k++){const a=k/5*Math.PI*2-Math.PI/2;s+=`<circle cx="${f1(x+Math.cos(a)*r*.5)}" cy="${f1(y+Math.sin(a)*r*.5)}" r="${f1(r*.56)}" fill="url(#gPetal)" stroke="#c23d76" stroke-width="${f1(Math.max(1,r*.03))}" stroke-opacity=".5"/>`;}
+  s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r*.6)}" fill="url(#gRose)"/>`;
+  s+=nameIn(p.name,x,y,r*.86,'#fff','#8a1f4c');return s;}
+function nameIn(t,x,y,r,fill='#fff',stroke='#0b2a12'){const fs=r*(t.length>5?.5:t.length>3?.6:.72);
+  return txt(t,x,y+r*.04,{size:fs,font:'Amiri',weight:700,fill,fit:r*1.62,extra:`stroke="${stroke}" stroke-width="${f1(fs*.1)}" paint-order="stroke" stroke-linejoin="round"`});}
+function nameTag(t,x,y,fs,col){const w=Math.max(fs*2.2,t.length*fs*.55+fs*.9),h=fs*1.45;
+  return `<rect x="${f1(x-w/2)}" y="${f1(y-h/2)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(h/2)}" fill="${col}" stroke="#e9c46a" stroke-width="2"/>`+txt(t,x,y+fs*.04,{size:fs,fill:'#fff',fit:w-fs*.6});}
+let clipN=0;
+function star(x,y,r,fill='url(#gGold)'){let d='';for(let i=0;i<16;i++){const a=i*Math.PI/8-Math.PI/2,rr=i%2?r*.45:r;d+=(i?'L':'M')+f1(x+Math.cos(a)*rr)+','+f1(y+Math.sin(a)*rr);}return `<path d="${d}Z" fill="${fill}" stroke="#5c3a06" stroke-width="2"/>`;}
+// لوحة ذهبية على الجذع
+function plaque(p,x,y,rx,ry,gen,kind){let s='';const fnd=kind==='root'||kind==='founder';
+  s+=`<ellipse cx="${f1(x+6)}" cy="${f1(y+ry*.2)}" rx="${f1(rx)}" ry="${f1(ry)}" fill="#000" opacity=".35"/>`;
+  if(fnd){s+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx+16)}" ry="${f1(ry+14)}" fill="url(#gBronze)" stroke="#3b2304" stroke-width="4"/>`;
+    for(let i=0;i<28;i++){const a=i/28*Math.PI*2;s+=`<circle cx="${f1(x+Math.cos(a)*(rx+8))}" cy="${f1(y+Math.sin(a)*(ry+7))}" r="3.4" fill="#ffe9a0"/>`;}}
+  s+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx)}" ry="${f1(ry)}" fill="url(#gPlaque)" stroke="#5c3a06" stroke-width="5"/>`;
+  s+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rx-10)}" ry="${f1(ry-9)}" fill="none" stroke="#ffe9a0" stroke-width="2.5"/>`;
+  s+=`<ellipse cx="${f1(x-rx*.15)}" cy="${f1(y-ry*.48)}" rx="${f1(rx*.55)}" ry="${f1(ry*.22)}" fill="#fff" opacity=".22"/>`;
+  const t=p.title,nfs=t?ry*.7:ry*1.0,coinR=Math.min(ry*.62,36);
+  const textW=(rx-coinR-16)*2-28;
+  if(t){s+=txt(p.name,x+coinR*.5,y-ry*.3,{size:nfs,fill:'#1b1003',fit:textW});
+    s+=txt(t,x+coinR*.5,y+ry*.5,{size:Math.min(ry*.4,32),fill:'#6b2207',fit:textW*.98});}
+  else s+=txt(p.name,x+coinR*.5,y+ry*.02,{size:nfs,fill:'#1b1003',fit:textW});
+  // رقم الجيل على طرف اللوحة
+  const cx=x-rx+coinR+12;
+  s+=`<circle cx="${f1(cx)}" cy="${f1(y)}" r="${f1(coinR)}" fill="#3a2416" stroke="#ffe08a" stroke-width="3"/>`+txt(ar(gen),cx,y+coinR*.06,{size:coinR*1.0,font:'Tajawal',weight:800,fill:'#ffe9a0'});
+  if(fnd){star(0,0,0);s+=star(x+rx+30,y,24)+star(x-rx-30,y,24);}
+  return s;}
+
+// أرقام عشوائية ثابتة لكل شخص (نفس الرسمة كل مرة)
+function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296;};}
+const LEAF_D=r=>`M0,${f1(-r*1.32)} C${f1(r*1.12)},${f1(-r*.72)} ${f1(r*1.08)},${f1(r*.62)} 0,${f1(r*1.02)} C${f1(-r*1.08)},${f1(r*.62)} ${f1(-r*1.12)},${f1(-r*.72)} 0,${f1(-r*1.32)}Z`;
+// ورقة زينة صغيرة (بدون اسم)
+function leaf(x,y,r,rot,v){const fill=['url(#gLeafA)','url(#gLeafB)','url(#gLeafC)'][v];
+  return `<g transform="translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})"><path d="${LEAF_D(r)}" fill="${fill}" stroke="#0f4a1c" stroke-width="1.2" stroke-opacity=".5"/><path d="M0,${f1(r*.9)} Q${f1(r*.08)},0 0,${f1(-r*1.15)}" fill="none" stroke="#e9ffd9" stroke-opacity=".45" stroke-width="1.6"/></g>`;}
+function blossom(x,y,r){let s='';for(let k=0;k<5;k++){const a=k/5*Math.PI*2-Math.PI/2;s+=`<circle cx="${f1(x+Math.cos(a)*r*.5)}" cy="${f1(y+Math.sin(a)*r*.5)}" r="${f1(r*.5)}" fill="#f6b9d0"/>`;}return s+`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r*.3)}" fill="#f3d27a"/>`;}
+function bud(x,y,r){return `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#gBud)" stroke="#6f8f2a" stroke-width="1.2" stroke-opacity=".6"/>`;}
+// ولد بلا ذرية: ورقة خضراء كبيرة باسمه (كما في الطبعة)
+function namedLeaf(p,x,y,r,rot){rot=Math.max(-28,Math.min(28,((rot+540)%360)-180));
+  let s=`<g transform="translate(${f1(x+r*.06)},${f1(y+r*.16)}) rotate(${f1(rot)})"><path d="${LEAF_D(r*1.02)}" fill="#000" opacity=".25"/></g>`;
+  s+=`<g transform="translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})"><path d="${LEAF_D(r)}" fill="url(#gBoy)" stroke="#f3d27a" stroke-width="${f1(Math.max(2,r*.06))}"/><path d="M0,${f1(r*.95)} Q${f1(r*.08)},0 0,${f1(-r*1.2)}" fill="none" stroke="#e9ffd9" stroke-opacity=".3" stroke-width="${f1(r*.05)}"/></g>`;
+  return s+nameIn(p.name,x,y-r*.08,r*.92);}
+let SHOW_UNCLES=false;
+// خرطوشة الجد: إطار برونزي بزوايا مقعّرة، اسم كبير، لقب واضح، ورقم الجيل في عملة
+function cartouche(p,x,y,w,h,gen,kind,side){const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,k=h*.26;
+  const P=(x0,y0,x1,y1,k)=>`M${f1(x0+k)},${f1(y0)} L${f1(x1-k)},${f1(y0)} A${f1(k)},${f1(k)} 0 0 0 ${f1(x1)},${f1(y0+k)} L${f1(x1)},${f1(y1-k)} A${f1(k)},${f1(k)} 0 0 0 ${f1(x1-k)},${f1(y1)} L${f1(x0+k)},${f1(y1)} A${f1(k)},${f1(k)} 0 0 0 ${f1(x0)},${f1(y1-k)} L${f1(x0)},${f1(y0+k)} A${f1(k)},${f1(k)} 0 0 0 ${f1(x0+k)},${f1(y0)}Z`;
+  const big=kind==='root'||kind==='founder',ms=big||kind==='titled',fr=big?16:ms?12:9;let s='';
+  s+=`<path d="${P(x0-fr+8,y0-fr+14,x1+fr+8,y1+fr+14,k+fr)}" fill="#000" opacity=".38"/>`;
+  s+=`<path d="${P(x0-fr,y0-fr,x1+fr,y1+fr,k+fr)}" fill="url(#${big?'gBronzeDeep':'gBronze'})" stroke="#2b1603" stroke-width="3"/>`;
+  if(big){const per=2*(w+h);for(let i=0,m=Math.round(per/34);i<m;i++){const t=i/m*per;let px,py;
+      if(t<w){px=x0+t;py=y0-fr/2;}else if(t<w+h){px=x1+fr/2;py=y0+(t-w);}else if(t<2*w+h){px=x1-(t-w-h);py=y1+fr/2;}else{px=x0-fr/2;py=y1-(t-2*w-h);}
+      s+=`<circle cx="${f1(px)}" cy="${f1(py)}" r="3.2" fill="#ffe9a0"/>`;}}
+  s+=`<path d="${P(x0,y0,x1,y1,k)}" fill="url(#gCart)" stroke="#5c3a06" stroke-width="3"/>`;
+  s+=`<path d="${P(x0+11,y0+11,x1-11,y1-11,Math.max(4,k-11))}" fill="none" stroke="#fff3c0" stroke-width="2.4" stroke-opacity=".9"/>`;
+  s+=`<ellipse cx="${f1(x)}" cy="${f1(y0+h*.24)}" rx="${f1(w*.4)}" ry="${f1(h*.12)}" fill="#fff" opacity=".2"/>`;
+  // العملة في الطرف الخارجي (أو يسار الجذر)
+  const cr=Math.min(56,h*.33),cx=side===0?x0+cr*.15:side>0?x1-cr*.15:x0+cr*.15;
+  s+=`<circle cx="${f1(cx)}" cy="${f1(y)}" r="${f1(cr+6)}" fill="url(#gGold)" stroke="#3b2304" stroke-width="2"/><circle cx="${f1(cx)}" cy="${f1(y)}" r="${f1(cr)}" fill="url(#gCoin)"/>`+
+    txt(ar(gen),cx,y+cr*.08,{size:cr*1.05,font:'Tajawal',weight:800,fill:'#ffe9a0'});
+  // النص بين العملة والطرف الآخر
+  const inner=side===0?x1-30:side>0?x0+30:x1-30,outer=cx+(side>0?-1:1)*(cr+22),tx=(inner+outer)/2,tw=Math.abs(inner-outer)-20;
+  const t=p.title;
+  if(t){const nfs=Math.min(big?84:76,h*.42),tfs=Math.min(52,h*.29);
+    s+=txt(p.name,tx,y-h*.17,{size:nfs,font:'Aref Ruqaa',fill:'#2b1603',fit:tw});
+    const bw=Math.min(tw,t.length*tfs*.5+tfs*1.6),bh=tfs*1.45,by=y+h*.25;
+    s+=`<rect x="${f1(tx-bw/2)}" y="${f1(by-bh/2)}" width="${f1(bw)}" height="${f1(bh)}" rx="${f1(bh/2)}" fill="${big?'#5a1606':'#6b2207'}" stroke="#f3d27a" stroke-width="2"/>`+
+      txt(t,tx,by+tfs*.04,{size:tfs,font:'Amiri',fill:'#fff1cf',fit:bw-tfs*.8});}
+  else s+=txt(p.name,tx,y+h*.02,{size:Math.min(big?96:88,h*.52),font:'Aref Ruqaa',fill:'#2b1603',fit:tw});
+  if(big){s+=star(x,y0-fr-6,20)+star(x-60,y0-fr+2,12)+star(x+60,y0-fr+2,12);}
+  return s;}
+// ===================================================================
+// ألوان الطبعة حسب الجيل (دليل الألوان أسفل الطبعة)
+// لوح ذهبي ← دائرة ذهبية ← بني غامق ← وردي فاتح ← أخضر غامق ← أخضر ← زيتوني ← أخضر فاتح
+// ===================================================================
+const GENC={8:'gold',9:'brown',10:'salmon',11:'dark',12:'mid',13:'green',14:'olive',15:'lime'};
+const PCOL={gold:['#fbe7a2','#e0a63a','#9a6a10'],brown:['#8a5a34','#603b1e','#2e1a0a'],salmon:['#f6b2b3','#e17779','#a8454a'],dark:['#3c6444','#1a311d','#0a160c'],
+  mid:['#2a9a5c','#026a39','#013a1e'],green:['#6fd57e','#35af4a','#1b7a2c'],olive:['#b2c070','#84933e','#56621f'],lime:['#c0e68a','#8cc63f','#5b8f22']};
+const colorOf=(p,gen)=>{const c=p.color==='mid2'?'mid':p.color;return PCOL[c]?c:(GENC[gen]||(gen>15?'lime':'gold'));};
+const TRUNK={src:'bg/trunk.png',gold:'bg/trunk-gold.png',w:1200,h:1071,topX:.507,plq:[876,706,597,488,378,270,100]};   // مراكز ألواح الهذلي…علي
+// عقدة بأسلوب الطبعة: دائرة بلون الجيل، إطار ذهبي فاتح، والاسم بخط عريض أبيض (أو داكن على الذهبي)
+function pNode(p,x,y,r,cls,{title='',photo=null,big=false}={}){let s=shadow(x,y,r);
+  s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r+Math.max(3,r*(big?.12:.07)))}" fill="${big?'url(#gGold)':'#f6dc8c'}"/>`;
+  if(photo){const id='ph'+(++clipN);defs+=`<clipPath id="${id}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}"/></clipPath>`;
+    s+=`<image href="${esc(photo)}" x="${f1(x-r)}" y="${f1(y-r)}" width="${f1(r*2)}" height="${f1(r*2)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
+    return s+nameTag(p.name,x,y+r*1.1,Math.max(22,r*.34),'#1f5a2a');}
+  s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="url(#pc_${cls})"/>`;
+  s+=`<ellipse cx="${f1(x-r*.16)}" cy="${f1(y-r*.46)}" rx="${f1(r*.6)}" ry="${f1(r*.3)}" fill="#fff" opacity=".16"/>`;
+  const dark=cls==='gold',fill=dark?'#2b1603':'#fff',st=dark?'none':'#0b1a08',L=p.name.length,fs=r*(L>6?.42:L>4?.52:.64);
+  const ex=dark?'':`stroke="${st}" stroke-opacity=".55" stroke-width="${f1(fs*.08)}" paint-order="stroke"`;
+  if(title){s+=txt(p.name,x,y-r*.16,{size:fs*.92,font:'Lalezar',weight:400,fill,fit:r*1.62,extra:ex});
+    s+=txt(`(${title})`,x,y+r*.42,{size:r*.24,font:'Tajawal',weight:800,fill:dark?'#4a2a06':'#fff3d0',fit:r*1.5});}
+  else s+=txt(p.name,x,y+r*.04,{size:fs,font:'Lalezar',weight:400,fill,fit:r*1.62,extra:ex});
+  return s;}
+// غصن بأسلوب الطبعة: حد داكن، جسم بني، لمعة، وضوء ذهبي يمشي في الداخل لطريق النسب
+function pLimb(a,b,c1,c2,w0,w1,lit){let s='';
+  if(w0>14)s+=`<circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${f1(w0*.58)}" fill="#140904"/><circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${f1(w0*.5)}" fill="#4a160e"/>`;
+  s+=limb(a,b,c1,c2,w0*1.16,w1*1.16,'#140904');
+  s+=limb(a,b,c1,c2,w0,w1,'url(#gLimbBody)');
+  const off=(w0+w1)*.08;s+=limb([a[0]-off,a[1]],[b[0]-off,b[1]],[c1[0]-off,c1[1]],[c2[0]-off,c2[1]],w0*.36,w1*.36,'#7e3424',.5);
+  if(lit){const d=`M${f1(a[0])},${f1(a[1])} C${f1(c1[0])},${f1(c1[1])} ${f1(c2[0])},${f1(c2[1])} ${f1(b[0])},${f1(b[1])}`;
+    s+=`<path d="${d}" fill="none" stroke="#ffb43c" stroke-width="${f1(Math.max(10,(w0+w1)*.22))}" stroke-linecap="round" opacity=".9" filter="url(#glow)"/><path d="${d}" fill="none" stroke="#fff3c8" stroke-width="${f1(Math.max(4,(w0+w1)*.06))}" stroke-linecap="round"/>`;}
+  return s;}
+function pRose(p,x,y,r){return girl(p,x,y,r);}
+
+function build(id){
+  const me=P[id];const c=chain(id);const anc=c.slice(0,-1);
+  const vil=villageOf(c),V=VILLAGES[vil.key],famName=familyOf(c);
+  const father=P[me.father];
+  const sibs=father?kidsOf(father.id).filter(k=>k.id!==me.id):[],bros=sibs.filter(k=>k.gender!=='f'),sis=sibs.filter(k=>k.gender==='f');
+  const kids=kidsOf(me.id),G=c.length;
+  document.title=`شجرة نسب ${me.name}${father?(me.gender==='f'?' بنت ':' بن ')+father.name:''}`;
+  svgEls.length=0;defs='';clipN=0;const rnd=rng(id*7919+13);
+
+  // ---------- المشهد ----------
+  out(`<image href="${V.bg}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>`);
+  out(`<rect width="${W}" height="${H}" fill="url(#gVignette)"/>`);
+
+  // ---------- مقاسات: الجذع الحقيقي تحت، والتاج فوقه ----------
+  const TW=1320,TH=TW*TRUNK.h/TRUNK.w,TB=4110,TT=TB-TH,TX=CX-TW*(TRUNK.topX-.5);   // TT = قمة الجذع (فوق لوح علي)
+  const tScale=TW/TRUNK.w,plqY=TRUNK.plq.map(v=>TT+v*tScale);
+  const line=c.slice(7,-1);                 // من الجيل ٨ إلى الأب: أغصان فوق الجذع
+  const m=line.length;
+  const crowd=kids.length+sibs.length+kids.reduce((a,k)=>a+kidsOf(k.id).length,0);
+  const CTOP=640,CB=Math.max(1900,Math.min(2520,TT-140-Math.max(0,m-2)*160)),cry=(CB-CTOP)/2;
+  const CR={x:CX,y:CTOP+cry,ry:cry,rx:Math.min(1400,cry*(crowd>40?1.5:crowd>16?1.32:1.2))};
+  const meR=crowd>40?130:crowd>16?140:150;
+  const ME={x:CX,y:CR.y+CR.ry*(kids.length?.02:-.08),r:meR};
+  const nrm=(x,y)=>Math.hypot((x-CR.x)/CR.rx,(y-CR.y)/CR.ry);
+  // عقد طريق النسب فوق الجذع
+  const fy=ME.y+ME.r+190,y0=TT-120;
+  const LN=line.map((p,k)=>{const t=m===1?1:k/(m-1),y=y0+(fy-y0)*t,sw=(k%2?1:-1)*Math.min(150,70+m*12)*(1-t*.6);
+    const sp=m>1?Math.abs(fy-y0)/(m-1):300,r=Math.max(46,Math.min(112-k*5,sp*.4));return{p,x:CX+sw,y,r,gen:8+k};});
+  if(m)LN[m-1].x=CX+(m%2?-1:1)*40;
+  const FN=m?LN[m-1]:null;          // الأب
+  // ---------- أهل الشخص داخل التاج ----------
+  function rings(list,a0,a1,rho0,r,gap){const outp=[];let rho=rho0,i=0,guard=0;const k=(CR.rx+CR.ry)/2;
+    while(i<list.length&&guard++<40){const len=Math.abs(a1-a0)*Math.PI/180*rho*k,cap=Math.max(1,Math.floor(len/(r*2+gap)));
+      const take=list.slice(i,i+cap),mm=take.length;
+      take.forEach((p,j)=>{const t=mm===1?.5:(cap===mm?(j+.5)/mm:(j+.5)/cap+(1-mm/cap)/2),a=(a0+(a1-a0)*t)*Math.PI/180;
+        outp.push({p,x:ME.x+Math.cos(a)*rho*CR.rx,y:ME.y+Math.sin(a)*rho*CR.ry,r});});
+      i+=mm;rho+=(r*2+gap*.8)/k;}
+    return outp;}
+  function fitRings(list,a0,a1,rho0,rMax,rMin,gap){if(!list.length)return[];
+    for(let r=rMax;r>=rMin;r-=2){const o=rings(list,a0,a1,rho0,r,gap);if(o.every(q=>nrm(q.x,q.y)+q.r/CR.ry<.95))return o;}
+    return rings(list,a0,a1,rho0,rMin,gap);}
+  const order=l=>[...l.filter(k=>k.gender==='f').reverse(),...l.filter(k=>k.gender!=='f')];
+  const kidsO=order(kids),gks=kidsO.flatMap(k=>order(kidsOf(k.id)).map(g=>({g,par:k})));
+  const big=crowd<=12?1:crowd<=24?.82:.62;
+  const kidN=fitRings(kidsO,-160,-20,gks.length?.36:.5,Math.round(92*big),32,40);
+  const kOut=kidN.length?Math.max(...kidN.map(o=>nrm(o.x,o.y)))+Math.max(...kidN.map(o=>o.r))/CR.ry:0;
+  const gkN=fitRings(gks.map(x=>x.g),-172,-8,Math.max(.6,kOut+.1),Math.round(74*big),27,24);gkN.forEach((o,i)=>o.par=gks[i].par);
+  const sibA=[-14,48];
+  const broN=fitRings(bros,sibA[0],sibA[1],.55,Math.round(88*big),30,46),sisN=fitRings(sis,180-sibA[0],180-sibA[1],.55,Math.round(88*big),30,46);
+  const fam=[...kidN.map(o=>({...o,k:'kid'})),...gkN.map(o=>({...o,k:'gk'})),...broN.map(o=>({...o,k:'sib'})),...sisN.map(o=>({...o,k:'sib'}))];
+  const fixed=[ME,...LN];
+  for(let it=0;it<220;it++){for(let i=0;i<fam.length;i++){const A=fam[i];
+      for(let j=i+1;j<fam.length;j++){const B=fam[j],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy)||1,need=(A.r+B.r)*1.16+22;if(d<need){const mm=(need-d)/2;A.x-=dx/d*mm;A.y-=dy/d*mm;B.x+=dx/d*mm;B.y+=dy/d*mm;}}
+      for(const F of fixed){const dx=A.x-F.x,dy=A.y-F.y,d=Math.hypot(dx,dy)||1,need=F.r+A.r*1.16+(F===ME?70:40);if(d<need){A.x=F.x+dx/d*need;A.y=F.y+dy/d*need;}}
+      if(Math.abs(A.x-CX)<A.r+170&&A.y>ME.y+ME.r*.5){A.x=CX+Math.sign(A.x-CX||1)*(A.r+170);}
+      const e=nrm(A.x,A.y)+A.r/CR.ry;if(e>.95){const kk=(.95-A.r/CR.ry)/nrm(A.x,A.y);A.x=CR.x+(A.x-CR.x)*kk;A.y=CR.y+(A.y-CR.y)*kk;}}}
+
+  // ---------- الأغصان ----------
+  const net=[],limbsSVG=[],twigSVG=[],leafSVG=[],litSVG=[];
+  const push=(a,c1,c2,b,w0,w1)=>{for(let i=1;i<=8;i++){const t=i/8,u=1-t;net.push([u*u*u*a[0]+3*u*u*t*c1[0]+3*u*t*t*c2[0]+t*t*t*b[0],u*u*u*a[1]+3*u*u*t*c1[1]+3*u*t*t*c2[1]+t*t*t*b[1],w0+(w1-w0)*t]);}};
+  function curve(a,b,w0,w1,bend=0,lit=false,arr=limbsSVG){const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+    const c1=[a[0]+dx*.3+nx*bend*L,a[1]+dy*.3+ny*bend*L-L*.12],c2=[a[0]+dx*.72+nx*bend*L*.6,a[1]+dy*.72+ny*bend*L*.6];push(a,c1,c2,b,w0,w1);
+    arr.push(pLimb(a,b,c1,c2,w0,w1,lit));}
+  function grow(o,targets,w){if(!targets.length)return;
+    if(targets.length===1){const t=targets[0];curve(o,[t.x,t.y],w,Math.max(7,w*.45),(rnd()-.5)*.25);return;}
+    const ang=t=>Math.atan2(t.y-o[1],t.x-o[0]);targets=targets.slice().sort((a,b)=>ang(a)-ang(b));
+    const mx=targets.reduce((s,t)=>s+t.x,0)/targets.length,my=targets.reduce((s,t)=>s+t.y,0)/targets.length;
+    const near=Math.min(...targets.map(t=>Math.hypot(t.x-o[0],t.y-o[1])));
+    const f=Math.min(.45,(near*.7)/(Math.hypot(mx-o[0],my-o[1])||1)),hub=[o[0]+(mx-o[0])*f,o[1]+(my-o[1])*f];
+    curve(o,hub,w,w*.82,(rnd()-.5)*.2);
+    const parts=targets.length>=6?3:2,sz=Math.ceil(targets.length/parts);
+    for(let i=0;i<targets.length;i+=sz){const g=targets.slice(i,i+sz);grow(hub,g,Math.max(8,w*.82*Math.sqrt(g.length/targets.length)+4));}}
+  const W0=n=>Math.min(70,18+10*Math.sqrt(n));
+  // هيكل بلا أسماء: من قمة الجذع وأطراف التاج
+  const occN=[...fam.map(o=>[o.x,o.y,o.r+80]),[ME.x,ME.y,ME.r+90],...LN.map(o=>[o.x,o.y,o.r+70])];
+  {const tg=[];const addRing=(rho,stepPx,a0,a1)=>{const k=(CR.rx+CR.ry)/2,cnt=Math.max(2,Math.round(Math.abs(a1-a0)*Math.PI/180*rho*k/stepPx));
+      for(let i=0;i<cnt;i++){const a=(a0+(a1-a0)*(i+.5)/cnt+(rnd()-.5)*4)*Math.PI/180,x=CR.x+Math.cos(a)*rho*CR.rx,y=CR.y+Math.sin(a)*rho*CR.ry;
+        if(occN.some(([ox,oy,or])=>Math.hypot(x-ox,y-oy)<or))continue;tg.push({x,y,a:a*180/Math.PI});}};
+    addRing(.9,crowd>40?210:150,-215,35);addRing(.66,crowd>40?300:210,-205,25);addRing(.4,280,-195,15);
+    const tl=[TX-TW*.12,TT+70],tr=[TX+TW*.12,TT+70];
+    const Lg=tg.filter(t=>t.x<CX-60&&t.y>ME.y-CR.ry*.15),Rg=tg.filter(t=>t.x>CX+60&&t.y>ME.y-CR.ry*.15),Ug=tg.filter(t=>!Lg.includes(t)&&!Rg.includes(t));
+    grow(tl,Lg,170);grow(tr,Rg,170);grow([ME.x,ME.y-ME.r*.4],Ug,Math.min(60,16+8*Math.sqrt(Ug.length)));
+    tg.forEach(t=>{leafSVG.push(leaf(t.x,t.y,22+rnd()*6,t.a+90+(rnd()-.5)*30,0)+pRoseD(t.x+20,t.y-16,14)+leaf(t.x,t.y,18,t.a+130,2));});}
+  const deco=limbsSVG.splice(0);
+  // طريق النسب المضيء: من قمة الجذع إلى الشخص
+  {const pts=[[TX+6,TT+90],...LN.map(o=>[o.x,o.y]),[ME.x,ME.y]];
+    for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],dy=b[1]-a[1],w0=Math.max(30,(i?120:190)-i*(80/Math.max(1,pts.length-1))),w1=Math.max(26,(i?120:190)-(i+1)*(80/Math.max(1,pts.length-1))-(i?0:70));
+      const c1=[a[0],a[1]+dy*.45],c2=[b[0],b[1]-dy*.45];push(a,c1,c2,b,w0,w1);litSVG.push(pLimb(a,b,c1,c2,w0,w1,true));}}
+  // الإخوان والأخوات من الأب، والعيال من الشخص
+  const FO=FN?[FN.x,FN.y]:[CX,ME.y+ME.r+150];
+  const fb=fam.filter(o=>o.k==='sib'&&o.x>CX),fs=fam.filter(o=>o.k==='sib'&&o.x<=CX);
+  grow(FO,fb,W0(fb.length));grow(FO,fs,W0(fs.length));
+  const kidF=fam.filter(o=>o.k==='kid');grow([ME.x,ME.y-ME.r*.3],kidF,W0(kidF.length+fam.filter(o=>o.k==='gk').length*.5));
+  kidF.forEach(k=>{const g=fam.filter(o=>o.k==='gk'&&o.par.id===k.p.id);if(g.length)grow([k.x,k.y],g,Math.max(10,W0(g.length)*.6));});
+  // إخوان الأجداد (اختياري): أوراق ودوائر صغيرة على جانب كل عقدة
+  const uncl=[];
+  if(SHOW_UNCLES){const lv=LN.map((o,k)=>({par:c[6+k],next:c[7+k],x:o.x,y:o.y,r:o.r}));
+    lv.forEach(L=>{if(!L.par||!L.next)return;const others=kidsOf(L.par.id).filter(k=>k.gender!=='f'&&k.id!==L.next.id);if(!others.length)return;
+      const CAP=6,shown=others.length>CAP?others.slice(0,CAP-1):others,more=others.length-shown.length,dir=L.x>=CX?-1:1,ur=Math.max(30,Math.min(52,L.r*.55));
+      const items=shown.map(p=>({p}));if(more)items.push({more});
+      items.forEach((it,k)=>{const x=L.x+dir*(L.r+ur+40+k*(ur*2+16)),y=L.y-k*ur*.5-ur*.3;uncl.push({...it,x,y,r:ur,from:[L.x,L.y]});});});
+    uncl.forEach(u=>curve(u.from,[u.x,u.y],14,5,0));}
+  // ---------- أوراق وأزهار صغيرة بلا أسماء تملأ التاج ----------
+  {const occ=[...fam.map(o=>[o.x,o.y,o.r*1.2+30]),[ME.x,ME.y,ME.r+60],...LN.map(o=>[o.x,o.y,o.r+28]),...uncl.map(u=>[u.x,u.y,u.r+24])];
+    const cand=[];const step=crowd>40?66:58;
+    for(let y=CR.y-CR.ry;y<=CR.y+CR.ry;y+=step*.87)for(let x=CR.x-CR.rx;x<=CR.x+CR.rx;x+=step){const jx=x+(rnd()-.5)*step*.7+((Math.round(y/step)%2)?step/2:0),jy=y+(rnd()-.5)*step*.6;
+      const e=nrm(jx,jy);if(e>1.02-rnd()*.07)continue;if(Math.abs(jx-CX)<150&&jy>ME.y+ME.r)continue;if(jy>TT-30)continue;
+      if(occ.some(([ox,oy,or])=>Math.hypot(jx-ox,jy-oy)<or))continue;cand.push([jx,jy]);}
+    const dist=p=>{let b=1e9,bi=0;for(let i=0;i<net.length;i++){const d=Math.hypot(net[i][0]-p[0],net[i][1]-p[1]);if(d<b){b=d;bi=i;}}return[b,bi];};
+    let pend=cand.map(p=>({p,d:dist(p)}));
+    while(pend.length){pend.sort((a,b)=>a.d[0]-b.d[0]);const{p,d}=pend.shift();if(d[0]>160)continue;const q=net[d[1]];
+      const dx=p[0]-q[0],dy=p[1]-q[1],L=Math.hypot(dx,dy)||1,w=Math.min(12,Math.max(4,q[2]*.3));
+      const mid=[q[0]+dx*.5+(-dy/L)*L*.12*(rnd()-.5),q[1]+dy*.5+(dx/L)*L*.12*(rnd()-.5)-L*.08];
+      twigSVG.push(limb([q[0],q[1]],p,[mid[0],mid[1]],[p[0]-dx*.2,p[1]-dy*.2],w,2,'#2a1206'));
+      const np=[[q[0]+dx*.5,q[1]+dy*.5,w*.7],[p[0],p[1],3]];net.push(...np);
+      const a=Math.atan2(dy,dx)*180/Math.PI+90,kind=rnd();
+      if(kind<.46)leafSVG.push(leaf(p[0],p[1],17+rnd()*7,a+(rnd()-.5)*40,kind<.2?0:kind<.36?2:1));
+      else leafSVG.push(pRoseD(p[0],p[1],15+rnd()*5));
+      for(const it of pend){for(let j=0;j<np.length;j++){const s=np[j],dd=Math.hypot(s[0]-it.p[0],s[1]-it.p[1]);if(dd<it.d[0])it.d=[dd,net.length-np.length+j];}}}}
+
+  // ---------- الرسم ----------
+  out(`<ellipse cx="${CR.x}" cy="${CR.y}" rx="${f1(CR.rx*1.15)}" ry="${f1(CR.ry*1.13)}" fill="url(#gCanopy)"/>`);
+  out(twigSVG.join('')+deco.join('')+limbsSVG.join(''));
+  out(`<g>${leafSVG.join('')}</g>`);
+  // الجذع الحقيقي من الطبعة، والضوء يمشي فيه خلف الألواح
+  out(litSVG.join(''));
+  out(`<image href="${TRUNK.src}" x="${f1(CX-TW/2)}" y="${f1(TT)}" width="${f1(TW)}" height="${f1(TH)}"/>`);
+  {const d=`M${f1(CX)},${f1(plqY[0]+20)} C${f1(CX-14)},${f1(plqY[0]-220)} ${f1(CX+14)},${f1(plqY[6]+200)} ${f1(TX+6)},${f1(TT+60)}`;
+    out(`<path d="${d}" fill="none" stroke="#ffb43c" stroke-width="34" stroke-linecap="round" opacity=".7" filter="url(#glowBig)"/><path d="${d}" fill="none" stroke="#fff3c8" stroke-width="8" stroke-linecap="round" opacity=".85"/>`);
+    plqY.forEach((y,i)=>out(`<ellipse cx="${CX}" cy="${f1(y)}" rx="${f1(i===0?470:i===6?240:200)}" ry="${f1(i===0?120:i===6?110:62)}" fill="#ffc850" opacity=".3" filter="url(#glowBig)"/>`));}
+  out(`<image href="${TRUNK.gold}" x="${f1(CX-TW/2)}" y="${f1(TT)}" width="${f1(TW)}" height="${f1(TH)}"/>`);
+  // العقد
+  LN.forEach(o=>out(pNode(o.p,o.x,o.y,o.r,colorOf(o.p,o.gen),{title:o.p.title||''})));
+  uncl.forEach(u=>{if(u.more){const w=u.r*1.9,h=u.r*1.15;out(`<rect x="${f1(u.x-w/2)}" y="${f1(u.y-h/2)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(h/2)}" fill="#22130a" stroke="#f3d27a" stroke-width="3"/>`+txt('+'+ar(u.more),u.x,u.y+2,{size:u.r*.62,font:'Tajawal',weight:800,fill:'#ffe9a0',fit:w-14}));return;}
+    const g=genOfP(u.p);out(kidsOf(u.p.id).length?pNode(u.p,u.x,u.y,u.r,colorOf(u.p,g)):namedLeaf(u.p,u.x,u.y,u.r,0));});
+  fam.forEach(o=>{const p=o.p,hk=kidsOf(p.id).length>0,g=G+(o.k==='kid'?1:o.k==='gk'?2:0);
+    if(p.gender==='f')out(girl(p,o.x,o.y,o.r));
+    else if(p.photo||hk)out(pNode(p,o.x,o.y,o.r,colorOf(p,g),{photo:p.photo||null}));
+    else out(namedLeaf(p,o.x,o.y,o.r,Math.atan2(o.y-ME.y,o.x-ME.x)*180/Math.PI+90));});
+  // الشخص: دائرة بلون جيله وإطار ذهبي وهالة
+  {const{x,y,r}=ME;let s=`<circle cx="${x}" cy="${y}" r="${r*2.1}" fill="url(#gHalo)"/>`;
+    for(let k=0;k<16;k++){const a=k/16*Math.PI*2+.1;s+=`<path d="M${f1(x+Math.cos(a-.05)*r*1.05)},${f1(y+Math.sin(a-.05)*r*1.05)} L${f1(x+Math.cos(a)*r*1.8)},${f1(y+Math.sin(a)*r*1.8)} L${f1(x+Math.cos(a+.05)*r*1.05)},${f1(y+Math.sin(a+.05)*r*1.05)}Z" fill="#ffd36a" opacity=".45"/>`;}
+    const cls=me.gender==='f'?null:colorOf(me,G);
+    if(me.gender==='f'){s+=girl(me,x,y,r*1.1);}
+    else{s+=pNode(me,x,y,r,cls,{big:true,photo:me.photo||null});if(!me.photo)s+=txt(`الجيل ${ar(G)}`,x,y+r*.56,{size:r*.19,font:'Tajawal',weight:800,fill:cls==='gold'?'#4a2a06':'#ffe9a0'});}
+    out(s);}
+
+  // ---------- الترويسة مثل الصفحة الرئيسية ----------
+  out(`<rect width="${W}" height="560" fill="url(#gHeadShade)"/>`);
+  out(txt('بسم الله الرحمن الرحيم',CX,70,{size:50,font:'Amiri',weight:700,fill:'#ffecbe',extra:'opacity=".92" stroke="#2a1606" stroke-opacity=".5" stroke-width="5" paint-order="stroke"'}));
+  const title=`شجرة نسب ${me.name}${father?(me.gender==='f'?' بنت ':' بن ')+father.name:''}`;
+  out(txt(title,CX,245,{size:220,font:'Aref Ruqaa',fill:'url(#gTitle2)',fit:2100,extra:'id="ttl" filter="url(#titleShadow)"'}));
+  out(txt(title,CX,245,{size:220,font:'Aref Ruqaa',fill:'none',fit:2100,extra:'id="ttl2" stroke="#fff5c8" stroke-opacity=".6" stroke-width="3"'}));
+  out(`<image id="lgL" href="bg/logo.png" x="${CX-1250}" y="150" width="200" height="186" filter="url(#logoShadow)"/><image id="lgR" href="bg/logo.png" x="${CX+1050}" y="150" width="200" height="186" filter="url(#logoShadow)"/>`);
+  const st=[`الجيل ${ar(G)} من الهذلي`,bros.length?`${ar(bros.length)} ${bros.length>2&&bros.length<11?'إخوة':'إخوان'}`:'',sis.length?`${ar(sis.length)} ${sis.length>2&&sis.length<11?'أخوات':'أخت'}`:'',kids.length?`${ar(kids.length)} من الأبناء`:'',vil.sure||vil.forced?`من ${V.name}`:''].filter(Boolean);
+  out(`<text x="${CX}" y="410" font-family="Tajawal" font-weight="700" font-size="58" fill="#fff0cd" text-anchor="middle" dominant-baseline="central" direction="rtl" data-fit="2500" filter="url(#textShadow)">${st.map(esc).join('<tspan fill="#e8bd3c" style="font-size:.55em">\u00A0\u00A0\u00A0◆\u00A0\u00A0\u00A0</tspan>')}</text>`);
+  {const r=c.slice().reverse(),parts=r.map((p,i)=>(i?(r[i-1].gender==='f'?'بنت ':'بن '):'')+p.name);
+    const full=parts.join(' '),two=full.length>70;let L=[full];
+    if(two){let acc=0,cut=1;for(let i=0;i<parts.length;i++){acc+=parts[i].length+1;if(acc>=full.length/2){cut=i+1;break;}}L=[parts.slice(0,cut).join(' '),parts.slice(cut).join(' ')];}
+    L.forEach((t,i)=>out(txt(t,CX,478+i*58,{size:46,font:'Amiri',weight:700,fill:'#fff4dc',fit:2400,extra:'opacity=".95" filter="url(#textShadow)"'})));}
+  // شارتا القرية والفرع
+  const badge=(x,label,sub,icon)=>{const w=270,h=84;let s=`<g transform="translate(${x},60)"><rect x="${-w/2}" y="0" width="${w}" height="${h}" rx="${h/2}" fill="#1c120a" fill-opacity=".55" stroke="#f3d27a" stroke-width="3"/>`;
+    s+=icon+txt(label,26,h/2+2,{size:44,font:'Aref Ruqaa',fill:'url(#gTitle2)',fit:150});
+    if(sub)s+=txt(sub,0,h+28,{size:24,font:'Tajawal',weight:500,fill:'#f4e6c8',extra:'opacity=".85" filter="url(#textShadow)"'});
+    return s+'</g>';};
+  const mesa=`<path d="M-108,58 L-90,58 L-80,38 L-78,28 L-56,28 L-54,38 L-44,58 L-28,58Z" fill="#e8bd3c"/>`,tower=`<path d="M-80,62 L-74,20 L-66,20 L-60,62Z M-74,20 L-74,8 L-62,12 L-74,15" fill="#e8bd3c"/><rect x="-98" y="52" width="56" height="10" fill="#e8bd3c"/>`;
+  out(badge(250,V.name,vil.forced?'':vil.sure?'':'القرية غير مؤكدة',vil.key==='barra'?mesa:tower));
+  out(badge(W-250,famName,'',`<circle cx="-76" cy="42" r="20" fill="none" stroke="#e8bd3c" stroke-width="5"/><circle cx="-76" cy="42" r="8" fill="#e8bd3c"/>`));
+
+  // ---------- دليل الألوان والتذييل ----------
+  out(`<rect y="${H-170}" width="${W}" height="170" fill="url(#gFootShade)"/>`);
+  {let s=`<g transform="translate(${W-160},${H-112})">`;const sw=[['oval','gold'],['gold'],['brown'],['salmon'],['dark'],['mid'],['olive'],['lime']];
+    sw.forEach(([k,k2],i)=>{const x=-i*56;s+=k==='oval'?`<ellipse cx="${x-6}" cy="0" rx="34" ry="21" fill="url(#gCart)" stroke="#7a5208" stroke-width="2"/>`:`<circle cx="${x-14}" cy="0" r="21" fill="url(#pc_${k})" stroke="#f6dc8c" stroke-width="2.5"/>`;if(k==='oval')s+='';});
+    s+=txt('ترتيب الأجيال والألوان حسب الكبر',-210,44,{size:24,font:'Tajawal',weight:700,fill:'#fff0cd',extra:'filter="url(#textShadow)"'});
+    s+=`</g><g transform="translate(${W-680},${H-112})">`+girl({name:''},0,0,22)+txt('أنثى',-36,2,{size:26,font:'Tajawal',weight:700,fill:'#fff0cd',anchor:'start'})+`<g transform="translate(-130,0)">`+namedLeaf({name:''},0,0,20,0)+txt('ذكر بلا عقب',-34,2,{size:26,font:'Tajawal',weight:700,fill:'#fff0cd',anchor:'start'})+`</g></g>`;
+    out(s);}
+  out(txt(EDITION,CX,H-62,{size:46,font:'Aref Ruqaa',fill:'url(#gTitle2)',fit:1700,extra:'filter="url(#textShadow)"'}));
+  const now=new Date();let hj='';try{hj=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(now);}catch(e){}
+  const gd=new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{day:'numeric',month:'long',year:'numeric'}).format(now);
+  out(txt(`طُبعت في ${hj?hj+' — ':''}${gd}`,300,H-112,{size:28,font:'Tajawal',weight:500,fill:'#f4e6c8',fit:500,extra:'filter="url(#textShadow)"'}));
+  out(txt(`nasab.html?id=${id}`,300,H-70,{size:22,font:'Tajawal',weight:500,fill:'#d9c7a2',extra:'direction="ltr" opacity=".75"'}));
+  return svg();}
+const genOfP=p=>chain(p.id).length;
+function pRoseD(x,y,r){let s='';for(let k=0;k<5;k++){const a=k/5*Math.PI*2-Math.PI/2;s+=`<circle cx="${f1(x+Math.cos(a)*r*.5)}" cy="${f1(y+Math.sin(a)*r*.5)}" r="${f1(r*.55)}" fill="url(#gPetal)"/>`;}
+  return s+`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r*.5)}" fill="url(#gRose)"/>`;}
+// اللوغو على جانبي العنوان: نقيس العنوان بعد تحميل الخط ونقرّب الشعارين منه
+function placeLogos(root){const t=root.querySelector('#ttl');if(!t)return;let w=0;try{w=t.getComputedTextLength();}catch(e){}if(!w)return;
+  const L=root.querySelector('#lgL'),R=root.querySelector('#lgR');L.setAttribute('x',f1(CX-w/2-250));R.setAttribute('x',f1(CX+w/2+50));
+  const t2=root.querySelector('#ttl2');if(t2)t2.setAttribute('font-size',t.getAttribute('font-size'));}
+
+function svg(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">
+<defs>
+ <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b8"/><stop offset=".45" stop-color="#e8bd3c"/><stop offset="1" stop-color="#9b6b06"/></linearGradient>
+ <linearGradient id="gTitle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c4"/><stop offset=".5" stop-color="#f1c94e"/><stop offset="1" stop-color="#c08a12"/></linearGradient>
+ <linearGradient id="gPlaque" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".4" stop-color="#e2b545"/><stop offset=".75" stop-color="#b8861c"/><stop offset="1" stop-color="#7a5208"/></linearGradient>
+ <linearGradient id="gBronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a5b1a"/><stop offset=".5" stop-color="#6b3608"/><stop offset="1" stop-color="#3b1d04"/></linearGradient>
+ <radialGradient id="gBoy" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#6fd05a"/><stop offset=".6" stop-color="#2f9a3a"/><stop offset="1" stop-color="#17602a"/></radialGradient>
+ <radialGradient id="gElder" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#3f7a48"/><stop offset="1" stop-color="#10301a"/></radialGradient>
+ <radialGradient id="gPetal" cx=".4" cy=".4" r=".7"><stop offset="0" stop-color="#ffd6e6"/><stop offset="1" stop-color="#d9548c"/></radialGradient>
+ <radialGradient id="gRose" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#f8a8c7"/><stop offset="1" stop-color="#d4508a"/></radialGradient>
+ <linearGradient id="gBranch" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a1f0c"/><stop offset="1" stop-color="#2a1006"/></linearGradient>
+ <linearGradient id="gRoot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1808"/><stop offset="1" stop-color="#1a0a03" stop-opacity=".9"/></linearGradient>
+ <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#1e0b04"/><stop offset=".36" stop-color="#4a2210"/><stop offset=".47" stop-color="#7a4220"/><stop offset=".53" stop-color="#7a4220"/><stop offset=".64" stop-color="#4a2210"/><stop offset="1" stop-color="#1e0b04"/></linearGradient>
+ <linearGradient id="gTrunkShade" x1="0" y1="0" x2="1" y2="0"><stop offset=".3" stop-color="#000" stop-opacity=".5"/><stop offset=".43" stop-color="#000" stop-opacity="0"/><stop offset=".57" stop-color="#000" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity=".5"/></linearGradient>
+ <linearGradient id="gLimb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a1608"/><stop offset=".5" stop-color="#220c04"/><stop offset="1" stop-color="#140602"/></linearGradient>
+ <radialGradient id="gCanopy" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f7fbf2" stop-opacity=".93"/><stop offset=".7" stop-color="#eef6ea" stop-opacity=".85"/><stop offset=".86" stop-color="#e6f1e2" stop-opacity=".55"/><stop offset="1" stop-color="#e6f1e2" stop-opacity="0"/></radialGradient>
+ <radialGradient id="gLeafA" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7fd864"/><stop offset="1" stop-color="#1f7a2e"/></radialGradient>
+ <radialGradient id="gLeafB" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#b8e07a"/><stop offset="1" stop-color="#5c9a2e"/></radialGradient>
+ <radialGradient id="gLeafC" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#4fbf5a"/><stop offset="1" stop-color="#145a24"/></radialGradient>
+ <radialGradient id="gBud" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#f4f7c8"/><stop offset="1" stop-color="#b5c76a"/></radialGradient>
+ <filter id="limbTex" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.05 0.012" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" values="0 0 0 0 .45  0 0 0 0 .24  0 0 0 0 .1  0 0 0 -1.2 .55" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in" result="t"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="t"/></feMerge></filter>
+ <linearGradient id="gCart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4c0"/><stop offset=".35" stop-color="#f0cd62"/><stop offset=".7" stop-color="#d4a032"/><stop offset="1" stop-color="#a87414"/></linearGradient>
+ <linearGradient id="gBronzeDeep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a2e10"/><stop offset=".5" stop-color="#4f1a06"/><stop offset="1" stop-color="#2c0d02"/></linearGradient>
+ <radialGradient id="gCoin" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#5a3520"/><stop offset="1" stop-color="#1e0d05"/></radialGradient>
+ <radialGradient id="gLadderShade" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0d0703" stop-opacity=".34"/><stop offset=".7" stop-color="#0d0703" stop-opacity=".22"/><stop offset="1" stop-color="#0d0703" stop-opacity="0"/></radialGradient>
+ <radialGradient id="pc_gold" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#fbe7a2"/><stop offset=".55" stop-color="#e0a63a"/><stop offset="1" stop-color="#9a6a10"/></radialGradient>
+ <radialGradient id="pc_brown" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#8a5a34"/><stop offset=".55" stop-color="#603b1e"/><stop offset="1" stop-color="#2e1a0a"/></radialGradient>
+ <radialGradient id="pc_salmon" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#f6b2b3"/><stop offset=".55" stop-color="#e17779"/><stop offset="1" stop-color="#a8454a"/></radialGradient>
+ <radialGradient id="pc_dark" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#3c6444"/><stop offset=".55" stop-color="#1a311d"/><stop offset="1" stop-color="#0a160c"/></radialGradient>
+ <radialGradient id="pc_mid" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#2a9a5c"/><stop offset=".55" stop-color="#026a39"/><stop offset="1" stop-color="#013a1e"/></radialGradient>
+ <radialGradient id="pc_green" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#6fd57e"/><stop offset=".55" stop-color="#35af4a"/><stop offset="1" stop-color="#1b7a2c"/></radialGradient>
+ <radialGradient id="pc_olive" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#b2c070"/><stop offset=".55" stop-color="#84933e"/><stop offset="1" stop-color="#56621f"/></radialGradient>
+ <radialGradient id="pc_lime" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#c0e68a"/><stop offset=".55" stop-color="#8cc63f"/><stop offset="1" stop-color="#5b8f22"/></radialGradient>
+ <linearGradient id="gLimbBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a1c12"/><stop offset=".6" stop-color="#3e120b"/><stop offset="1" stop-color="#260a06"/></linearGradient>
+ <linearGradient id="gTitle2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4c0"/><stop offset=".35" stop-color="#f1c75a"/><stop offset=".6" stop-color="#c8901e"/><stop offset="1" stop-color="#8a5d08"/></linearGradient>
+ <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+ <filter id="glowBig" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>
+ <filter id="textShadow" x="-10%" y="-60%" width="120%" height="220%"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#1e0a00" flood-opacity=".85"/></filter>
+ <filter id="logoShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#3c2800" flood-opacity=".45"/></filter>
+ <filter id="bark" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.09 0.006" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .16  0 0 0 0 .07  0 0 0 0 .02  0 0 0 -1.6 1.15"/></filter>
+ <radialGradient id="gCrown" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f6fbfe" stop-opacity=".95"/><stop offset=".6" stop-color="#e6f2f9" stop-opacity=".9"/><stop offset=".88" stop-color="#cfe5f2" stop-opacity=".82"/><stop offset="1" stop-color="#d4eaf6" stop-opacity="0"/></radialGradient>
+ <radialGradient id="gCrownGlow" cx=".5" cy=".5" r=".5"><stop offset=".75" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></radialGradient>
+ <radialGradient id="gHalo" cx=".5" cy=".5" r=".5"><stop offset=".4" stop-color="#ffd25a" stop-opacity=".7"/><stop offset="1" stop-color="#ffc030" stop-opacity="0"/></radialGradient>
+ <radialGradient id="gSoil" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#2a1608" stop-opacity=".85"/><stop offset="1" stop-color="#2a1608" stop-opacity="0"/></radialGradient>
+ <radialGradient id="gGrass" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#4f8f35" stop-opacity=".95"/><stop offset=".7" stop-color="#3b6e26" stop-opacity=".6"/><stop offset="1" stop-color="#2c5a1c" stop-opacity="0"/></radialGradient>
+ <linearGradient id="gVeil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0f22" stop-opacity=".25"/><stop offset=".45" stop-color="#0a0f22" stop-opacity=".05"/><stop offset=".7" stop-color="#1a0e04" stop-opacity=".18"/><stop offset="1" stop-color="#140a03" stop-opacity=".55"/></linearGradient>
+ <radialGradient id="gVignette" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+ <linearGradient id="gHeadShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070b1a" stop-opacity=".3"/><stop offset="1" stop-color="#070b1a" stop-opacity="0"/></linearGradient>
+ <linearGradient id="gFootShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#120a04" stop-opacity="0"/><stop offset=".5" stop-color="#120a04" stop-opacity=".75"/><stop offset="1" stop-color="#120a04" stop-opacity=".9"/></linearGradient>
+ <filter id="titleShadow" x="-10%" y="-30%" width="120%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#280f00" flood-opacity=".75"/></filter>
+ <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#fff2c0" flood-opacity=".8"/></filter>
+ ${defs}
+</defs>
+<style>.halo{stroke:#1a1006;stroke-width:5px;paint-order:stroke;stroke-linejoin:round}</style>
+${svgEls.join('\n')}
+</svg>`;}
+
+// تصغير النص الطويل حتى يدخل مكانه (بعد تحميل الخطوط)
+function fitTexts(root){root.querySelectorAll('text[data-fit]').forEach(t=>{const max=+t.dataset.fit;if(!t.dataset.fs)t.dataset.fs=t.getAttribute('font-size');
+  t.setAttribute('font-size',t.dataset.fs);let w=0;try{w=t.getComputedTextLength();}catch(e){}if(w>max)t.setAttribute('font-size',f1(t.dataset.fs*max/w));});}
+
+// ===================================================================
+// العرض والتكبير
+// ===================================================================
+const sheet=document.getElementById('sheet'),stage=document.getElementById('stage');let zoom=1;
+function layout(){stage.style.top=document.getElementById('bar').offsetHeight+'px';const pad=innerWidth<=600?16:32,aw=stage.clientWidth-pad,ah=stage.clientHeight-pad,fit=Math.min(aw,ah*297/420);
+  const base=innerWidth<=600?aw:fit;sheet.style.width=Math.round(base*zoom)+'px';}
+function setZoom(z,keep=true){const cx=stage.scrollLeft+stage.clientWidth/2,cy=stage.scrollTop+stage.clientHeight/2,old=sheet.offsetWidth;
+  zoom=Math.max(1,Math.min(8,z));layout();const k=sheet.offsetWidth/old;if(keep){stage.scrollLeft=cx*k-stage.clientWidth/2;stage.scrollTop=cy*k-stage.clientHeight/2;}}
+document.getElementById('zin').onclick=()=>setZoom(zoom*1.4);
+document.getElementById('zout').onclick=()=>setZoom(zoom/1.4);
+document.getElementById('zfit').onclick=()=>{zoom=1;layout();stage.scrollTo(0,0);};
+document.getElementById('print').onclick=()=>window.print();
+let CUR=null;
+document.getElementById('uncles').onclick=e=>{SHOW_UNCLES=!SHOW_UNCLES;e.currentTarget.setAttribute('aria-pressed',SHOW_UNCLES);e.currentTarget.textContent=SHOW_UNCLES?'إخفاء إخوان الأجداد':'إظهار إخوان الأجداد';if(CUR!=null){sheet.innerHTML=build(CUR);fitTexts(sheet.querySelector('svg'));placeLogos(sheet.querySelector('svg'));}};
+stage.addEventListener('wheel',e=>{if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setZoom(zoom*(e.deltaY<0?1.15:1/1.15));},{passive:false});
+addEventListener('resize',layout);
+sheet.addEventListener('dblclick',()=>setZoom(zoom>1.2?1:2.4));
+addEventListener('beforeprint',()=>{const s=sheet.querySelector('svg');if(s){fitTexts(s);placeLogos(s);}});
+
+(async()=>{
+  P=await loadPeople();KIDX={};
+  for(const p of Object.values(P)){if(p.father==null)continue;(KIDX[p.father]=KIDX[p.father]||[]).push(p);}
+  for(const k in KIDX)KIDX[k].sort((a,b)=>a.id-b.id);
+  const id=+(QS.get('id')||DEFAULT_ID);
+  document.getElementById('back').href='index.html?id='+id;
+  if(!P[id]){sheet.outerHTML=`<div class="msg">ما لقينا شخصاً برقم «${esc(QS.get('id'))}».<br>افتح الصفحة من زر «شجرة النسب» في بطاقة الشخص، أو اكتب الرابط بهذا الشكل: <b>nasab.html?id=19</b></div>`;return;}
+  if(QS.get('uncles')==='1'){SHOW_UNCLES=true;const b=document.getElementById('uncles');b.setAttribute('aria-pressed','true');b.textContent='إخفاء إخوان الأجداد';}
+  CUR=id;layout();sheet.innerHTML=build(id);
+  const s=sheet.querySelector('svg');fitTexts(s);
+  try{await document.fonts.ready;}catch(e){}
+  await Promise.all(['700 40px "Aref Ruqaa"','700 40px Amiri','800 40px Tajawal','500 40px Tajawal'].map(f=>document.fonts.load(f,'عربي').catch(()=>{})));
+  fitTexts(s);placeLogos(s);document.body.dataset.ready='1';
+})();
+</script>
+</body>
+</html>
