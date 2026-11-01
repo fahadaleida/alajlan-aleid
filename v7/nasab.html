@@ -28,7 +28,7 @@ body{background:var(--stage);color:#f4ead6;font-family:Tajawal,system-ui,sans-se
 .sheet{position:relative;flex:none;aspect-ratio:297/420;box-shadow:0 20px 60px #000a,0 0 0 1px #f3d27a33;background:#1b2850}
 .sheet svg{display:block;width:100%;height:100%}
 .msg{max-width:560px;margin:120px auto;text-align:center;font:500 18px Tajawal;line-height:1.8;color:#f4ead6}
-@media (max-width:600px){.bar{padding:8px}.bar a,.bar button{font-size:13px;padding:7px 10px}.bar .pdf{font-size:14px;padding:8px 14px}.bar .lg{display:none}.stage{inset:54px 0 0 0}.stage-in{padding:8px}}
+@media (max-width:600px){.bar{padding:8px 8px 10px;gap:8px 6px}.bar a,.bar button{font-size:14px;padding:0 13px;min-height:42px;display:inline-flex;align-items:center;justify-content:center}.bar .pdf{font-size:15px;padding:0 18px;min-height:44px}.bar .zoom button{min-width:44px}.stage{inset:54px 0 0 0}.stage-in{padding:8px;min-height:100%}.sheet{margin:auto}}
 @page{size:A3 portrait;margin:0}
 @media print{
   html,body{background:#fff;height:auto}
@@ -45,7 +45,7 @@ body{background:var(--stage);color:#f4ead6;font-family:Tajawal,system-ui,sans-se
   <button class="pdf" id="print" type="button">تحميل PDF / طباعة</button>
   <span class="zoom"><button id="zout" type="button" aria-label="تصغير">−</button><button id="zfit" type="button">ملاءمة</button><button id="zin" type="button" aria-label="تكبير">+</button></span>
   <button id="uncles" type="button" aria-pressed="false">إظهار إخوان الأجداد</button>
-  <a id="back" href="index.html"><span class="lg">الرجوع </span>للشجرة</a>
+  <a id="back" href="index.html"><span class="lg">الرجوع&nbsp;</span>للشجرة</a>
 </div>
 <div class="stage" id="stage"><div class="stage-in"><div class="sheet" id="sheet"></div></div></div>
 <script>
@@ -503,7 +503,7 @@ addEventListener('beforeprint',()=>{const s=sheet.querySelector('svg');if(s){fit
   for(const p of Object.values(P)){if(p.father==null)continue;(KIDX[p.father]=KIDX[p.father]||[]).push(p);}
   for(const k in KIDX)KIDX[k].sort((a,b)=>a.id-b.id);
   const id=+(QS.get('id')||DEFAULT_ID);
-  document.getElementById('back').href='index.html?id='+id;
+  document.getElementById('back').href='index.html#'+id;   // الشجرة تفتح بطاقته مباشرة
   if(!P[id]){sheet.outerHTML=`<div class="msg">ما لقينا شخصاً برقم «${esc(QS.get('id'))}».<br>افتح الصفحة من زر «شجرة النسب» في بطاقة الشخص، أو اكتب الرابط بهذا الشكل: <b>nasab.html?id=19</b></div>`;return;}
   if(QS.get('uncles')==='1'){SHOW_UNCLES=true;const b=document.getElementById('uncles');b.setAttribute('aria-pressed','true');b.textContent='إخفاء إخوان الأجداد';}
   CUR=id;layout();sheet.innerHTML=build(id);

@@ -313,6 +313,7 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
 .pull{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);z-index:16;border:0;border-radius:999px;padding:11px 22px;font-weight:800;font-size:16px;cursor:pointer;color:#3a2405;background:linear-gradient(135deg,#fff0b0,#e2b545 55%,#b8861c);box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .5s,transform .5s}
 .pull.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
 @media (max-width:760px){.pull{bottom:136px}}
+@media (min-width:761px) and (max-height:500px){.pull{left:calc(50% + 200px);bottom:12px;font-size:14px;padding:9px 16px}}   /* الجوال بالعرض: الزر ما يغطي البطاقة */
 @media (max-width:760px){body.famv .ctrl,body.famv .miniw{opacity:0;pointer-events:none}}   /* شجرة العائلة بالجوال تاخذ العرض كله */
 .peekbar{display:none}
 .navback{position:fixed;top:17px;left:138px;z-index:40;display:flex;gap:8px;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .25s,transform .25s}
@@ -381,7 +382,7 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
   #cscrim{display:block;position:fixed;inset:0;z-index:21;background:rgba(10,6,2,.45);opacity:0;pointer-events:none;transition:opacity .4s}
   #cscrim.on{opacity:1;pointer-events:auto}
   .journey{top:calc(var(--abh) + 10px)}
-  .toast{top:calc(var(--abh) + 12px);border-radius:14px;padding:10px 18px;box-shadow:0 10px 30px rgba(0,0,0,.3);white-space:normal;max-width:calc(100% - 32px);text-align:center;font-weight:700}
+  .toast{z-index:60;top:calc(var(--abh) + 12px);border-radius:14px;padding:10px 18px;box-shadow:0 10px 30px rgba(0,0,0,.3);white-space:normal;max-width:calc(100% - 32px);text-align:center;font-weight:700}
   .pull{bottom:calc(var(--tbh) + 14px)}
   .fampanel{bottom:var(--tbh);z-index:24}
   .tip{max-width:calc(100% - 24px)}
@@ -1350,7 +1351,7 @@ function descN(id){let s=0;for(const k of kidsOf(id)){s+=1+descN(k.id);}return s
 const FTM=document.createElement('canvas').getContext('2d'),ftClamp=(v,a,b)=>Math.max(a,Math.min(b,v)),ftOv=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
 const famOrd=a=>{const by=p=>p.birth?(p.cal==='g'?(+p.birth-622)*1.0307:+p.birth):9e9;return a.map((p,i)=>[p,i]).sort((x,y)=>(x[0].gender==='f')-(y[0].gender==='f')||by(x[0])-by(y[0])||x[1]-y[1]).map(x=>x[0]);};   // الأولاد ثم البنات، بترتيب الميلاد
 // المساحة المتاحة على الشاشة: بدون البطاقة يسار، الشريط والأزرار فوق، زر «شوف مكانه» وأزرار التكبير
-function ftBox(){const mob=VW<=760,pk=mob&&$('#card .peekbar'),ph=pk&&pk.offsetHeight?pk.offsetHeight+18:184,l=mob?6:404,t=mob?(CH.t?CH.t+12:108):74,r=VW-(mob?6:76),b=VH-(mob?(CH.b?CH.b+ph:194):84),W=Math.max(260,r-l),H=Math.max(320,b-t);
+function ftBox(){const mob=VW<=760,pk=mob&&$('#card .peekbar'),ph=pk&&pk.offsetHeight?pk.offsetHeight+18:184,l=mob?6:404,t=mob?(CH.t?CH.t+12:108):74,r=VW-(mob?6:76),b=VH-(mob?(CH.b?CH.b+ph:194):84),W=Math.max(260,r-l),H=Math.max(mob||VH<560?230:320,b-t);
   return{x:l,y:t,W,H,mob,obs:[]};}
 // مقاس اسم العقدة: البنت اسمها داخل الوردة إذا وسع (١٢px على الأقل)، غير كذا شريط تحتها؛ الولد شريط فيه العمر
 function ftLbl(o,fs){const p=o.p,age=ageShort(p),af=fs*.62,L={fs,rib:true,w:0,h:0,pill:null};
@@ -1541,7 +1542,7 @@ function cardLayout(id){const B=famOf(id),me=B.p,kids=kidsOf(id),sib=B.f?kidsOf(
   if(kids.length)y+=10;
   const meN={p:me,x:500,y:y+95,r:92,kind:"me"};y+=95+92+175;
   const showSib=sib.length&&sib.length<=8;const sibN=[];
-  if(showSib){const pr=N?4:8,sr=Math.ceil(sib.length/pr);for(let q=0;q<sr;q++){const row=sib.slice(q*pr,q*pr+pr),n=row.length,sp=Math.min(N?225:118,900/n);row.forEach((p,i)=>sibN.push({p,x:500-(i-(n-1)/2)*sp,y:y+40,r:N?50:38,kind:'sib',mw:sp-12}));y+=N?200:0;}y+=N?10:40+38+90;}
+  if(showSib){const pr=N?4:8,sr=Math.ceil(sib.length/pr);for(let q=0;q<sr;q++){const row=sib.slice(q*pr,q*pr+pr),n=row.length,sp=Math.min(N?225:118,900/n);row.forEach((p,i)=>sibN.push({p,x:500-(i-(n-1)/2)*sp,y:y+(N?60:40),r:N?56:38,kind:'sib',mw:sp-12}));y+=N?212:0;}y+=N?10:40+38+90;}
   const fN=B.f?{p:B.f,x:500,y:y+50,r:50,kind:'plaque'}:null;if(fN)y+=120;const gN=B.gf?{p:B.gf,x:500,y:y+50,r:50,kind:'plaque'}:null;if(gN)y+=120;
   return{W,H:y+30,B,me,kidN,meN,sibN,fN,gN,showSib,sibCount:sib.length,N};}
 function agePill(g,p,x,y,fs,hits){const t=ageShort(p),miss=!t;const txt=miss?'العمر؟':t;g.save();g.font=`800 ${fs}px Tajawal`;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
@@ -1564,7 +1565,7 @@ function paintCardTree(cv){const id=+cv.dataset.ft,L=cardLayout(id),{B,kidN,meN,
     if(!photoImg(o.p)||PHOTO_MODE){const bx=o.x+o.r*.72,by=o.y-o.r*.72,br=Math.max(16,o.r*.28);photoBadge(g,bx,by,br,PHOTO_MODE);hits.push({id:o.p.id,x:bx,y:by,r:br+4,photo:true});}};
   const girl=o=>{shapeFlower(g,o.x,o.y,o.r*1.05,0);nameIn(g,o.p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,o.p,o.x,o.y+o.r+(L.N?34:30),Math.max(L.N?32:20,o.r*.34),hits);};
   [...kidN,...sibN].forEach(o=>o.p.gender==='f'?girl(o):man(o,false));
-  if(L.showSib){g.save();g.font=`800 ${L.N?34:26}px Tajawal`;g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(B.p.gender==='f'?'إخوانها وأخواتها':'إخوانه وأخواته',500,sibN[0].y-sibN[0].r-22);g.restore();}
+  if(L.showSib){g.save();g.font=`800 ${L.N?34:26}px Tajawal`;g.textAlign='center';g.direction='rtl';const st=B.p.gender==='f'?'إخوانها وأخواتها':'إخوانه وأخواته',sy=sibN[0].y-sibN[0].r-(L.N?26:22);g.lineJoin='round';g.lineWidth=L.N?7:5;g.strokeStyle='rgba(40,22,8,.75)';g.strokeText(st,500,sy);g.fillStyle='#fff4dc';g.fillText(st,500,sy);g.restore();}
   if(kidN.length){g.save();g.translate(500,22);g.scale(1.7,1.7);ribbon(g,`${B.p.gender==='f'?'عيالها':'عيال '+B.p.name} · ${ar(kidN.length)}`,0,0,1);g.restore();}
   if(B.p.gender==='f'){shapeFlower(g,meN.x,meN.y,meN.r,0);nameIn(g,B.p.name,meN.x,meN.y,meN.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,B.p,meN.x,meN.y+meN.r+30,L.N?32:26,hits);}
   else{drawMedal(g,B.p,meN.x,meN.y,meN.r,0);nameRibbon(g,B.p.name,meN.x,meN.y+meN.r+26,36,'#9b6b06');agePill(g,B.p,meN.x,meN.y+meN.r+80,L.N?32:26,hits);
@@ -1775,9 +1776,9 @@ function nodeSprite(id){const sp=PSP.get(id);if(sp&&sp.ok)return sp.c;const q=po
   PSP.set(id,{c,ok});return ok?c:null;}
 function popNode(g,id,S,rg,s,now){const c=nodeSprite(id);if(!c){dirty=true;return false;}if(!POPT[id]||POPT[id].gone)POPT[id]={t:now};for(const k in POPT)if(k!=id&&+k!==SEL&&+k!==HOV)delete POPT[k];
   const t=Math.min(1,(now-POPT[id].t)/520),e=t<1?1+2.2*Math.pow(t-1,3)+1.2*Math.pow(t-1,2):1;if(t<1)dirty=true;   // ارتداد للأعلى
-  const base=Math.max(rg.rx,rg.ry)*s,tr=Math.max(base*1.9,VW<=760?34:44),rr=base+(tr-base)*e,lift=(rr*.9+8)*e,cx=S.x,cy=S.y-lift,k=rr/(c.width/2*0.893);
+  const base=Math.max(rg.rx,rg.ry)*s,tr=Math.max(base*1.9,VW<=760?34:44),rr=base+(tr-base)*e,lift=(rr*.9+8)*e,up=S.y-(rr*.9+8)-tr>=(VW<=760?CH.t:64)+6,cx=S.x,cy=up?S.y-lift:S.y+lift,k=rr/(c.width/2*0.893);   // قريب من الشريط العلوي: يطلع لتحت
   g.save();g.fillStyle=`rgba(40,25,5,${.28*e})`;g.beginPath();g.ellipse(S.x,S.y+base*.4,rr*.8,rr*.22,0,0,7);g.fill();   // ظل على الشجرة
-  g.strokeStyle=`rgba(255,214,90,${.8*e})`;g.lineWidth=2;g.beginPath();g.moveTo(S.x,S.y);g.lineTo(cx,cy+rr*.9);g.stroke();
+  g.strokeStyle=`rgba(255,214,90,${.8*e})`;g.lineWidth=2;g.beginPath();g.moveTo(S.x,S.y);g.lineTo(cx,cy+(up?rr:-rr)*.9);g.stroke();
   g.shadowColor='rgba(30,15,0,.55)';g.shadowBlur=18*e;g.shadowOffsetY=8*e;g.drawImage(c,cx-c.width/2*k,cy-c.height/2*k,c.width*k,c.height*k);g.shadowColor='transparent';
   g.strokeStyle='rgba(255,220,110,.95)';g.lineWidth=2.5;g.beginPath();g.ellipse(cx,cy,rg.rx/Math.max(rg.rx,rg.ry)*rr*1.02,rg.ry/Math.max(rg.rx,rg.ry)*rr*1.02,0,0,7);g.stroke();
   const sh=(now/1400)%1;if(t>=1&&id===HOV){g.globalAlpha=.35*(1-sh);g.lineWidth=2;g.beginPath();g.arc(cx,cy,rr*(1.05+sh*.35),0,7);g.stroke();dirty=true;}   // نبض خفيف
@@ -1791,7 +1792,10 @@ function setHover(id,x,y){if(id===HOV){if(id&&x!=null)moveTip(x,y);return;}HOV=i
     ${p.gender!=='f'?`<div class="c">عياله: <b>${ar(ks.length)}</b>${gk?` · أحفاده: <b>${ar(gk)}</b>`:''}${desc(id)>ks.length+gk?` · كل الذرية: <b>${ar(desc(id))}</b>`:''}</div>`:''}
     <div class="hint">${matchMedia('(pointer:coarse)').matches?'اضغط مرة ثانية للتفاصيل':'اضغط للتفاصيل'}</div>`;
   if(x!=null)moveTip(x,y);el.classList.add('show');setCrumbs(id);}
-function moveTip(x,y){const el=$('#tip'),w=el.offsetWidth||260,h=el.offsetHeight||140;el.style.left=Math.min(VW-w-8,Math.max(8,x+18))+'px';el.style.top=Math.min(VH-h-8,Math.max(110,y-h-16))+'px';}
+function moveTip(x,y){const el=$('#tip'),w=el.offsetWidth||260,h=el.offsetHeight||140;
+  if(VW<=760){const dn=y<CH.t+100,lo=y<VH/2,t=lo?y+(dn?120:36):y-110-h;   // الجوال: البطاقة ما تغطي الشخص ولا صورته المرفوعة
+    el.style.left=Math.round((VW-w)/2)+'px';el.style.top=Math.round(Math.min(VH-CH.b-h-8,Math.max(CH.t+8,t)))+'px';return;}
+  el.style.left=Math.min(VW-w-8,Math.max(8,x+18))+'px';el.style.top=Math.min(VH-h-8,Math.max(110,y-h-16))+'px';}
 // ===== شريط النسب (فتات الخبز) =====
 function setCrumbs(id){const el=$('#crumbs');if(true||!id||RUN){   // شريط النسب العلوي أُلغي بطلب صاحب الموقع
   el.classList.remove('show');return;}const c=chain(id);
