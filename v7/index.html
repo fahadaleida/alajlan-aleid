@@ -1755,7 +1755,8 @@ function buildGrid(){GRID=new Map();for(const p of Object.values(people)){const 
 function gridHit(wx,wy){if(!GRID)buildGrid();let best=null,bd=1.2;const cx=wx>>8,cy=wy>>8;
   for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const l=GRID.get((cx+i)+','+(cy+j));if(!l)continue;for(const id of l){const q=posOf(id),rg=ringOf(id),d=Math.hypot((q.x-wx)/rg.rx,(q.y-wy)/rg.ry);if(d<bd){bd=d;best=id;}}}return best;}
 function hit(sx,sy){const bn=BL&&(gl?BL.snodes:BL.nodes);if(bn&&!placing){let b=null,bd=1e9;for(const o of bn){if(o.photo||o.age)continue;const d=Math.hypot(sx-o.x,sy-o.y);if(d<Math.max(o.r,MOBILE?22:0)&&d-o.r<bd){bd=d-o.r;b=o;}}if(b)return b.id;}   // الأقرب، وباللمس هدف ٤٤px على الأقل
-  if(BL)return null;if(inBrowse())for(const r of LHIT)if(sx>=r[0]&&sx<=r[2]&&sy>=r[1]&&sy<=r[3])return r[4];const w=s2w(sx,sy);return gridHit(w.x,w.y);}
+  if(BL)return null;if(inBrowse())for(const id of[HOV,SEL]){const h=id&&POPT[id]&&POPT[id].hit;if(h&&(Math.hypot(sx-h[0],sy-h[1])<=h[2]+4||Math.hypot(sx-h[3],sy-h[4])<=h[5]))return id;}
+  if(inBrowse())for(const r of LHIT)if(sx>=r[0]&&sx<=r[2]&&sy>=r[1]&&sy<=r[3])return r[4];const w=s2w(sx,sy);return gridHit(w.x,w.y);}
 // صبغة خفيفة لكل فرع (تُرسم مرة وحدة)
 function buildTint(){const c=document.createElement('canvas');c.width=Math.ceil(PW/8);c.height=Math.ceil(PH/8);const g=c.getContext('2d');
   for(const p of Object.values(people)){const b=branchOf(p.id);if(!b||!p.pos)continue;const x=p.pos[0]/8,y=p.pos[1]/8,gr=g.createRadialGradient(x,y,0,x,y,26);gr.addColorStop(0,`rgba(${BR[b].col},.10)`);gr.addColorStop(1,`rgba(${BR[b].col},0)`);g.fillStyle=gr;g.fillRect(x-26,y-26,52,52);}
@@ -1777,6 +1778,7 @@ function nodeSprite(id){const sp=PSP.get(id);if(sp&&sp.ok)return sp.c;const q=po
 function popNode(g,id,S,rg,s,now){const c=nodeSprite(id);if(!c){dirty=true;return false;}if(!POPT[id]||POPT[id].gone)POPT[id]={t:now};for(const k in POPT)if(k!=id&&+k!==SEL&&+k!==HOV)delete POPT[k];
   const t=Math.min(1,(now-POPT[id].t)/520),e=t<1?1+2.2*Math.pow(t-1,3)+1.2*Math.pow(t-1,2):1;if(t<1)dirty=true;   // ارتداد للأعلى
   const base=Math.max(rg.rx,rg.ry)*s,tr=Math.max(base*1.9,VW<=760?34:44),rr=base+(tr-base)*e,lift=(rr*.9+8)*e,up=S.y-(rr*.9+8)-tr>=(VW<=760?CH.t:64)+6,cx=S.x,cy=up?S.y-lift:S.y+lift,k=rr/(c.width/2*0.893);   // قريب من الشريط العلوي: يطلع لتحت
+  POPT[id].hit=[cx,cy,rr,S.x,S.y,Math.max(base,10)];   // الوردة المرتفعة تغطي جيرانها: الضغط عليها يختار صاحبها هو
   g.save();g.fillStyle=`rgba(40,25,5,${.28*e})`;g.beginPath();g.ellipse(S.x,S.y+base*.4,rr*.8,rr*.22,0,0,7);g.fill();   // ظل على الشجرة
   g.strokeStyle=`rgba(255,214,90,${.8*e})`;g.lineWidth=2;g.beginPath();g.moveTo(S.x,S.y);g.lineTo(cx,cy+(up?rr:-rr)*.9);g.stroke();
   g.shadowColor='rgba(30,15,0,.55)';g.shadowBlur=18*e;g.shadowOffsetY=8*e;g.drawImage(c,cx-c.width/2*k,cy-c.height/2*k,c.width*k,c.height*k);g.shadowColor='transparent';
