@@ -1242,7 +1242,7 @@ function ftLayout(B,box){box=box||ftBox();
     let rK=[],rG=[];const r1=rm+12+lhK+rk+6;for(let q=0;q<nk;q++)rK.push(r1+q*(2*rk+lhK+10));
     const rKo=rK[nk-1];if(gkN.length){const g0=rKo+rk+lhG+rg+14;for(let q=0;q<ng;q++)rG.push(g0+q*(2*rg+lhG+7));}
     const Rl=rG.length?rG[ng-1]:rKo,rl=rG.length?rg:rk,wOut=Math.max(0,...(rG.length?gkN.map(o=>o.e+o.bt+4+o.L.w):kidN.map(o=>o.hw)));let extra=Vt-(Rl+rl*1.2+4);if(extra<0)return why('vert');
-    const e1=Math.min(extra*(rG.length?.4:.45),rG.length?100:90),e2=rG.length?Math.min(extra-e1,170):0;rK=rK.map(r=>r+e1);rG=rG.map(r=>r+e1+e2);
+    const e1=rG.length?extra*ftClamp(kidN.length/(kidN.length+gkN.length/ng),.3,.7):Math.min(extra*.45,90),e2=rG.length?Math.min(extra-e1,170):0;rK=rK.map(r=>r+e1);rG=rG.map(r=>r+e1+e2);   // الفراغ الزايد يروح للقوس الأزحم
     const RL=rG.length?rG[ng-1]:rK[nk-1],ex=ftClamp((Hh-wOut)/RL,.55,1.8);
     const P=(R,a)=>({x:cx+ex*R*Math.sin(a),y:cy-R*Math.cos(a)}),sideA=a=>Math.abs(Math.sin(a))>1.25*ex*Math.abs(Math.cos(a));   // على جنب المروحة الاسم يطلع للخارج بجنب العقدة، وفوقها تحتها
     const pb=(o,R,a)=>{const q=P(R,a),t=o.e+o.bt;if(o.lh&&o.kind!=='kid'&&sideA(a)){const y0=q.y-Math.max(t,o.lh/2),y1=q.y+Math.max(o.e,o.lh/2);return Math.sin(a)>0?[q.x-t,y0,q.x+t+4+o.L.w,y1]:[q.x-t-4-o.L.w,y0,q.x+t,y1];}return[q.x-o.hw,q.y-t,q.x+o.hw,q.y+o.e+3+o.lh];};
@@ -1301,7 +1301,7 @@ function ftLayout(B,box){box=box||ftBox();
     const mx=Math.min(ccx+FM,AW-ccx+FM)-2,my=Math.min(c+FM,AH-c+FM)-2,rx=Math.min(crx0*k,mx),ry=Math.min(cry0*k,my),miss=crx0*k-rx+cry0*k-ry;
     if(miss*1e4+k<best){best=miss*1e4+k;crown={x:ccx,y:c,rx,ry};}}
   const bot=(gN||fN)?(gN||fN).y+pry+14:cy+rm+14+meLblH+20,cb=[Math.min(x0,...plq.map(o=>o.px-o.pr-6)),y0,Math.max(x1,...plq.map(o=>o.capX+o.cw/2+4)),bot];
-  return{box,ss,FM,AW,AH,W:Math.round((AW+2*FM)*ss),H:Math.round((AH+2*FM)*ss),cx,cy,ex:R.ex,meN,fN,gN,plq,kidN,gkN,lab:R.lab,all:[meN,fN,gN,...all].filter(Boolean),br,crown,bot,cb,mfs,cs,rp,pm:PHOTO_MODE,cfg:R.sc&&{sc:+R.sc.toFixed(2),nk:R.nk,ng:R.ng,shown:gkN.filter(o=>o.kind!=='more').length,of:nG,why:WHY}};
+  return{box,ss,FM,AW,AH,W:Math.round((AW+2*FM)*ss),H:Math.round((AH+2*FM)*ss),cx,cy,ex:R.ex,meN,fN,gN,plq,kidN,gkN,lab:R.lab,all:[meN,fN,gN,...all].filter(Boolean),br,crown,bot,cb,mfs,cs,rp,pm:PHOTO_MODE,cfg:{sc:R.sc&&+R.sc.toFixed(2),nk:R.nk,ng:R.ng,shown:gkN.filter(o=>o.kind!=='more').length,of:nG,why:WHY}};
 }
 function bez(b,t){t=Math.max(0,Math.min(1,t));const u=1-t;return{x:u*u*u*b.a.x+3*u*u*t*b.c1.x+3*u*t*t*b.c2.x+t*t*t*b.b.x,y:u*u*u*b.a.y+3*u*u*t*b.c1.y+3*u*t*t*b.c2.y+t*t*t*b.b.y};}
 const bpt=(b,t)=>{if(!b.pts)return bez(b,t);t=ftClamp(t,0,1)*(b.pts.length-1);const i=Math.min(b.pts.length-2,Math.floor(t)),f=t-i,A=b.pts[i],C=b.pts[i+1];return{x:A.x+(C.x-A.x)*f,y:A.y+(C.y-A.y)*f};};
@@ -1553,7 +1553,8 @@ function openFamily(id){
 let HOV=null,SEL=null,hovT=0,INERT=null,GRID=null,DESC={},BRANCH={},TINT=null,BIGF=[],LBL=null,LHIT=[];
 const BR={8:{name:'فرع إبراهيم · العيد',col:'46,125,50'},9:{name:'فرع حمد · العجلان',col:'170,70,40'},10:{name:'فرع سليمان · الطويل',col:'50,80,160'}};
 const inBrowse=()=>!RUN;
-function onReindex(){GRID=null;DESC={};BRANCH={};TINT=null;BIGF=[];LBL=null;LBD={};}
+function onReindex(){GRID=null;DESC={};BRANCH={};TINT=null;BIGF=[];LBL=null;LBD={};
+  document.querySelectorAll('.bc[data-br] em').forEach(e=>e.textContent=ar(brCount(+e.parentNode.dataset.br)));}   // أعداد الفروع بعد تحميل people_all
 function desc(id){if(DESC[id]!=null)return DESC[id];let n=0;for(const k of kidsOf(id))n+=1+desc(k.id);return DESC[id]=n;}
 // ===== إضاءة فرع في مكانه: كل دوائر الفرع تتوهج (موجة من جد الفرع) وباقي التاج يخفت — بدون ما تطير الكاميرا =====
 let LIT=null,LITH=null,LBD={};   // LIT={b,t0,out}: الفرع المضاء، LITH: معاينة عند التمرير على الشريحة
@@ -2149,7 +2150,7 @@ if(QS.includes('demoages')){const B={19:1405,26:1375,22:1435,23:1438,27:1400,28:
 {const pv=(QS.match(/panel=(\d+)/)||[])[1],ph=(QS.match(/phover=(\d+)/)||[])[1];if(pv)setTimeout(()=>openPanel(+pv),2500);if(ph)setTimeout(()=>{const r=PANELS[+ph].r;cam={...cam,x:(r[0]+r[2])/2,y:(r[1]+r[3])/2-600,s:VW<=760?.08:.18};dirty=true;setTimeout(()=>setPanelHover(+ph),300);},2200);}
 
 {const ob=(QS.match(/lightbranch=(\d+)/)||[])[1];if(ob)setTimeout(()=>lightBranch(+ob),2500);}
-{const fm=(QS.match(/family=(\d+)/)||[])[1];if(fm)setTimeout(()=>openFamily(+fm),2500);}   // للاختبار: family=رقم يفتح شجرة عائلته مباشرة
+{const fm=(QS.match(/family=(\d+)/)||[])[1];if(fm)setTimeout(()=>{openFamily(+fm);console.log('FTCFG',JSON.stringify(BL.ftl.cfg),BL.ftl.box.W,BL.ftl.box.H,BL.ftl.cy);},2500);}   // للاختبار: family=رقم يفتح شجرة عائلته مباشرة
 {const md=(QS.match(/medal=(\d)/)||[])[1];if(md)setTimeout(()=>openMedal(+md),2500);}
 if(/[?&]orig\b/.test(QS))setTimeout(()=>showOrig(true),3500);
 
