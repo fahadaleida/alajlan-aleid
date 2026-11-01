@@ -1221,7 +1221,7 @@ function ftLayout(B,box){box=box||ftBox();
   // الجذع: هو، ثم لوحة الأب، ثم الجد (من فوق لتحت)
   const dn=ftClamp((kids.length+nG)/36,0,1),rm=ftClamp(Math.min(AH*(.095-.023*dn),AW*.09),30,62),rp=ftClamp(AH*(.042-.012*dn),19,34),   // العائلة الصغيرة: ميدالية ولوحات أكبر
    pry=rp*.82,mfs=ftClamp(rm*.46,15,26),cs=ftClamp(rp*.72,13,22);
-  const mAge=ageShort(me),meLblH=me.gender!=='f'&&me.photo?mfs*1.25+(mAge?mfs*.62*1.25:0)+(PHOTO_MODE&&!mAge?mfs*.8*1.5+3:0):mAge||PHOTO_MODE?mfs*.8*1.5:0;   // مكان اسمه/عمره تحت الميدالية على قد اللي ينرسم
+  const mAge=ageShort(me),meLblH=me.gender!=='f'&&me.photo?mfs*1.25+(mAge?mfs*.62*1.25:0)+(PHOTO_MODE&&!mAge?mfs*.8*1.5+3:0):Math.max(box.mob?mfs*1.9:0,mAge||PHOTO_MODE?mfs*.8*1.5:0);   // بالجوال نخلي فسحة تحت الميدالية تمر منها الأغصان الجانبية   // مكان اسمه/عمره تحت الميدالية على قد اللي ينرسم
   const cy=AH-14-(gf?2*pry+10:0)-(f?2*pry+8:0)-meLblH-rm-14;
   const meN={p:me,x:cx,y:cy,r:rm,kind:'me'},plq=[];let py=cy+rm+14+meLblH+8;
   const fN=f?{p:f,x:cx,y:py+pry,r:rp,kind:'plaque'}:null;if(f)py+=2*pry+10;const gN=gf?{p:gf,x:cx,y:py+pry,r:rp,kind:'plaque'}:null;
@@ -2150,7 +2150,7 @@ if(QS.includes('demoages')){const B={19:1405,26:1375,22:1435,23:1438,27:1400,28:
 {const pv=(QS.match(/panel=(\d+)/)||[])[1],ph=(QS.match(/phover=(\d+)/)||[])[1];if(pv)setTimeout(()=>openPanel(+pv),2500);if(ph)setTimeout(()=>{const r=PANELS[+ph].r;cam={...cam,x:(r[0]+r[2])/2,y:(r[1]+r[3])/2-600,s:VW<=760?.08:.18};dirty=true;setTimeout(()=>setPanelHover(+ph),300);},2200);}
 
 {const ob=(QS.match(/lightbranch=(\d+)/)||[])[1];if(ob)setTimeout(()=>lightBranch(+ob),2500);}
-{const fm=(QS.match(/family=(\d+)/)||[])[1];if(fm)setTimeout(()=>{openFamily(+fm);console.log('FTCFG',JSON.stringify(BL.ftl.cfg),BL.ftl.box.W,BL.ftl.box.H,BL.ftl.cy);},2500);}   // للاختبار: family=رقم يفتح شجرة عائلته مباشرة
+{const fm=(QS.match(/family=(\d+)/)||[])[1];if(fm)setTimeout(()=>openFamily(+fm),2500);}   // للاختبار: family=رقم يفتح شجرة عائلته مباشرة
 {const md=(QS.match(/medal=(\d)/)||[])[1];if(md)setTimeout(()=>openMedal(+md),2500);}
 if(/[?&]orig\b/.test(QS))setTimeout(()=>showOrig(true),3500);
 
