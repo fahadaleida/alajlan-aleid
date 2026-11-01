@@ -509,11 +509,11 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
       <label>الجنس<select name="gender"><option value="m">ذكر</option><option value="f">أنثى</option></select></label>
     </div>
     <label>لقب أو وصف (اختياري)<input name="title"></label>
-    <div class="two">
+    <div class="two" hidden>
       <label>سنة الميلاد<input name="birth" inputmode="numeric" placeholder="مثال: 1410"></label>
       <label>التقويم<select name="cal"><option value="h">هجري</option><option value="g">ميلادي</option></select></label>
     </div>
-    <label>سنة الوفاة (إن وجدت)<input name="death" inputmode="numeric"></label>
+    <label hidden>سنة الوفاة (إن وجدت)<input name="death" inputmode="numeric"></label>
     <label>ملاحظات<textarea name="notes" rows="3"></textarea></label>
     <div class="actions"><button class="btn dark" value="ok">حفظ</button><button class="btn" value="cancel" formnovalidate>إلغاء</button></div>
   </form>
@@ -593,6 +593,7 @@ const SEED=[
   {id:22,name:'سعد',gender:'m',father:19,pos:[745,7128],r:38},
   {id:23,name:'لينا',gender:'f',father:19,pos:[615,7155],r:36},
 ];
+const AGES=false;   // الأعمار مخفية بطلب فهد (true يرجّعها)
 const PW=7387,PH=10554,TILE=512,AJLAN_ID=9,DEFAULT_ID=19,KEY='ajlan-aleid-v7';
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 let people=(()=>{try{const s=store.get(KEY);if(s){const o=JSON.parse(s);for(const p of SEED)if(!o[p.id])o[p.id]=structuredClone(p);return o;}}catch(e){}return Object.fromEntries(SEED.map(p=>[p.id,structuredClone(p)]))})();
@@ -1478,7 +1479,7 @@ function portrait(g,p,x,y,r,rim,rimW){const im=photoImg(p);g.save();g.shadowColo
   g.fillStyle='#fff6d8';g.beginPath();g.arc(x,y,r+2,0,7);g.fill();g.beginPath();g.arc(x,y,r,0,7);g.clip();if(im)g.drawImage(im,x-r,y-r,r*2,r*2);else silhouette(g,x,y,r);g.restore();return!!im;}
 function photoBadge(g,x,y,r,strong){g.save();g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=6;g.fillStyle=strong?'#e8bd3c':'#fff';g.beginPath();g.arc(x,y,r,0,7);g.fill();g.shadowColor='transparent';
   g.lineWidth=2;g.strokeStyle='#9b6b06';g.stroke();g.font=`${r*1.15}px system-ui`;g.textAlign='center';g.textBaseline='middle';g.fillText('📷',x,y+1);g.restore();}
-function ageLine(g,p,x,y,fs,badges){const t=ageShort(p);
+function ageLine(g,p,x,y,fs,badges){if(!AGES)return;const t=ageShort(p);
   if(t){g.save();g.font=`800 ${fs}px Tajawal`;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';const w=g.measureText(t).width+fs,h=fs*1.45;g.shadowColor='rgba(0,0,0,.25)';g.shadowBlur=4;g.fillStyle='#fff';g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();g.shadowColor='transparent';g.fillStyle=p.death?'#6b4a1e':'#2b1d10';g.fillText(t,x,y+1);g.restore();}
   else if(PHOTO_MODE){const w=fs*4.2,h=fs*1.5;g.save();g.fillStyle='#fff8e6';g.strokeStyle='#c9970f';g.lineWidth=1.5;g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();g.stroke();
     g.font=`800 ${fs*.85}px Tajawal`;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';g.fillStyle='#9a6a00';g.fillText('+ العمر',x,y+1);g.restore();badges.push({id:p.id,x,y,r:w/2,age:true});}}
@@ -1547,7 +1548,7 @@ function cardLayout(id){const B=famOf(id),me=B.p,kids=kidsOf(id),sib=B.f?kidsOf(
   if(showSib){const pr=N?4:8,sr=Math.ceil(sib.length/pr);for(let q=0;q<sr;q++){const row=sib.slice(q*pr,q*pr+pr),n=row.length,sp=Math.min(N?225:118,900/n);row.forEach((p,i)=>sibN.push({p,x:500-(i-(n-1)/2)*sp,y:y+(N?60:40),r:N?56:38,kind:'sib',mw:sp-12}));y+=N?212:0;}y+=N?10:40+38+90;}
   const fN=B.f?{p:B.f,x:500,y:y+50,r:50,kind:'plaque'}:null;if(fN)y+=120;const gN=B.gf?{p:B.gf,x:500,y:y+50,r:50,kind:'plaque'}:null;if(gN)y+=120;
   return{W,H:y+30,B,me,kidN,meN,sibN,fN,gN,showSib,sibCount:sib.length,N};}
-function agePill(g,p,x,y,fs,hits){const t=ageShort(p),miss=!t;const txt=miss?'العمر؟':t;g.save();g.font=`800 ${fs}px Tajawal`;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
+function agePill(g,p,x,y,fs,hits){if(!AGES)return;const t=ageShort(p),miss=!t;const txt=miss?'العمر؟':t;g.save();g.font=`800 ${fs}px Tajawal`;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
   const w=g.measureText(txt).width+fs*1.1,h=fs*1.5;g.fillStyle=miss?'rgba(255,255,255,.75)':p.death?'#efe4d0':'#fff';g.strokeStyle=miss?'#c9b48a':'#c9970f';g.lineWidth=1.6;if(miss)g.setLineDash([5,4]);
   g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();g.stroke();g.setLineDash([]);g.fillStyle=miss?'#a08a60':p.death?'#6b4a1e':'#2b1d10';g.fillText(txt,x,y+1);g.restore();
   if(miss)hits.push({id:p.id,x,y,r:w/2+4,age:true});}
@@ -2138,7 +2139,7 @@ addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const c=e.t
 // ===================================================================
 function currentYear(cal){if(cal==='g')return new Date().getFullYear();
   try{return parseInt(new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{year:'numeric'}).formatToParts(new Date()).find(x=>x.type==='year').value);}catch(e){return Math.round((new Date().getFullYear()-622)*1.0307);}}
-function ageText(p){if(!p.birth)return null;const b=+p.birth;if(p.death)return`توفي ${ar(p.death)}${p.cal==='g'?'م':'هـ'} عن ${ar(p.death-b)} سنة`;return`${ar(currentYear(p.cal)-b)} سنة`;}
+function ageText(p){if(!AGES||!p.birth)return null;const b=+p.birth;if(p.death)return`توفي ${ar(p.death)}${p.cal==='g'?'م':'هـ'} عن ${ar(p.death-b)} سنة`;return`${ar(currentYear(p.cal)-b)} سنة`;}
 function descCount(id){let s=0;for(const k of kidsOf(id)){s++;if(k.gender==='m')s+=descCount(k.id);}return s;}
 // شجرة مختصرة للشخص: جده، أبوه، هو وإخوانه، وعياله
 function miniTree(id){
@@ -2299,7 +2300,7 @@ function nasabChain(id){
   return h+'</ol>';
 }
 
-function ageShort(p){if(p.death)return'رحمه الله';if(!p.birth)return'';return`${ar(Math.max(0,currentYear(p.cal)-(+p.birth)))} سنة`;}
+function ageShort(p){if(!AGES)return'';if(p.death)return'رحمه الله';if(!p.birth)return'';return`${ar(Math.max(0,currentYear(p.cal)-(+p.birth)))} سنة`;}
 // إدخال سريع لسنة الميلاد
 function askBirth(id,x,y){document.querySelector('.agepop')?.remove();const p=people[id],d=document.createElement('div');d.className='agepop';d.style.left=Math.min(innerWidth-230,Math.max(8,x-110))+'px';d.style.top=Math.max(8,y-70)+'px';
   d.innerHTML=`<b>سنة ميلاد ${p.name}</b><div><input inputmode="numeric" placeholder="مثال: ١٤١٠" ><select><option value="h">هجري</option><option value="g">ميلادي</option></select><button class="btn dark">حفظ</button></div>`;
