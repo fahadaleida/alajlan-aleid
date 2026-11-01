@@ -537,6 +537,8 @@ const QS=location.search;
 if(QS.includes('raf'))window.requestAnimationFrame=cb=>setTimeout(()=>cb(performance.now()),33);
 const SNAP=(QS.match(/snap=([\d,]+)/)||[])[1];
 const FORCE2D=QS.includes('nogl');
+// خلفية البوستر الأصلية بدل مشهد المعالم: ?bg=poster (أو ?bg=scene للرجوع) — تنحفظ في الجهاز
+const POSTERBG=(()=>{try{if(QS.includes('bg=poster'))localStorage.setItem('ajlan-bg','poster');if(QS.includes('bg=scene'))localStorage.removeItem('ajlan-bg');return localStorage.getItem('ajlan-bg')==='poster';}catch(e){return QS.includes('bg=poster');}})();
 if(SNAP)setTimeout(()=>{const d=document.createElement("pre");d.id="sched";d.textContent=JSON.stringify(typeof TN!=="undefined"&&TN?TN.sched.map(e=>[e.m,+e.t0.toFixed(2),e.k]):null);document.body.appendChild(d);},+SNAP.split(",")[0]);
 // للاختبار: domshot=ms يثبّت صورة اللوحتين كـ<img> عشان لقطة الشاشة الكاملة (مع البطاقات) تطلع صحيحة
 {const ds=(QS.match(/domshot=(\d+)/)||[])[1];if(ds)setTimeout(()=>{const a=document.getElementById('gl'),b=document.getElementById('cv'),c=document.createElement('canvas');c.width=b.width;c.height=b.height;const g=c.getContext('2d');g.drawImage(a,0,0,c.width,c.height);g.drawImage(b,0,0);
@@ -844,9 +846,9 @@ function initGL(){
     const upRep=(img,fmt)=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);try{gl.texImage2D(gl.TEXTURE_2D,0,fmt,fmt,gl.UNSIGNED_BYTE,img);}catch(e){return null;}gl.generateMipmap(gl.TEXTURE_2D);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.MIRRORED_REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return{tex:t,w:img.naturalWidth,h:img.naturalHeight};};
     // الخلفية: v7/bg/bg-scene.jpg (بانوراما المعلمين، يفضّل 3840×1600، تُعرض بملء الشاشة) و v7/bg/crown-mask.png (قناع قص الشجرة)
-    loadImg(innerHeight>innerWidth*1.15?'bg/bg-scene-portrait.jpg':'bg/bg-scene.jpg',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
-    loadImg('bg/node-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.node=t;});
-    loadImg('bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
+    if(!POSTERBG)loadImg(innerHeight>innerWidth*1.15?'bg/bg-scene-portrait.jpg':'bg/bg-scene.jpg',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
+    if(!POSTERBG)loadImg('bg/node-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.node=t;});
+    if(!POSTERBG)loadImg('bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
     try{initStageGL();}catch(e){console.warn('stage off:',e);G.bb=null;}
     glc.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback2D();});
     return true;
@@ -1373,12 +1375,13 @@ function ftLayout(B,box){box=box||ftBox();
   const Vt=cy-10,Hh=AW/2-4,TMAX=(box.mob?124:104)*RAD,TMK=(box.mob?136:126)*RAD;   // الجوال ضيق: المروحة تنزل أكثر بجنب الجذع
   // يبني تخطيط بمقاس معيّن (sc) وعدد صفوف للعيال (nk) والأحفاد (ng)، ويرجّع null إذا فيه أي تداخل
   const WHY={},why=k=>(WHY[k]=(WHY[k]||0)+1,null);
-  function build(sc,nk,ng,show){
+  function build(sc,nk,ng,show,fold,kc=kids.length){   // fold: الأحفاد ينطوون «+N» على الولد نفسه؛ kc: كم ولد ينعرض والباقي «+N» واحدة
     const rk=Math.max(15,46*sc),rg=Math.max(10.5,34*sc),fk=Math.max(12.5,20*sc),fg=Math.max(12,17*sc);
     const mk=(p,r,kind,fs,extra)=>{const o={p,r:p.gender==='f'?r*.9:r,kind,...extra};o.e=p.gender==='f'||kind==='more'?o.r*1.13:o.r+Math.max(2,o.r*.1);o.br=Math.max(7.5,o.r*.3)*(PHOTO_MODE?1.2:1);
-      o.bt=p.gender!=='f'&&kind!=='more'?Math.max(0,o.r*.74+o.br-o.e):0;o.L=ftLbl(o,fs);o.hw=Math.max(o.e+o.bt,o.L.w/2)+2;o.lh=o.L.h;return o;};
-    const kidN=kids.map((p,i)=>mk(p,rk,'kid',fk,{i,row:i%nk})),gkN=[];let j=0;
-    kids.forEach((k,i)=>{const s=Math.min(G[i].length,show[i]);G[i].slice(0,s).forEach(p=>gkN.push(mk(p,rg,'gk',fg,{par:kidN[i],sec:i,row:(j++)%ng})));
+      o.bt=(p.gender!=='f'||o.gm)&&kind!=='more'?Math.max(0,o.r*.74+o.br-o.e):0;o.L=ftLbl(o,fs);o.hw=Math.max(o.e+o.bt,o.L.w/2)+2;o.lh=o.L.h;return o;};
+    const kidN=kids.slice(0,kc).map((p,i)=>mk(p,rk,'kid',fk,{i,row:i%nk,gm:fold?G[i].length:0})),gkN=[];let j=0;
+    if(kc<kids.length)kidN.push(mk(me,rk*.9,'more',fk,{i:kc,row:kc%nk,n:kids.length-kc,km:1}));
+    if(!fold)kids.slice(0,kc).forEach((k,i)=>{const s=Math.min(G[i].length,show[i]);G[i].slice(0,s).forEach(p=>gkN.push(mk(p,rg,'gk',fg,{par:kidN[i],sec:i,row:(j++)%ng})));
       if(s<G[i].length)gkN.push(mk(k,Math.max(14,rg*1.1),'more',fg,{par:kidN[i],sec:i,row:(j++)%ng,n:G[i].length-s}));});
     const lhK=Math.max(0,...kidN.map(o=>o.lh)),lhG=Math.max(0,...gkN.map(o=>o.lh));
     let rK=[],rG=[];const r1=rm+12+lhK+rk+6;for(let q=0;q<nk;q++)rK.push(r1+q*(2*rk+lhK+10));
@@ -1427,6 +1430,10 @@ function ftLayout(B,box){box=box||ftBox();
   let show=G.map(x=>x.length),R=null;const NKS=kids.length>8?[1,2,3]:kids.length>4?[1,2]:[1];
   srch:for(let si=0;si<17;si++){const sc=Math.pow(.92,si);for(const nk of NKS)for(const ng of(nG?[1,2,3]:[1])){R=build(sc,nk,ng,show);if(R)break srch;}}
   for(let M=Math.floor(nG*.85);!R&&M>=0;M=M?Math.floor(M*.82):-1){show=G.map(x=>x.length?Math.max(1,Math.floor(x.length*M/nG)):0);for(const nk of NKS)for(const ng of[3,2,1]){if(!R)R=build(.3,nk,ng,show);}}
+  // الجوال ضيق: الأحفاد ينطوون «+N» على أبوهم، وإذا العيال كثير مرة نعرض أول كم واحد و«+N» للباقي (البطاقة فيها الكل)
+  const NK2=box.mob||kids.length>12?[1,2,3,4]:NKS;
+  if(!R)srch2:for(let si=0;si<17;si+=2){for(const nk of NK2){R=build(Math.pow(.92,si),nk,1,null,1);if(R)break srch2;}}
+  for(let kc=kids.length-1;!R&&kc>=2;kc--)for(const nk of NK2){if(!R)R=build(.3,nk,1,null,1,kc);}
   if(!R)R=[1,2,3].reduce((r,nk)=>r||build(.3,nk,3,G.map(()=>0)),null)||{kidN:[],gkN:[],all:[],rK:[],rG:[],ex:1,P:()=>({x:cx,y:cy}),lab:[],NB:[]};
   const{kidN,gkN,all,P}=R;
   // الأغصان: منحنيات قطبية — تطلع من الأب بزاويته وتنفرد لزاوية الولد قبل ما توصل لصفّه، فما تتقاطع أبداً
@@ -1479,6 +1486,9 @@ function ftNode(g,o,badges){const p=o.p,Lb=o.L;
   if(p.gender==='f'){shapeFlower(g,o.x,o.y,o.r*1.05,0);if(!Lb.rib)nameIn(g,p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');}
   else{const hk=kidsOf(p.id).length,has=portrait(g,p,o.x,o.y,o.r,hk?'#123d1e':'#5cb85c',hk?Math.max(2.5,o.r*.1):Math.max(2,o.r*.07));
     if(!has||PHOTO_MODE){const bx=o.x+o.r*.74,by=o.y-o.r*.74;photoBadge(g,bx,by,o.br,PHOTO_MODE);badges.push({id:p.id,x:bx,y:by,r:o.br+3,photo:true});}}
+  if(o.gm){const t='+'+ar(o.gm),fs=Math.max(12,o.br*1.15);g.save();g.font=`${fs}px Lalezar`;const w=g.measureText(t).width+fs*.7,h=fs*1.3,bx=o.x-o.r*.74,by=o.y-o.r*.74;   // أحفاد منطويين
+    g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=5;g.fillStyle='#fff8e6';g.beginPath();g.roundRect(bx-w/2,by-h/2,w,h,h/2);g.fill();g.shadowColor='transparent';g.lineWidth=1.5;g.strokeStyle='#b8861c';g.stroke();
+    g.fillStyle='#7a5208';g.textAlign='center';g.textBaseline='middle';g.direction='ltr';g.fillText(t,bx,by+fs*.08);g.restore();}
   if(o.lx==null)return;let y=o.ly;
   if(Lb.rib){nameRibbon(g,p.name,o.lx,y+Lb.fs*.62,Lb.fs,p.gender==='f'?'#a3305f':kidsOf(p.id).length?'#123d1e':'#2e7d32',ageShort(p));y+=Lb.rh+3;}
   if(Lb.pill)ageLine(g,p,o.lx,y+Lb.pill.h/2,Lb.pill.fs,badges);}
@@ -1510,7 +1520,7 @@ function paintFamilyTree(g,L,B,t,now,part='all'){
   if(part!=='static'){P0(meN,seg(t,1.1,1.6),()=>drawMedal(g,B.p,meN.x,meN.y,meN.r,now));
     if(t>1.4&&B.p.gender!=='f'&&(!photoImg(B.p)||PHOTO_MODE)){const r=meN.r*.3*(PHOTO_MODE?1.2:1),bx=meN.x+meN.r*.75,by=meN.y-meN.r*.75;photoBadge(g,bx,by,r,PHOTO_MODE);badges.push({id:B.p.id,x:bx,y:by,r:r+5,photo:true});}}
   function P0(o,a,f){pop(g,o,a,now,f);}
-  return[...badges,...(part==='me'?[meN]:part==='static'?L.all.filter(o=>o!==meN):L.all).map(o=>({id:o.p.id,x:o.x,y:o.y,r:o.kind==='plaque'?o.r*1.8:o.kind==='me'?o.r+6:o.r*1.08}))];
+  return[...badges,...(part==='me'?[meN]:part==='static'?L.all.filter(o=>o!==meN):L.all).map(o=>({id:o.km?-o.p.id:o.p.id,x:o.x,y:o.y,r:o.kind==='plaque'?o.r*1.8:o.kind==='me'?o.r+6:o.r*1.08}))];
 }
 // بعد ما تخلص الحركة نرسم الثابت مرة كل شوي ونرسم الميدالية فوقه كل فريم (أخف بكثير على الجوال)
 function drawFamilyTree(now,dt){
@@ -1743,7 +1753,7 @@ function buildGrid(){GRID=new Map();for(const p of Object.values(people)){const 
   BIGF=Object.values(people).filter(p=>p.gender!=='f'&&p.id>7&&p.pos&&desc(p.id)>=6).map(p=>({id:p.id,n:desc(p.id)})).sort((a,b)=>b.n-a.n);}
 function gridHit(wx,wy){if(!GRID)buildGrid();let best=null,bd=1.2;const cx=wx>>8,cy=wy>>8;
   for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const l=GRID.get((cx+i)+','+(cy+j));if(!l)continue;for(const id of l){const q=posOf(id),rg=ringOf(id),d=Math.hypot((q.x-wx)/rg.rx,(q.y-wy)/rg.ry);if(d<bd){bd=d;best=id;}}}return best;}
-function hit(sx,sy){const bn=BL&&(gl?BL.snodes:BL.nodes);if(bn&&!placing){for(const o of bn.filter(o=>!o.photo&&!o.age))if(Math.hypot(sx-o.x,sy-o.y)<o.r)return o.id;}
+function hit(sx,sy){const bn=BL&&(gl?BL.snodes:BL.nodes);if(bn&&!placing){let b=null,bd=1e9;for(const o of bn){if(o.photo||o.age)continue;const d=Math.hypot(sx-o.x,sy-o.y);if(d<Math.max(o.r,MOBILE?22:0)&&d-o.r<bd){bd=d-o.r;b=o;}}if(b)return b.id;}   // الأقرب، وباللمس هدف ٤٤px على الأقل
   if(BL)return null;if(inBrowse())for(const r of LHIT)if(sx>=r[0]&&sx<=r[2]&&sy>=r[1]&&sy<=r[3])return r[4];const w=s2w(sx,sy);return gridHit(w.x,w.y);}
 // صبغة خفيفة لكل فرع (تُرسم مرة وحدة)
 function buildTint(){const c=document.createElement('canvas');c.width=Math.ceil(PW/8);c.height=Math.ceil(PH/8);const g=c.getContext('2d');
@@ -1801,7 +1811,7 @@ function drawBrowse(g,now){LHIT=[];if(!inBrowse())return;g.save();g.setTransform
   if(!GRID)buildGrid();if(!TINT)buildTint();for(const r of domRects())O.put(r);
   // بعيد: صبغة الفروع وأسماؤها الكبيرة
   const far=clamp01((fs*2.2-s)/(fs*1.2));
-  if(far>0&&!(LIT||LITH)){const o=w2s(0,0);g.globalAlpha=far*(G&&G.crown?.12:1);g.drawImage(TINT.c,o.x,o.y,PW*s,PH*s);g.globalAlpha=1;}   // أسماء الفروع انتقلت للعمود الجانبي (فروع الشجرة)
+  if(far>0&&!(LIT||LITH)){const o=w2s(0,0);g.globalAlpha=far*(G&&G.crown||POSTERBG?.12:1);g.drawImage(TINT.c,o.x,o.y,PW*s,PH*s);g.globalAlpha=1;}   // أسماء الفروع انتقلت للعمود الجانبي (فروع الشجرة)
   drawLit(g,now,s);
   // التمييز: المحدد والممرَّر عليه
   const marks=[];
@@ -1864,7 +1874,7 @@ ov.addEventListener('pointerup',e=>{up(e);if(moved){if(performance.now()-lastMv<
   if(placing){const w=s2w(e.clientX,e.clientY),id=placing;placing=null;Object.assign(people[id],{pos:[Math.round(w.x),Math.round(w.y)],r:people[id].r||48});save();toast('تم تحديد المكان ✓');browseSelect(id);return;}
   if(BL&&BL.snodes){const pb=BL.snodes.find(o=>(o.photo||o.age)&&Math.hypot(e.clientX-o.x,e.clientY-o.y)<o.r);if(pb){if(pb.age)askBirth(pb.id,e.clientX,e.clientY);else openPhotoFor(pb.id);return;}}
   const id=hit(e.clientX,e.clientY);
-  if(BL){if(id)openFamily(id);return;}
+  if(BL){if(id<0){showCard(-id);sheetTo('full');}else if(id)openFamily(id);return;}   // «+N» للعيال الزايدين: القائمة الكاملة بالبطاقة
   if(!id){const pi=panelAt(e.clientX,e.clientY);if(pi>=0){setHover(null);setPanelHover(-1);openPanel(pi);return;}if(e.pointerType==='touch'&&dblTap(e))return;setHover(null);return;}
   if(e.pointerType==='touch'&&HOV!==id){setHover(id,e.clientX,e.clientY);return;}
   browseSelect(id);});
@@ -2045,9 +2055,9 @@ function buildDecor(){buildTitle();DECO.meds=MEDS.map(buildMedal);}
 const LOGO=new Image();LOGO.onload=()=>{dirty=true;};LOGO.src='bg/logo.png';
 function drawDecor(g){if(!gl||BL||(RUN&&!RUN.done&&RUN.mode!=='poster'&&cam.pitch>.1))return;if(!DECO.title)buildDecor();g.save();g.setTransform(DPR,0,0,DPR,0,0);
   const put=(cv,x0,y0,x1,y1)=>{const a=w2s(x0,y0),b=w2s(x1,y1);if(a.behind||b.behind)return;g.drawImage(cv,a.x,a.y,b.x-a.x,b.y-a.y);};
-  put(DECO.title,300,120,7087,1300);
+  if(!POSTERBG)put(DECO.title,300,120,7087,1300);
   // شعار العائلة على جانبي العنوان
-  if(LOGO.complete&&LOGO.naturalWidth){const h=820,w=h*LOGO.naturalWidth/LOGO.naturalHeight;for(const cx of[3693-3200,3693+3200])put(LOGO,cx-w/2,690-h/2,cx+w/2,690+h/2);}
+  if(!POSTERBG&&LOGO.complete&&LOGO.naturalWidth){const h=820,w=h*LOGO.naturalWidth/LOGO.naturalHeight;for(const cx of[3693-3200,3693+3200])put(LOGO,cx-w/2,690-h/2,cx+w/2,690+h/2);}
   drawTrunk(g);g.restore();}
 // ألواح الجذع الذهبية: فوق ألواح الطبعة نفسها (نفس المكان والمقاس، مقاسة من الصورة)، تكبر شوي من بعيد عشان تنقرا، وتغطي اللوح المطبوع بالكامل عند التقريب
 const TPL=[[7,'علي',3696,9260,229,132,'الجد الجامع'],[6,'فهد',3690,9487,173,57],[5,'سليمان',3692,9633,196,58],[4,'محمد',3692,9773,221,58,'قاضي ثرمداء'],[3,'عيد',3694,9919,243,61],[2,'المطرفي',3695,10065,283,61]];
