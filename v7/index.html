@@ -1889,12 +1889,12 @@ ov.addEventListener('pointerdown',e=>{ov.setPointerCapture(e.pointerId);ptrs.set
 ov.addEventListener('pointermove',e=>{
   if(!ptrs.has(e.pointerId)){if(e.pointerType==='touch')return;const id=hit(e.clientX,e.clientY),pi=id?-1:panelAt(e.clientX,e.clientY);ov.style.cursor=id?'pointer':pi>=0?'zoom-in':'grab';setPanelHover(pi);if(inBrowse())setHover(id,e.clientX,e.clientY);return;}
   const pr=ptrs.get(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(ptrs.size===1){if(Math.hypot(e.clientX-downAt.x,e.clientY-downAt.y)>5&&!moved){moved=true;if(RUN&&RUN.done)exitFamily();setHover(null);}
+  if(ptrs.size===1){if(Math.hypot(e.clientX-downAt.x,e.clientY-downAt.y)>(e.pointerType==='touch'?12:5)&&!moved){moved=true;lastMv=performance.now();if(RUN&&RUN.done)exitFamily();setHover(null);}   // الإصبع يتحرك شوي وقت الضغط: لا نحسبها سحب إلا بعد ١٢px
     if(moved){const a=s2w(pr.x,pr.y),b=s2w(e.clientX,e.clientY);cam.x+=a.x-b.x;cam.y+=a.y-b.y;const t=performance.now(),dt=Math.max(1,t-lastMv);lastMv=t;vel={x:vel.x*.6+(e.clientX-pr.x)/dt*.4,y:vel.y*.6+(e.clientY-pr.y)/dt*.4};}}
   else if(ptrs.size===2){const[a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)zoomAt(d/pinch,(a.x+b.x)/2,(a.y+b.y)/2);pinch=d;if(!moved&&RUN&&RUN.done)exitFamily();moved=true;}
   dirty=true;});
 const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(!ptrs.size)ov.classList.remove('drag');};
-ov.addEventListener('pointerup',e=>{up(e);if(moved){if(performance.now()-lastMv<60&&Math.hypot(vel.x,vel.y)>.15&&inBrowse())INERT={...vel};return;}
+ov.addEventListener('pointerup',e=>{up(e);if(moved){if(performance.now()-lastMv<(e.pointerType==='touch'?100:60)&&Math.hypot(vel.x,vel.y)>.12&&inBrowse())INERT={...vel};return;}
   if(placing){const w=s2w(e.clientX,e.clientY),id=placing;placing=null;Object.assign(people[id],{pos:[Math.round(w.x),Math.round(w.y)],r:people[id].r||48});save();toast('تم تحديد المكان ✓');browseSelect(id);return;}
   if(BL&&BL.snodes){const pb=BL.snodes.find(o=>(o.photo||o.age)&&Math.hypot(e.clientX-o.x,e.clientY-o.y)<o.r);if(pb){if(pb.age)askBirth(pb.id,e.clientX,e.clientY);else openPhotoFor(pb.id);return;}}
   const id=hit(e.clientX,e.clientY);
@@ -1908,7 +1908,7 @@ ov.addEventListener('wheel',e=>{e.preventDefault();camTween=null;INERT=null;if(R
 ov.addEventListener('dblclick',e=>{if(performance.now()-LTZ<700)return;camTween=null;zoomAt(2,e.clientX,e.clientY);});
 function zoomAt(f,sx,sy){const ns=Math.min(3,Math.max(fitView().s*.9,cam.s*f)),w=s2w(sx,sy);cam.s=ns;const b=s2w(sx,sy);cam.x+=w.x-b.x;cam.y+=w.y-b.y;clampCam();dirty=true;}
 function clampCam(){if(!inBrowse())return;const m=VW/2/cam.s*.6,n=VH/2/cam.s*.6;cam.x=Math.max(-m+PW*.05,Math.min(PW*.95+m,cam.x));cam.y=Math.max(-n+PH*.05,Math.min(PH*.95+n,cam.y));}
-function stepInertia(dt){if(!INERT)return false;cam.x-=INERT.x*dt*1000/cam.s;cam.y-=INERT.y*dt*1000/cam.s;const k=Math.exp(-dt*4.5);INERT.x*=k;INERT.y*=k;clampCam();if(Math.hypot(INERT.x,INERT.y)<.01)INERT=null;return true;}
+function stepInertia(dt){if(!INERT)return false;cam.x-=INERT.x*dt*1000/cam.s;cam.y-=INERT.y*dt*1000/cam.s;const k=Math.exp(-dt*3.6);INERT.x*=k;INERT.y*=k;clampCam();if(Math.hypot(INERT.x,INERT.y)<.01)INERT=null;return true;}
 
 // ===================================================================
 // لوحات المعلومات أسفل الطبعة: قابلة للضغط وتُعرض كبيرة مع نصها
