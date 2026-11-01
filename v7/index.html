@@ -1589,7 +1589,7 @@ function cardTreeHTML(id){const L=cardLayout(id);return`<canvas class="ftc" data
 let camTween=null,pulled=false;
 const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const DEG=Math.PI/180,wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a));
-function fitView(){if(VW<=760&&CH.b){const t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/PH)*.98;return{x:PW/2,y:PH/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
+function fitView(){if(VW<=760&&CH.b){const y0=POSTERBG?0:1240,t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/(PH-y0))*.98;return{x:PW/2,y:(y0+PH)/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
 function tweenTo(t,ms=900){camTween={from:{...cam},to:{h:0,pitch:0,yaw:0,roll:0,...t},t0:performance.now(),ms};dirty=true;}
 function stepCamera(now){if(!camTween)return false;const{from,to,t0,ms}=camTween,t=Math.min(1,(now-t0)/ms),e=ez(t);
   for(const k of['x','y','h','pitch','roll'])cam[k]=(from[k]||0)+((to[k]||0)-(from[k]||0))*e;
@@ -1807,7 +1807,7 @@ function pathPts(id){const pts=[];let p=people[id];while(p){const q=posOf(p.id);
 const LC={m:{bg:'rgba(228,246,226,.96)',bd:'rgba(46,125,50,.8)',tx:'#0f3816',dk:'rgba(22,70,32,.95)'},f:{bg:'rgba(255,235,244,.96)',bd:'rgba(210,79,134,.8)',tx:'#86123f'}};
 function buildLbl(){LBL=[];for(const p of Object.values(people)){const q=posOf(p.id);if(!q||!p.name||/[A-Za-z]/.test(p.name)||(p.conf&&p.conf.name<.9))continue;   // قراءة غير مؤكدة: نخلي اسم الطبعة نفسه
     const f=p.gender==='f',n=f?0:desc(p.id),rg=ringOf(p.id);
-    LBL.push({id:p.id,f,n,x:q.x,y:q.y,r:Math.max(rg.rx,rg.ry),pr:n*100-genOf(p.id),t:n>=6?`${p.name} (${ar(n)})`:p.name,w:0});}
+    LBL.push({id:p.id,f,n,x:q.x,y:q.y,r:Math.max(rg.rx,rg.ry),pr:n*100-genOf(p.id),t:p.name,w:0});}
   LBL.sort((a,b)=>b.pr-a.pr||a.id-b.id);LBL.fs=0;}
 // شبكة إشغال على الشاشة (خلايا ٤٨ بكسل) لفحص التداخل بسرعة
 function occ(){const B=new Map(),cells=(r,f)=>{const x0=Math.max(0,r[0]/48|0),x1=Math.max(0,r[2]/48|0),y0=Math.max(0,r[1]/48|0),y1=Math.max(0,r[3]/48|0);for(let i=x0;i<=x1;i++)for(let j=y0;j<=y1;j++)if(f(i*4096+j)===false)return false;return true;};
@@ -1818,7 +1818,7 @@ function drawLabels(g,s,O){if(!LBL)buildLbl();const mob=VW<=760,FS=mob?12:13,fs=
   const cap=Math.round(VW*VH/(mob?5200:7000)*(.32+.68*z)),px=4+8*(1-z),py=2+5*(1-z),out=[];
   g.font=F;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
   for(const L of LBL){if(out.length>=cap)break;if(L.id===SEL)continue;
-    const rr=L.r*s,a=L.f?clamp01((64-rr)/5):clamp01((25-rr)/3);if(a<=.04)continue;   // تختفي بسرعة لما يكبر اسم الطبعة نفسه (أسماء الوردي باهتة فتبقى أطول)
+    const rr=L.r*s,a=1;if(rr>(L.f?24:13))continue;   // إما اسم واضح أو اسم الطبعة نفسه، بدون أسماء باهتة فوق بعض   // تختفي بسرعة لما يكبر اسم الطبعة نفسه (أسماء الوردي باهتة فتبقى أطول)
     const sp=w2s(L.x,L.y);if(sp.behind||sp.x<-80||sp.x>VW+80||sp.y<-20||sp.y>VH+20)continue;
     if(!L.w)L.w=g.measureText(L.t).width;const hd=L.n>=25,w=L.w+(hd?16:12),h=FS+(hd?9:7),r=[sp.x-w/2-px,sp.y-h/2-py,sp.x+w/2+px,sp.y+h/2+py];
     if(r[0]<2||r[2]>VW-2||r[1]<2||r[3]>VH-2||!O.free(r))continue;O.put(r);out.push([L,sp.x,sp.y,w,h,a,hd]);}
@@ -1843,7 +1843,8 @@ function drawBrowse(g,now){LHIT=[];if(!inBrowse())return;g.save();g.setTransform
       const ks=w2s(kq.x,kq.y),kr=Math.max(6,ringOf(k.id).rx*s);g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=2;g.beginPath();g.arc(ks.x,ks.y,kr+2,0,7);g.stroke();}
     const r=Math.max(10,Math.max(rg.rx,rg.ry)*s)+4;g.shadowColor='#ffc83a';g.shadowBlur=20;g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=id===SEL?4:3;g.beginPath();g.ellipse(S.x,S.y,Math.max(10,rg.rx*s)+4,Math.max(10,rg.ry*s)+4,0,0,7);g.stroke();g.shadowBlur=0;
     O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);const pp=!(id===SEL&&HOV===SEL&&id!==HOV)&&popNode(g,id,S,rg,s,now);if(id===SEL&&s<.3&&!pp)marks.push([people[id].name,S.x,S.y-r-14]);}
-  // أسماء الخريطة فوق كل شي ما عدا اسم المحدد
+  // أسماء الخريطة فوق كل شي ما عدا اسم المحدد: تطلع بس لما تقرّب
+  if(s>fs*1.7&&!LIT&&!LITH)drawLabels(g,s,O);
   for(const[t,x,y]of marks)tag(g,t,x,y,'#b8860b',1,14);
   g.restore();drawMini();}
 function drawHover(g,now){drawBrowse(g,now);drawPanels(g,now);}
@@ -2076,9 +2077,10 @@ function buildDecor(){buildTitle();DECO.meds=MEDS.map(buildMedal);}
 const LOGO=new Image();LOGO.onload=()=>{dirty=true;};LOGO.src='bg/logo.png';
 function drawDecor(g){if(!gl||BL||(RUN&&!RUN.done&&RUN.mode!=='poster'&&cam.pitch>.1))return;if(!DECO.title)buildDecor();g.save();g.setTransform(DPR,0,0,DPR,0,0);
   const put=(cv,x0,y0,x1,y1)=>{const a=w2s(x0,y0),b=w2s(x1,y1);if(a.behind||b.behind)return;g.drawImage(cv,a.x,a.y,b.x-a.x,b.y-a.y);};
-  if(!POSTERBG)put(DECO.title,300,120,7087,1300);
+  const TT=!POSTERBG&&VW>760;   // الجوال: العنوان في الشريط العلوي، والصورة نظيفة
+  if(TT)put(DECO.title,300,120,7087,1300);
   // شعار العائلة على جانبي العنوان
-  if(!POSTERBG&&LOGO.complete&&LOGO.naturalWidth){const h=820,w=h*LOGO.naturalWidth/LOGO.naturalHeight;for(const cx of[3693-3200,3693+3200])put(LOGO,cx-w/2,690-h/2,cx+w/2,690+h/2);}
+  if(TT&&LOGO.complete&&LOGO.naturalWidth){const h=820,w=h*LOGO.naturalWidth/LOGO.naturalHeight;for(const cx of[3693-3200,3693+3200])put(LOGO,cx-w/2,690-h/2,cx+w/2,690+h/2);}
   drawTrunk(g);g.restore();}
 // ألواح الجذع الذهبية: فوق ألواح الطبعة نفسها (نفس المكان والمقاس، مقاسة من الصورة)، تكبر شوي من بعيد عشان تنقرا، وتغطي اللوح المطبوع بالكامل عند التقريب
 const TPL=[[7,'علي',3696,9260,229,132,'الجد الجامع'],[6,'فهد',3690,9487,173,57],[5,'سليمان',3692,9633,196,58],[4,'محمد',3692,9773,221,58,'قاضي ثرمداء'],[3,'عيد',3694,9919,243,61],[2,'المطرفي',3695,10065,283,61]];
@@ -2319,7 +2321,7 @@ const IC={tree:'<path d="M12 21.5v-7"/><path d="M12 14.5c-4.6 0-7.2-2.5-7.2-5.5a
 // شاشة البداية: تختفي لما تجهز صورة الطبعة وأول رسم (أو بعد ٦ ثواني كحد أقصى)
 let RDY=0;function appReady(){if(++RDY<2)return;const s=$('#splash');if(!s||s.classList.contains('out')||QS.includes('holdsplash'))return;s.classList.add('out');setTimeout(()=>s.remove(),700);}
 setTimeout(()=>{RDY=Math.max(RDY,1);appReady();},6000);
-document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة العائلة</b></div><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
+document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة عائلة العجلان والعيد</b></div><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
 <nav class="tabbar" id="tabbar">${[['tree','الشجرة'],['search','بحث'],['branch','الفروع'],['user','عائلتي'],['more','المزيد']].map(([k,t])=>`<button class="tab${k==='tree'?' on':''}" data-tab="${k}"><i>${SV(IC[k])}</i><span>${t}</span></button>`).join('')}</nav>
 <div id="cscrim"></div><div class="litpill" id="litpill"><i></i><b></b><button aria-label="إلغاء الإضاءة">${SV(IC.x,16)}</button></div>
 <section class="sh fulls" id="shSearch"><div class="shp"><div class="shh shs"><label class="sfield">${SV(IC.search,20)}<input id="sq" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="اكتب اسمك واسم أبوك…"></label><button class="scan" data-close>إلغاء</button></div><div class="shb" id="sres"></div></div></section>
@@ -2391,7 +2393,7 @@ $('#tabbar').addEventListener('click',e=>{const t=e.target.closest('[data-tab]')
   if(t==='tree'){closeSheets();goHome();}else if(t==='search')openSearch();else if(t==='branch'){openSheet('shBr');buildBr();}else if(t==='user')openMe();else if(t==='more'){openSheet('shMore');buildMore();}});
 $('#abSearch').onclick=()=>{hap();openSearch();};$('#abBack').onclick=()=>{hap();goBack();};
 function syncChrome(){if(!isPh())return;const c=$('#card').classList.contains('show'),bk=!!RUN||c||cam.s>fitView().s*1.25;$('#appbar').classList.toggle('bk',bk);
-  const t=RUN&&people[RUN.id]?'عائلة '+people[RUN.id].name:'شجرة العائلة';if($('#abTitle').textContent!==t)$('#abTitle').textContent=t;$('#cscrim').classList.toggle('on',c&&CD==='full');syncTabs();}
+  const t=RUN&&people[RUN.id]?'عائلة '+people[RUN.id].name:'شجرة عائلة العجلان والعيد';if($('#abTitle').textContent!==t)$('#abTitle').textContent=t;$('#cscrim').classList.toggle('on',c&&CD==='full');syncTabs();}
 setInterval(syncChrome,250);
 // ---- البطاقة: صفيحة بثلاث درجات (لمحة / نصف / كامل) مع سحب وزخم ----
 let CD='peek',CY=0;
