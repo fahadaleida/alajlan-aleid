@@ -56,6 +56,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .journey span{color:var(--muted);transition:color .3s}
 .journey span.on{color:#9a6a00;font-weight:800}
 .journey .sep{opacity:.5}
+.journey .jt{display:flex;gap:6px;align-items:center;overflow:hidden;min-width:0;flex:1 1 auto;-webkit-mask-image:linear-gradient(90deg,transparent,#000 18px,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,transparent,#000 18px,#000 calc(100% - 18px),transparent);padding:0 10px}
+.journey .skip{flex:none}.journey>b{flex:none}
 .skip{border:0;background:var(--gold2);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:13px;margin-inline-start:8px}
 .card{position:fixed;top:84px;left:16px;width:370px;max-height:calc(100% - 104px);overflow:auto;z-index:18;background:var(--panel);border:1px solid var(--line);border-radius:26px;box-shadow:0 24px 60px rgba(40,25,5,.35);padding:22px 20px;opacity:0;transform:translateX(-24px);pointer-events:none;transition:opacity .5s,transform .5s}
 .card.show{opacity:1;transform:none;pointer-events:auto}
@@ -1186,13 +1188,13 @@ function renderOverlay(now,dt){
     if(age<1.2){g.globalAlpha=fade*(1-age/1.2);g.lineWidth=3;ring(1+age*1.4);g.stroke();}g.globalAlpha=1;}
   g.shadowBlur=0;
   // رأس الضوء والشرر
-  if(!R.done&&R.len>0){const q=pointAt(R.path,R.len),s=w2s(q.x,q.y),rr=Math.max(12,Math.min(70,q.w*s.k*.55));
-    const rg=g.createRadialGradient(s.x,s.y,0,s.x,s.y,rr);rg.addColorStop(0,'rgba(255,250,225,.75)');rg.addColorStop(.35,'rgba(255,200,90,.35)');rg.addColorStop(1,'rgba(255,170,30,0)');
+  if(!R.done&&R.len>0){const q=pointAt(R.path,R.len),s=w2s(q.x,q.y),rr=Math.max(12,Math.min(52,q.w*s.k*.45));   // أخف من قبل: الوهج كان يمسح اسم اللوحة اللي تحته
+    const rg=g.createRadialGradient(s.x,s.y,0,s.x,s.y,rr);rg.addColorStop(0,'rgba(255,250,225,.42)');rg.addColorStop(.35,'rgba(255,200,90,.22)');rg.addColorStop(1,'rgba(255,170,30,0)');
     g.fillStyle=rg;g.beginPath();g.arc(s.x,s.y,rr,0,7);g.fill();
-    if(dt>0)for(let i=0;i<3;i++)sparks.push({x:q.x+(Math.random()-.5)*q.w*.5,y:q.y+(Math.random()-.5)*q.w*.5,vx:(Math.random()-.5)*160,vy:-40-Math.random()*160,life:1});}
+    if(dt>0)for(let i=0;i<2;i++)sparks.push({x:q.x+(Math.random()-.5)*q.w*.5,y:q.y+(Math.random()-.5)*q.w*.5,vx:(Math.random()-.5)*160,vy:-40-Math.random()*160,life:1});}
   sparks=sparks.filter(p=>(p.life-=.024)>0);
   for(const p of sparks){p.x+=p.vx*.016;p.y+=p.vy*.016;p.vy+=40*.016;const s=w2s(p.x,p.y);
-    g.fillStyle=`rgba(255,${200+55*p.life|0},${120*p.life|0},${p.life})`;g.beginPath();g.arc(s.x,s.y,Math.max(1.2,2.6*p.life),0,7);g.fill();}
+    g.fillStyle=`rgba(255,${200+55*p.life|0},${120*p.life|0},${p.life*.7})`;g.beginPath();g.arc(s.x,s.y,Math.max(1,2.1*p.life),0,7);g.fill();}
   g.restore();
   if(BL&&!gl)drawBloom(g,now,dt);
 }
@@ -1602,7 +1604,8 @@ function focusBox(id){
   const s=Math.min(aw/(x1-x0),ah/(y1-y0),.55);
   return{x:(x0+x1)/2-(desk?205/s:0),y:(y0+y1)/2+(desk?-10/s:VH*.21/s),s};
 }
-function setLit(lit){const R=RUN;if(lit===R.lit)return;R.lit=lit;$('#journey').querySelectorAll('[data-i]').forEach(sp=>sp.classList.toggle('on',+sp.dataset.i<lit));}
+function setLit(lit){const R=RUN;if(lit===R.lit)return;R.lit=lit;const sps=$('#journey').querySelectorAll('[data-i]');sps.forEach(sp=>sp.classList.toggle('on',+sp.dataset.i<lit));
+  const jt=$('#journey .jt'),cu=sps[Math.max(0,Math.min(sps.length-1,lit-1))];if(jt&&cu){const a=cu.getBoundingClientRect(),b=jt.getBoundingClientRect();jt.scrollTo({left:jt.scrollLeft+(a.left+a.width/2)-(b.left+b.width/2),behavior:'smooth'});}}   // الاسم الحالي بالنص
 function headingAt(P,len){const a=pointAt(P,Math.max(0,len-230)),b=pointAt(P,Math.min(P.total,len+230)),dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;return{x:dx/l,y:dy/l,yaw:Math.atan2(dx,-dy)};}
 const PITCH=58*DEG,flyS=()=>VW<=760?.4:.52;
 // وضع الوصول: الكاميرا تطلع وتلف حول الشخص، وشجرته واقفة قدّامه
@@ -1660,7 +1663,7 @@ function startRun(id){
   $('#card').classList.remove('show','peek');$('#pull').classList.remove('show');$('#pull').textContent='🌳 شوف مكانه في الشجرة';pulled=false;sparks=[];BL=null;
   const path=buildPath(id),c=chain(id);
   RUN={id,path,len:0,done:false,dim:0,lit:-1,t:0,end:bloomView(id),focus:[id,people[id].father,...kidsOf(id).map(k=>k.id)].filter(i=>i&&people[i])};
-  $('#journey').innerHTML='<b style="color:#9a6a00">رحلة النسب:</b> '+c.map((p,i)=>`<span data-i="${i}">${p.name}</span>`).join('<span class="sep">‹</span>')+'<button class="skip" id="skip">تخطَّ</button>';
+  $('#journey').innerHTML='<b style="color:#9a6a00">رحلة النسب:</b><div class="jt">'+c.map((p,i)=>`<span data-i="${i}">${p.name}</span>`).join('<span class="sep">‹</span>')+'</div><button class="skip" id="skip">تخطَّ</button>';   // الأسماء تتمرر لحالها والزر دايم ظاهر
   $('#journey').classList.add('show');$('#skip').onclick=()=>finishRun();
   prepareStage(RUN);
   if(gl){
@@ -1674,7 +1677,7 @@ function startRun(id){
     const r0=posOf(c[0].id);tweenTo({x:r0.x,y:Math.min(r0.y-VH*.3/s0,PH-VH*.56/s0),s:s0},1200);
   }
 }
-function pullBack(){const R=RUN;if(!R)return;const id=R.id;exitFamily();browseSelect(id,.22);}
+function pullBack(){const R=RUN;if(!R)return;const id=R.id;exitFamily();browseSelect(id,.32);}
 
 // ===================================================================
 // تفاعل
@@ -1683,7 +1686,7 @@ $('#zin').onclick=()=>zoomAt(1.5,VW/2,VH/2);$('#zout').onclick=()=>zoomAt(1/1.5,
 $('#zall').onclick=()=>{exitFamily();tweenTo(fitView(),900);};
 // زر الرجوع والشجرة كاملة: يرجعك خطوة أو للبداية بدون تحديث الصفحة
 function clearSel(){SEL=null;setHover(null);$('#card').classList.remove('show','peek');setCrumbs(null);if(location.hash)history.replaceState(null,'',location.pathname+location.search);}
-function goBack(){if(RUN){if(FH.length){openFamily(FH.pop(),1);return;}exitFamily();dirty=true;return;}if($('#card').classList.contains('show'))clearSel();tweenTo(fitView(),900);dirty=true;}
+function goBack(){if(RUN){if(FH.length){openFamily(FH.pop(),1);return;}const id=RUN.id;exitFamily();if(people[id]&&VW<=760)browseSelect(id,.32);dirty=true;return;}if($('#card').classList.contains('show'))clearSel();tweenTo(fitView(),900);dirty=true;}   // الجوال: نطلع من العائلة لمكانه في الشجرة الكبيرة ومحدد
 function goHome(){if(RUN)exitFamily();clearSel();tweenTo(fitView(),1000);dirty=true;}
 $('#nbBack').onclick=goBack;$('#nbHome').onclick=goHome;
 setInterval(()=>{const on=!!RUN||$('#card').classList.contains('show')||cam.s>fitView().s*1.25;$('#navback').classList.toggle('show',on);document.body.classList.toggle('famv',!!BL);},300);
@@ -1692,7 +1695,7 @@ $('#replay').onclick=()=>select(selected,true);
 $('#pull').onclick=pullBack;
 
 // يفتح شجرة الشخص مباشرة (بدون رحلة الضوء) بحركة كاميرا سريعة
-let FH=[];function openFamily(id,back){if(!back&&RUN&&BL&&RUN.id!==id)FH.push(RUN.id);
+let FH=[];function openFamily(id,back){if(!back&&RUN&&BL&&RUN.id!==id)FH.push(RUN.id);selected=id;history.replaceState(null,'','#'+id);   // أزرار البطاقة تشتغل على صاحب العائلة المفتوحة
   $('#card').classList.remove('show','peek');$('#pull').classList.remove('show');pulled=false;sparks=[];setHover(null);
   const path=buildPath(id);
   RUN={id,path,len:path.total,done:false,dim:.6,lit:path.nodes.length,t:0,mode:'done',end:bloomView(id),focus:[id,people[id].father,...kidsOf(id).map(k=>k.id)].filter(i=>i&&people[i])};
@@ -1752,11 +1755,11 @@ function drawLit(g,now,s){const L=litState(now);if(!L)return;const{pv,t,K,D}=L;
 function branchOf(id){if(BRANCH[id]!==undefined)return BRANCH[id];const p=people[id];let b=null;if(p){if(p.father===7&&BR[id])b=id;else if(p.father!=null)b=branchOf(p.father);}return BRANCH[id]=b;}
 function buildGrid(){GRID=new Map();for(const p of Object.values(people)){const q=posOf(p.id);if(!q)continue;const k=(q.x>>8)+','+(q.y>>8);if(!GRID.has(k))GRID.set(k,[]);GRID.get(k).push(p.id);}
   BIGF=Object.values(people).filter(p=>p.gender!=='f'&&p.id>7&&p.pos&&desc(p.id)>=6).map(p=>({id:p.id,n:desc(p.id)})).sort((a,b)=>b.n-a.n);}
-function gridHit(wx,wy){if(!GRID)buildGrid();let best=null,bd=1.2;const cx=wx>>8,cy=wy>>8;
-  for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const l=GRID.get((cx+i)+','+(cy+j));if(!l)continue;for(const id of l){const q=posOf(id),rg=ringOf(id),d=Math.hypot((q.x-wx)/rg.rx,(q.y-wy)/rg.ry);if(d<bd){bd=d;best=id;}}}return best;}
+function gridHit(wx,wy,tp){if(!GRID)buildGrid();let best=null,bd=1e9;const cx=wx>>8,cy=wy>>8;
+  for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const l=GRID.get((cx+i)+','+(cy+j));if(!l)continue;for(const id of l){const q=posOf(id),rg=ringOf(id),d=Math.hypot((q.x-wx)/rg.rx,(q.y-wy)/rg.ry),tol=Math.max(1.2,tp?(tp/cam.s)/Math.min(rg.rx,rg.ry):0);if(d<tol&&d<bd){bd=d;best=id;}}}return best;}   // tp: نصف قطر الإصبع بالبكسل
 function hit(sx,sy){const bn=BL&&(gl?BL.snodes:BL.nodes);if(bn&&!placing){let b=null,bd=1e9;for(const o of bn){if(o.photo||o.age)continue;const d=Math.hypot(sx-o.x,sy-o.y);if(d<Math.max(o.r,MOBILE?22:0)&&d-o.r<bd){bd=d-o.r;b=o;}}if(b)return b.id;}   // الأقرب، وباللمس هدف ٤٤px على الأقل
   if(BL)return null;if(inBrowse())for(const id of[HOV,SEL]){const h=id&&POPT[id]&&POPT[id].hit;if(h&&(Math.hypot(sx-h[0],sy-h[1])<=h[2]+4||Math.hypot(sx-h[3],sy-h[4])<=h[5]))return id;}
-  if(inBrowse())for(const r of LHIT)if(sx>=r[0]&&sx<=r[2]&&sy>=r[1]&&sy<=r[3])return r[4];const w=s2w(sx,sy);return gridHit(w.x,w.y);}
+  if(inBrowse())for(const r of LHIT)if(sx>=r[0]&&sx<=r[2]&&sy>=r[1]&&sy<=r[3])return r[4];const w=s2w(sx,sy);return gridHit(w.x,w.y,MOBILE?20:0);}
 // صبغة خفيفة لكل فرع (تُرسم مرة وحدة)
 function buildTint(){const c=document.createElement('canvas');c.width=Math.ceil(PW/8);c.height=Math.ceil(PH/8);const g=c.getContext('2d');
   for(const p of Object.values(people)){const b=branchOf(p.id);if(!b||!p.pos)continue;const x=p.pos[0]/8,y=p.pos[1]/8,gr=g.createRadialGradient(x,y,0,x,y,26);gr.addColorStop(0,`rgba(${BR[b].col},.10)`);gr.addColorStop(1,`rgba(${BR[b].col},0)`);g.fillStyle=gr;g.fillRect(x-26,y-26,52,52);}
@@ -1765,7 +1768,8 @@ function buildTint(){const c=document.createElement('canvas');c.width=Math.ceil(
 function exitFamily(){FH=[];if(!RUN)return;const keep={x:cam.x,y:cam.y};RUN=null;BL=null;sparks=[];$('#pull').classList.remove('show');$('#journey').classList.remove('show');
   if(cam.pitch>.02||cam.h>1)tweenTo({x:keep.x,y:keep.y,s:Math.max(cam.s*.7,fitView().s),h:0,pitch:0,yaw:0,roll:0},600);dirty=true;}
 function flyTo(id,s){const q=posOf(id);if(!q)return;const t={x:q.x+(VW>760&&$('#card').classList.contains('show')?-180/(s||Math.max(cam.s,.35)):0),y:q.y+(VW<=760?VH*.18/(s||Math.max(cam.s,.35)):0),s:s||Math.max(cam.s,.35),h:0,pitch:0,yaw:0,roll:0};tweenTo(t,900);}
-function browseSelect(id,s){exitFamily();SEL=id;selected=id;history.replaceState(null,'','#'+id);showCard(id);setHover(null);setCrumbs(id);flyTo(id,s);dirty=true;}
+function browseSelect(id,s){exitFamily();SEL=id;selected=id;const qe=$('#q');if(qe&&qe.value&&+qe.dataset.id!==id){qe.value='';qe.dataset.id='';$('#results').classList.remove('open');}   // نص البحث القديم ما يبقى لما تختار شخص ثاني
+  history.replaceState(null,'','#'+id);showCard(id);setHover(null);setCrumbs(id);flyTo(id,s);dirty=true;}
 // ===== البطاقة العائمة عند التمرير =====
 // الوردة/الدائرة ترتفع من مكانها: نقص العقدة من بلاطات الطبعة بدقتها الكاملة ونكبّرها مع ظل وارتداد ناعم
 const PTL=new Map(),PSP=new Map(),POPT={};
@@ -1830,7 +1834,8 @@ function drawLabels(g,s,O){if(!LBL)buildLbl();const mob=VW<=760,FS=mob?12:13,fs=
     g.fillStyle=hd?'#fff':c.tx;g.fillText(L.t,x,y+1);}
   LHIT=out.filter(o=>o[5]>.5).map(([L,x,y,w,h])=>[x-w/2,y-h/2,x+w/2,y+h/2,L.id]);   // الضغط على الاسم نفسه يختار صاحبه
   g.globalAlpha=1;return out.length;}
-function drawBrowse(g,now){LHIT=[];if(!inBrowse())return;g.save();g.setTransform(DPR,0,0,DPR,0,0);const s=cam.s,fs=fitView().s,O=occ();
+let selChip=null;
+function drawBrowse(g,now){LHIT=[];selChip=null;if(!inBrowse())return;g.save();g.setTransform(DPR,0,0,DPR,0,0);const s=cam.s,fs=fitView().s,O=occ();
   if(!GRID)buildGrid();if(!TINT)buildTint();for(const r of domRects())O.put(r);
   // بعيد: صبغة الفروع وأسماؤها الكبيرة
   const far=clamp01((fs*2.2-s)/(fs*1.2));
@@ -1844,11 +1849,17 @@ function drawBrowse(g,now){LHIT=[];if(!inBrowse())return;g.save();g.setTransform
       g.strokeStyle=`rgba(255,240,180,${.75*a})`;g.lineWidth=Math.max(2,6*s);g.setLineDash([8,10]);g.lineDashOffset=-now/40;g.beginPath();kp.forEach((p,i)=>i?g.lineTo(p.x,p.y):g.moveTo(p.x,p.y));g.stroke();g.setLineDash([]);
       const ks=w2s(kq.x,kq.y),kr=Math.max(6,ringOf(k.id).rx*s);g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=2;g.beginPath();g.arc(ks.x,ks.y,kr+2,0,7);g.stroke();}
     const r=Math.max(10,Math.max(rg.rx,rg.ry)*s)+4;g.shadowColor='#ffc83a';g.shadowBlur=20;g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=id===SEL?4:3;g.beginPath();g.ellipse(S.x,S.y,Math.max(10,rg.rx*s)+4,Math.max(10,rg.ry*s)+4,0,0,7);g.stroke();g.shadowBlur=0;
-    O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);const pp=!(id===SEL&&HOV===SEL&&id!==HOV)&&popNode(g,id,S,rg,s,now);if(id===SEL&&s<.3&&!pp)marks.push([people[id].name,S.x,S.y-r-14]);}
+    O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);const pp=!(id===SEL&&HOV===SEL&&id!==HOV)&&popNode(g,id,S,rg,s,now);if(id===SEL&&s<.3&&!pp)marks.push([people[id].name,S.x,S.y-r-14]);
+    const h=pp&&POPT[id].hit;if(h){const up=h[1]<h[4],ty=up?h[1]-h[2]-15:h[1]+h[2]+15;O.put([h[0]-h[2]-6,Math.min(h[1]-h[2],ty-14)-4,h[0]+h[2]+6,Math.max(h[1]+h[2],ty+14)+4]);if(id===SEL)selChip=[id,h[0],ty];}}   // الوردة المرفوعة واسمها محجوزين: ما تركب عليها أسماء الجيران
   // أسماء الخريطة فوق كل شي ما عدا اسم المحدد: تطلع بس لما تقرّب
   if(s>fs*1.7&&!LIT&&!LITH)drawLabels(g,s,O);
   for(const[t,x,y]of marks)tag(g,t,x,y,'#b8860b',1,14);
+  if(selChip)nameChip(g,...selChip);
   g.restore();drawMini();}
+// اسم المحدد واضح فوق وردته المرفوعة (اسم الطبعة على الوردي باهت ويصعب قراءته بالجوال)
+function nameChip(g,id,x,y){const p=people[id],f=p.gender==='f',t=p.name,FS=VW<=760?14:15;g.font=`800 ${FS}px Tajawal`;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
+  const w=g.measureText(t).width+22,h=FS+12;x=Math.max(w/2+4,Math.min(VW-w/2-4,x));g.fillStyle='rgba(20,12,4,.35)';g.beginPath();g.roundRect(x-w/2,y-h/2+2,w,h,h/2);g.fill();
+  g.fillStyle=f?'rgba(134,18,63,.96)':LC.m.dk;g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();g.lineWidth=1.6;g.strokeStyle='rgba(255,214,90,.95)';g.stroke();g.fillStyle='#fff';g.fillText(t,x,y+1);}
 function drawHover(g,now){drawBrowse(g,now);drawPanels(g,now);}
 // ===== الخريطة الصغيرة =====
 const MINI=$('#mini'),mg=MINI.getContext('2d'),MIMG=loadImg('../v4/tree-small.jpg',()=>drawMini());
@@ -1900,10 +1911,13 @@ ov.addEventListener('pointerup',e=>{up(e);if(moved){if(performance.now()-lastMv<
   const id=hit(e.clientX,e.clientY);
   if(BL){if(id<0){showCard(-id);sheetTo('full');}else if(id)openFamily(id);return;}   // «+N» للعيال الزايدين: القائمة الكاملة بالبطاقة
   if(!id){const pi=panelAt(e.clientX,e.clientY);if(pi>=0){setHover(null);setPanelHover(-1);openPanel(pi);return;}if(e.pointerType==='touch'&&dblTap(e))return;setHover(null);return;}
-  if(e.pointerType==='touch'&&HOV!==id){setHover(id,e.clientX,e.clientY);return;}
-  browseSelect(id);});
+  if(e.pointerType==='touch'){if(tapZoom(e,id))return;setHover(null);hap();}
+  browseSelect(id);});   // باللمس: ضغطة وحدة تختار وتطلع البطاقة مثل تطبيقات الخرائط
+// باللمس من بعيد: الدوائر أصغر من الإصبع، فالضغط يقرّب للمكان بدل ما يختار أحد بالغلط (إلا الوردة المرفوعة أو اسم ظاهر)
+function tapZoom(e,id){const x=e.clientX,y=e.clientY,own=[HOV,SEL].some(i=>i&&POPT[i]&&POPT[i].hit&&i===id)||LHIT.some(r=>r[4]===id&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]);
+  if(own||Math.max(ringOf(id).rx,ringOf(id).ry)*cam.s>=9)return false;const w=s2w(x,y),s2=Math.min(.5,Math.max(cam.s*2.6,fitView().s*4)),k=cam.s/s2;tweenTo({x:w.x-(w.x-cam.x)*k,y:w.y-(w.y-cam.y)*k,s:s2},520);hap();return true;}
 ov.addEventListener('pointercancel',up);
-ov.addEventListener('pointerleave',()=>{if(!ptrs.size){setHover(null);setPanelHover(-1);}});
+ov.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch'&&!ptrs.size){setHover(null);setPanelHover(-1);}});
 ov.addEventListener('wheel',e=>{e.preventDefault();camTween=null;INERT=null;if(RUN&&RUN.done)exitFamily();zoomAt(Math.exp(-e.deltaY*(e.ctrlKey?.01:.0016)),e.clientX,e.clientY);},{passive:false});
 ov.addEventListener('dblclick',e=>{if(performance.now()-LTZ<700)return;camTween=null;zoomAt(2,e.clientX,e.clientY);});
 function zoomAt(f,sx,sy){const ns=Math.min(3,Math.max(fitView().s*.9,cam.s*f)),w=s2w(sx,sy);cam.s=ns;const b=s2w(sx,sy);cam.x+=w.x-b.x;cam.y+=w.y-b.y;clampCam();dirty=true;}
@@ -2161,18 +2175,18 @@ function miniTree(id){
 function renderCard(id){
   const p=people[id],c=chain(id),ks=kidsOf(id),isF=p.gender==='f',f=people[p.father];
   const grand=ks.filter(k=>k.gender==='m').reduce((s,k)=>s+kidsOf(k.id).length,0);
-  const sibs=f?kidsOf(f.id).filter(s=>s.id!==id):[],age=ageText(p);
+  const sibs=f?kidsOf(f.id).filter(s=>s.id!==id):[],age=ageText(p),inF=!!(RUN&&RUN.id===id);   // داخل شجرة عائلته: الزر يرجعه لمكانه بالشجرة الكبيرة
   const chips=l=>`<div class="chips">${l.map(k=>`<button class="chip ${k.gender}" data-go="${k.id}">${k.name}</button>`).join('')}</div>`;
   $('#card').innerHTML=`
     <div class="peekbar"><span class="grab"></span><div class="ph1">${avatar(p)}<div class="pt"><b>${p.name}${id===meId()?'<em>أنا</em>':''}</b><small>${nasabTail(id)}</small><span class="pg2">الجيل ${ar(c.length)} · ${familyOf(id)}${ageShort(p)?' · '+ageShort(p):''}</span></div><button class="pclose" data-act="pclose" aria-label="إغلاق">${SV(IC.x,16)}</button></div>
-      <div class="pacts"><button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button><button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><a class="pa" href="nasab.html?id=${id}" target="_blank" rel="noopener">${SV(IC.scroll,19)}النسب PDF</a><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button></div></div>
+      <div class="pacts">${inF?`<button class="pa gold" data-act="pull">${SV(IC.tree,19)}في الشجرة</button>`:`<button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button>`}<button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><a class="pa" href="nasab.html?id=${id}" target="_blank" rel="noopener">${SV(IC.scroll,19)}النسب PDF</a><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button></div></div>
     <button class="x" data-act="close" title="إغلاق">×</button>
-    <div class="medal ${p.gender}">${p.photo&&!isF?`<img src="${p.photo}" alt="${p.name}">`:(isF?'🌸':p.name[0])}</div>
+    <div class="medal ${p.gender}">${p.photo&&!isF?`<img src="${p.photo}" alt="${p.name}">`:(isF?'🌸':ini(p.name))}</div>
     <h3>${p.name}</h3>${p.title?`<div class="ttl">${p.title}</div>`:''}
     <div class="nas">${fullNasab(id)} ${familyOf(id)}</div>
     <div class="badges"><span class="badge">${familyOf(id)}</span><span class="badge">الجيل ${ar(c.length)} من الهذلي</span>
       ${p.pos?'':'<span class="badge warn">مضاف بعد الطبعة</span>'}${p.verify?'<span class="badge warn">يحتاج تأكيد</span>':''}</div>
-    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px"><button class="btn gold" data-act="family">🌳 شجرة العائلة</button><button class="btn" data-act="journey">✨ رحلة النسب</button><a class="btn gold" href="nasab.html?id=${id}" target="_blank" rel="noopener" style="text-decoration:none">📜 شجرة النسب كاملة · PDF</a><button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button></div></div>
+    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px">${inF?'<button class="btn gold" data-act="pull">🌳 مكانه في الشجرة الكبيرة</button>':'<button class="btn gold" data-act="family">🌳 شجرة العائلة</button>'}<button class="btn" data-act="journey">✨ رحلة النسب</button><a class="btn gold" href="nasab.html?id=${id}" target="_blank" rel="noopener" style="text-decoration:none">📜 شجرة النسب كاملة · PDF</a><button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button></div></div>
     ${isF?'':`<div class="stats"><div><b>${cnt(ks.length)}</b><span>العيال</span></div><div><b>${cnt(grand)}</b><span>الأحفاد</span></div><div><b>${cnt(descCount(id))}</b><span>كل الذرية</span></div></div>`}
     ${age?`<div class="row"><span>العمر</span><span>${age}</span></div>`:''}
     ${f?`<div class="row"><span>${isF?'أبوها':'أبوه'}</span><span><a href="#" data-go="${f.id}">${fullNasab(f.id,2)}</a></span></div>`:''}
@@ -2200,6 +2214,7 @@ $('#card').addEventListener('click',async e=>{
   if(a==='edit')openForm(selected);
   if(a==='journey'){select(selected,true);return;}
   if(a==='family'){openFamily(selected);return;}
+  if(a==='pull'){pullBack();return;}
   if(a==='photo')openPhotoFor(selected);
   if(a==='photomode'){PHOTO_MODE=!PHOTO_MODE;renderCard(selected);toast(PHOTO_MODE?'اضغط 📷 على أي رجل في الشجرة لإضافة صورته':'تم');}
   if(a==='copynasab'){const t=fullNasab(selected)+' '+familyOf(selected);try{await navigator.clipboard.writeText(t);toast('تم نسخ النسب ✓');}catch(err){toast(t,5000);}}
@@ -2229,7 +2244,8 @@ function search(q){const{tokens,fam}=tokenize(q);if(!tokens.length)return[];cons
     if(ok&&(!fam||familyOf(p.id)===fam))hits.push({p,sc});}
   return hits.sort((a,b)=>a.sc-b.sc||genOf(b.p.id)-genOf(a.p.id)).slice(0,30).map(h=>h.p);}
 const qEl=$('#q'),resEl=$('#results');let active=-1;
-const avatar=p=>`<span class="av ${p.gender}">${p.photo&&p.gender==='m'?`<img src="${p.photo}" alt="">`:(p.gender==='f'?'🌸':p.name[0])}</span>`;
+const ini=n=>{const c=(n||'?')[0];return/[اأإآدذرزوءة]/.test(c)?c:c+'ـ';};   // الحرف الأول بشكل البداية (عـ) لأن المعزول يشبه الأرقام (ع ≈ ٤)
+const avatar=p=>`<span class="av ${p.gender}">${p.photo&&p.gender==='m'?`<img src="${p.photo}" alt="">`:(p.gender==='f'?'🌸':ini(p.name))}</span>`;
 function showResults(){const list=search(qEl.value);active=-1;if(!qEl.value.trim()){resEl.classList.remove('open');return;}
   resEl.innerHTML=list.length?list.map(p=>`<div class="res" data-id="${p.id}">${avatar(p)}<div><div class="n">${fullNasab(p.id,4)} ${familyOf(p.id)}</div><div class="l">الجيل ${ar(genOf(p.id))}${p.title?' · '+p.title:''}</div></div></div>`).join('')
     :'<div class="empty">ما لقينا أحد بهالاسم. جرّب الاسم الأول واسم الأب بس.</div>';resEl.classList.add('open');}
@@ -2240,7 +2256,7 @@ qEl.addEventListener('keydown',e=>{const it=[...resEl.querySelectorAll('.res')];
   e.preventDefault();it.forEach((r,i)=>r.classList.toggle('active',i===active));});
 resEl.addEventListener('click',e=>{const r=e.target.closest('.res');if(r)pick(+r.dataset.id);});
 document.addEventListener('click',e=>{if(!e.target.closest('.search'))resEl.classList.remove('open');});
-function pick(id){resEl.classList.remove('open');qEl.blur();select(id);}
+function pick(id){resEl.classList.remove('open');qEl.blur();qEl.dataset.id=id;select(id);}
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SR){const mic=$('#mic');mic.hidden=false;mic.onclick=()=>{const r=new SR();r.lang='ar-SA';r.interimResults=true;mic.classList.add('on');
   r.onresult=e=>{qEl.value=[...e.results].map(x=>x[0].transcript).join(' ');showResults();};
@@ -2279,7 +2295,7 @@ function nasabChain(id){
   let h='<div class="nline">'+c.map((p,i)=>(i?` <span class="nb">${c[i-1].gender==='f'?'بنت':'بن'}</span> `:'')+`<span class="nn">${esc(p.name)}</span>`).join('')+` <span class="nd">◆</span> <span class="nf">${familyOf(id)}</span></div>`;
   h+='<div class="nact"><button class="btn" data-act="copynasab">📋 نسخ النسب</button><button class="btn" data-act="share">🔗 مشاركة</button></div><ol class="nchain">';
   c.forEach((p,i)=>{const g=n-i,me=p.id===id,kind=me?'me':g<=7?'gold':p.gender==='f'?'rose':'green';
-    h+=`<li data-go="${p.id}" class="${kind}"><span class="nm">${esc(p.name[0])}</span><span class="nt"><b>${esc(p.name)}${ageShort(p)?` <i class="nage">${ageShort(p)}</i>`:''}</b>${p.title?`<small>${esc(p.title)}</small>`:''}${mark[p.id]?`<em>${mark[p.id]}</em>`:''}</span><span class="ng">الجيل ${ar(g)}</span></li>`;});
+    h+=`<li data-go="${p.id}" class="${kind}"><span class="nm">${esc(ini(p.name))}</span><span class="nt"><b>${esc(p.name)}${ageShort(p)?` <i class="nage">${ageShort(p)}</i>`:''}</b>${p.title?`<small>${esc(p.title)}</small>`:''}${mark[p.id]?`<em>${mark[p.id]}</em>`:''}</span><span class="ng">الجيل ${ar(g)}</span></li>`;});
   return h+'</ol>';
 }
 
@@ -2296,6 +2312,7 @@ function askBirth(id,x,y){document.querySelector('.agepop')?.remove();const p=pe
 // ===================================================================
 function select(id,journey){if(!people[id])id=1;selected=id;history.replaceState(null,'','#'+id);if(journey)startRun(id);else browseSelect(id);}
 addEventListener('resize',resize);
+addEventListener('hashchange',()=>{const id=+location.hash.slice(1);if(people[id]&&id!==SEL)select(id);});   // رابط شخص ثاني والصفحة مفتوحة
 if(QS.includes('demophoto')){const mk=(h,beard)=>{const c=document.createElement('canvas');c.width=c.height=240;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,240);gr.addColorStop(0,`hsl(${h},35%,62%)`);gr.addColorStop(1,`hsl(${h},40%,28%)`);g.fillStyle=gr;g.fillRect(0,0,240,240);
     g.fillStyle='#fff';g.beginPath();g.ellipse(120,250,105,80,0,0,7);g.fill();g.fillStyle='#ececec';g.beginPath();g.moveTo(60,92);g.quadraticCurveTo(120,22,180,92);g.lineTo(196,205);g.lineTo(44,205);g.fill();
     g.fillStyle='#e4c09a';g.beginPath();g.arc(120,108,42,0,7);g.fill();if(beard){g.fillStyle='#3b2a1e';g.beginPath();g.ellipse(120,138,30,18,0,0,Math.PI);g.fill();}return c.toDataURL('image/jpeg',.8);};
