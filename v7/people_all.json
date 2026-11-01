@@ -4745,7 +4745,7 @@
 },
 {
 "id": 1236,
-"name": "FRAG",
+"name": "علي",
 "gender": "m",
 "father": 1195,
 "pos": [
@@ -4756,7 +4756,7 @@
 "kind": "circle",
 "gen": 14,
 "conf": {
-"name": 0.5,
+"name": 1.0,
 "father": 0.95
 },
 "color": "olive"
@@ -39154,7 +39154,7 @@
 },
 {
 "id": 3231,
-"name": "البندري",
+"name": "العنود",
 "gender": "f",
 "father": 3160,
 "pos": [
@@ -39165,7 +39165,7 @@
 "kind": "rose",
 "gen": 15,
 "conf": {
-"name": 0.95,
+"name": 1.0,
 "father": 0.85
 }
 },
@@ -43760,7 +43760,7 @@
 },
 {
 "id": 3498,
-"name": "سهام",
+"name": "سماهر",
 "gender": "f",
 "father": 3455,
 "pos": [
@@ -43771,7 +43771,7 @@
 "kind": "rose",
 "gen": 15,
 "conf": {
-"name": 0.95,
+"name": 1.0,
 "father": 0.95
 }
 },
@@ -46628,7 +46628,7 @@
 },
 {
 "id": 3664,
-"name": "السند",
+"name": "العنود",
 "gender": "f",
 "father": 3602,
 "pos": [
@@ -46639,7 +46639,7 @@
 "kind": "rose",
 "gen": 16,
 "conf": {
-"name": 0.5,
+"name": 1.0,
 "father": 0.95
 }
 },
