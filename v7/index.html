@@ -370,9 +370,9 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
   .pt .pg2{font:800 11.5px/1.3 Tajawal;color:#9a6a00}
   .pclose{flex:none;align-self:flex-start;width:44px;height:44px;margin:-6px -8px 0 -6px;border:0;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--muted) 18%,transparent) 15px,transparent 16px);color:var(--muted);display:grid;place-items:center;cursor:pointer}
   .pclose svg{width:16px;height:16px}
-  .pacts{display:flex;gap:8px;margin:12px -16px 0;padding:2px 16px 4px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x}
+  .pacts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0 0;padding:2px 0 4px}
   .pacts::-webkit-scrollbar{display:none}
-  .pa{flex:none;min-height:44px;display:inline-flex;align-items:center;gap:7px;padding:0 15px;border-radius:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--gold2) 12%,var(--panel));font:800 14px Tajawal,sans-serif;color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform .15s}
+  .pa{min-width:0;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 2px;border-radius:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--gold2) 12%,var(--panel));font:800 12.5px/1.15 Tajawal,sans-serif;color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap;text-align:center;transition:transform .15s}
   .pa svg{width:19px;height:19px;color:#9a6a00}
   .pa.gold{background:linear-gradient(135deg,#f6dc8c,#c9970f);border-color:transparent;color:#3a2405;box-shadow:0 4px 12px rgba(201,151,15,.35)}.pa.gold svg{color:#3a2405}
   .pa:active{transform:scale(.95)}
@@ -1350,7 +1350,7 @@ function descN(id){let s=0;for(const k of kidsOf(id)){s+=1+descN(k.id);}return s
 const FTM=document.createElement('canvas').getContext('2d'),ftClamp=(v,a,b)=>Math.max(a,Math.min(b,v)),ftOv=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
 const famOrd=a=>{const by=p=>p.birth?(p.cal==='g'?(+p.birth-622)*1.0307:+p.birth):9e9;return a.map((p,i)=>[p,i]).sort((x,y)=>(x[0].gender==='f')-(y[0].gender==='f')||by(x[0])-by(y[0])||x[1]-y[1]).map(x=>x[0]);};   // الأولاد ثم البنات، بترتيب الميلاد
 // المساحة المتاحة على الشاشة: بدون البطاقة يسار، الشريط والأزرار فوق، زر «شوف مكانه» وأزرار التكبير
-function ftBox(){const mob=VW<=760,l=mob?6:404,t=mob?(CH.t?CH.t+12:108):74,r=VW-(mob?6:76),b=VH-(mob?(CH.b?CH.b+184:194):84),W=Math.max(260,r-l),H=Math.max(320,b-t);
+function ftBox(){const mob=VW<=760,pk=mob&&$('#card .peekbar'),ph=pk&&pk.offsetHeight?pk.offsetHeight+18:184,l=mob?6:404,t=mob?(CH.t?CH.t+12:108):74,r=VW-(mob?6:76),b=VH-(mob?(CH.b?CH.b+ph:194):84),W=Math.max(260,r-l),H=Math.max(320,b-t);
   return{x:l,y:t,W,H,mob,obs:[]};}
 // مقاس اسم العقدة: البنت اسمها داخل الوردة إذا وسع (١٢px على الأقل)، غير كذا شريط تحتها؛ الولد شريط فيه العمر
 function ftLbl(o,fs){const p=o.p,age=ageShort(p),af=fs*.62,L={fs,rib:true,w:0,h:0,pill:null};
@@ -1536,14 +1536,14 @@ function drawFamilyTree(now,dt){
 }
 // ===== شجرة البطاقة: مرتبة وطويلة، ومع كل شخص عمره =====
 function cardLayout(id){const B=famOf(id),me=B.p,kids=kidsOf(id),sib=B.f?kidsOf(B.f.id).filter(x=>x.id!==id):[],W=1000,rows=[];
-  const perRow=5,kr=Math.ceil(kids.length/perRow);let y=40;const kidN=[];
-  for(let r=0;r<kr;r++){const row=kids.slice(r*perRow,r*perRow+perRow),n=row.length,sp=Math.min(190,900/n);row.forEach((p,i)=>kidN.push({p,x:500-(i-(n-1)/2)*sp,y:y+70,r:58,kind:'kid',mw:sp-12}));y+=225;}
+  const N=VW<=760,perRow=N?4:5,kr=Math.ceil(kids.length/perRow);let y=40;const kidN=[];   // الجوال: البطاقة ضيقة، فنقلل العدد بالصف ونكبّر الخط (١٢px على الأقل)
+  for(let r=0;r<kr;r++){const row=kids.slice(r*perRow,r*perRow+perRow),n=row.length,sp=Math.min(N?225:190,900/n);row.forEach((p,i)=>kidN.push({p,x:500-(i-(n-1)/2)*sp,y:y+70,r:N?64:58,kind:'kid',mw:sp-12}));y+=N?262:225;}
   if(kids.length)y+=10;
   const meN={p:me,x:500,y:y+95,r:92,kind:"me"};y+=95+92+175;
   const showSib=sib.length&&sib.length<=8;const sibN=[];
-  if(showSib){const n=sib.length,sp=Math.min(118,900/n);sib.forEach((p,i)=>sibN.push({p,x:500-(i-(n-1)/2)*sp,y:y+40,r:38,kind:'sib',mw:sp-12}));y+=40+38+90;}
+  if(showSib){const pr=N?4:8,sr=Math.ceil(sib.length/pr);for(let q=0;q<sr;q++){const row=sib.slice(q*pr,q*pr+pr),n=row.length,sp=Math.min(N?225:118,900/n);row.forEach((p,i)=>sibN.push({p,x:500-(i-(n-1)/2)*sp,y:y+40,r:N?50:38,kind:'sib',mw:sp-12}));y+=N?200:0;}y+=N?10:40+38+90;}
   const fN=B.f?{p:B.f,x:500,y:y+50,r:50,kind:'plaque'}:null;if(fN)y+=120;const gN=B.gf?{p:B.gf,x:500,y:y+50,r:50,kind:'plaque'}:null;if(gN)y+=120;
-  return{W,H:y+30,B,me,kidN,meN,sibN,fN,gN,showSib,sibCount:sib.length};}
+  return{W,H:y+30,B,me,kidN,meN,sibN,fN,gN,showSib,sibCount:sib.length,N};}
 function agePill(g,p,x,y,fs,hits){const t=ageShort(p),miss=!t;const txt=miss?'العمر؟':t;g.save();g.font=`800 ${fs}px Tajawal`;g.direction='rtl';g.textAlign='center';g.textBaseline='middle';
   const w=g.measureText(txt).width+fs*1.1,h=fs*1.5;g.fillStyle=miss?'rgba(255,255,255,.75)':p.death?'#efe4d0':'#fff';g.strokeStyle=miss?'#c9b48a':'#c9970f';g.lineWidth=1.6;if(miss)g.setLineDash([5,4]);
   g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();g.stroke();g.setLineDash([]);g.fillStyle=miss?'#a08a60':p.death?'#6b4a1e':'#2b1d10';g.fillText(txt,x,y+1);g.restore();
@@ -1560,19 +1560,19 @@ function paintCardTree(cv){const id=+cv.dataset.ft,L=cardLayout(id),{B,kidN,meN,
   sibN.forEach(o=>limb({x:500,y:o.y+120},o,12,5));
   kidN.forEach(o=>limb({x:500,y:meN.y-meN.r*.6},o,16,7));
   // الأشخاص
-  const man=(o,big)=>{const hk=kidsOf(o.p.id).length;portrait(g,o.p,o.x,o.y,o.r,big?'#e8bd3c':hk?'#123d1e':'#5cb85c',big?8:hk?6:4);let fs=Math.max(24,o.r*.42);if(o.mw){FTM.font=`${fs}px Lalezar`;fs=Math.min(fs,fs*o.mw/(FTM.measureText(o.p.name).width+fs*.9));}nameRibbon(g,o.p.name,o.x,o.y+o.r+fs*.55,fs,big?'#9b6b06':hk?'#123d1e':'#2e7d32');agePill(g,o.p,o.x,o.y+o.r+fs*1.75,Math.max(20,o.r*.34),hits);
+  const man=(o,big)=>{const hk=kidsOf(o.p.id).length;portrait(g,o.p,o.x,o.y,o.r,big?'#e8bd3c':hk?'#123d1e':'#5cb85c',big?8:hk?6:4);let fs=Math.max(L.N?34:24,o.r*.42);if(o.mw){FTM.font=`${fs}px Lalezar`;fs=Math.min(fs,fs*o.mw/(FTM.measureText(o.p.name).width+fs*.9));}nameRibbon(g,o.p.name,o.x,o.y+o.r+fs*.55,fs,big?'#9b6b06':hk?'#123d1e':'#2e7d32');agePill(g,o.p,o.x,o.y+o.r+fs*1.75,Math.max(L.N?32:20,o.r*.34),hits);
     if(!photoImg(o.p)||PHOTO_MODE){const bx=o.x+o.r*.72,by=o.y-o.r*.72,br=Math.max(16,o.r*.28);photoBadge(g,bx,by,br,PHOTO_MODE);hits.push({id:o.p.id,x:bx,y:by,r:br+4,photo:true});}};
-  const girl=o=>{shapeFlower(g,o.x,o.y,o.r*1.05,0);nameIn(g,o.p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,o.p,o.x,o.y+o.r+30,Math.max(20,o.r*.34),hits);};
+  const girl=o=>{shapeFlower(g,o.x,o.y,o.r*1.05,0);nameIn(g,o.p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,o.p,o.x,o.y+o.r+(L.N?34:30),Math.max(L.N?32:20,o.r*.34),hits);};
   [...kidN,...sibN].forEach(o=>o.p.gender==='f'?girl(o):man(o,false));
-  if(L.showSib){g.save();g.font='800 26px Tajawal';g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(B.p.gender==='f'?'إخوانها وأخواتها':'إخوانه وأخواته',500,sibN[0].y-sibN[0].r-22);g.restore();}
+  if(L.showSib){g.save();g.font=`800 ${L.N?34:26}px Tajawal`;g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(B.p.gender==='f'?'إخوانها وأخواتها':'إخوانه وأخواته',500,sibN[0].y-sibN[0].r-22);g.restore();}
   if(kidN.length){g.save();g.translate(500,22);g.scale(1.7,1.7);ribbon(g,`${B.p.gender==='f'?'عيالها':'عيال '+B.p.name} · ${ar(kidN.length)}`,0,0,1);g.restore();}
-  if(B.p.gender==='f'){shapeFlower(g,meN.x,meN.y,meN.r,0);nameIn(g,B.p.name,meN.x,meN.y,meN.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,B.p,meN.x,meN.y+meN.r+30,26,hits);}
-  else{drawMedal(g,B.p,meN.x,meN.y,meN.r,0);nameRibbon(g,B.p.name,meN.x,meN.y+meN.r+26,36,'#9b6b06');agePill(g,B.p,meN.x,meN.y+meN.r+76,26,hits);
+  if(B.p.gender==='f'){shapeFlower(g,meN.x,meN.y,meN.r,0);nameIn(g,B.p.name,meN.x,meN.y,meN.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,B.p,meN.x,meN.y+meN.r+30,L.N?32:26,hits);}
+  else{drawMedal(g,B.p,meN.x,meN.y,meN.r,0);nameRibbon(g,B.p.name,meN.x,meN.y+meN.r+26,36,'#9b6b06');agePill(g,B.p,meN.x,meN.y+meN.r+80,L.N?32:26,hits);
     if(!photoImg(B.p)||PHOTO_MODE){photoBadge(g,meN.x+meN.r*.72,meN.y-meN.r*.72,22,PHOTO_MODE);hits.push({id:B.p.id,x:meN.x+meN.r*.72,y:meN.y-meN.r*.72,r:26,photo:true});}}
   // الأب والجد: لوحة بالنص، صورة يمين، والعمر يسار
   for(const[o,cap]of[[fN,B.p.gender==='f'?'أبوها':'أبوه'],[gN,B.p.gender==='f'?'جدّها':'جدّه']]){if(!o)continue;const rx=o.r*2.4;ftPlaque(g,{...o},'',0);
     portrait(g,o.p,o.x+rx+70,o.y,46,'#e8bd3c',5);if(!photoImg(o.p)||PHOTO_MODE){photoBadge(g,o.x+rx+104,o.y-34,15,PHOTO_MODE);hits.push({id:o.p.id,x:o.x+rx+104,y:o.y-34,r:19,photo:true});}
-    agePill(g,o.p,o.x-rx-80,o.y+18,22,hits);g.save();g.font='800 22px Tajawal';g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(cap,o.x-rx-80,o.y-18);g.restore();}
+    agePill(g,o.p,o.x-rx-80,o.y+20,L.N?32:22,hits);g.save();g.font=`800 ${L.N?32:22}px Tajawal`;g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(cap,o.x-rx-80,o.y-18);g.restore();}
   cv._hits=[...hits,...[...kidN,...sibN,meN,fN,gN].filter(Boolean).map(o=>({id:o.p.id,x:o.x,y:o.y,r:o.kind==='plaque'?o.r*2.2:o.r}))];
   if([...kidN,...sibN,meN,fN,gN].filter(Boolean).some(o=>o.p.photo&&!photoImg(o.p))&&(cv._tries=(cv._tries||0)+1)<8)setTimeout(()=>cv.isConnected&&paintCardTree(cv),250);
   cv.onclick=e=>{const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width/k,y=(e.clientY-r.top)*cv.height/r.height/k;
@@ -1682,7 +1682,7 @@ $('#zin').onclick=()=>zoomAt(1.5,VW/2,VH/2);$('#zout').onclick=()=>zoomAt(1/1.5,
 $('#zall').onclick=()=>{exitFamily();tweenTo(fitView(),900);};
 // زر الرجوع والشجرة كاملة: يرجعك خطوة أو للبداية بدون تحديث الصفحة
 function clearSel(){SEL=null;setHover(null);$('#card').classList.remove('show','peek');setCrumbs(null);if(location.hash)history.replaceState(null,'',location.pathname+location.search);}
-function goBack(){if(RUN){exitFamily();dirty=true;return;}if($('#card').classList.contains('show'))clearSel();tweenTo(fitView(),900);dirty=true;}
+function goBack(){if(RUN){if(FH.length){openFamily(FH.pop(),1);return;}exitFamily();dirty=true;return;}if($('#card').classList.contains('show'))clearSel();tweenTo(fitView(),900);dirty=true;}
 function goHome(){if(RUN)exitFamily();clearSel();tweenTo(fitView(),1000);dirty=true;}
 $('#nbBack').onclick=goBack;$('#nbHome').onclick=goHome;
 setInterval(()=>{const on=!!RUN||$('#card').classList.contains('show')||cam.s>fitView().s*1.25;$('#navback').classList.toggle('show',on);document.body.classList.toggle('famv',!!BL);},300);
@@ -1691,7 +1691,7 @@ $('#replay').onclick=()=>select(selected,true);
 $('#pull').onclick=pullBack;
 
 // يفتح شجرة الشخص مباشرة (بدون رحلة الضوء) بحركة كاميرا سريعة
-function openFamily(id){
+let FH=[];function openFamily(id,back){if(!back&&RUN&&BL&&RUN.id!==id)FH.push(RUN.id);
   $('#card').classList.remove('show','peek');$('#pull').classList.remove('show');pulled=false;sparks=[];setHover(null);
   const path=buildPath(id);
   RUN={id,path,len:path.total,done:false,dim:.6,lit:path.nodes.length,t:0,mode:'done',end:bloomView(id),focus:[id,people[id].father,...kidsOf(id).map(k=>k.id)].filter(i=>i&&people[i])};
@@ -1760,11 +1760,28 @@ function buildTint(){const c=document.createElement('canvas');c.width=Math.ceil(
   for(const p of Object.values(people)){const b=branchOf(p.id);if(!b||!p.pos)continue;const x=p.pos[0]/8,y=p.pos[1]/8,gr=g.createRadialGradient(x,y,0,x,y,26);gr.addColorStop(0,`rgba(${BR[b].col},.10)`);gr.addColorStop(1,`rgba(${BR[b].col},0)`);g.fillStyle=gr;g.fillRect(x-26,y-26,52,52);}
   const cen={};for(const b in BR){const pts=Object.values(people).filter(p=>p.pos&&branchOf(p.id)==b).map(p=>p.pos);if(pts.length){const xs=pts.map(p=>p[0]).sort((a,b)=>a-b),ys=pts.map(p=>p[1]).sort((a,b)=>a-b);cen[b]={x:xs[xs.length>>1],y:ys[ys.length>>1],n:pts.length};}}
   TINT={c,cen};}
-function exitFamily(){if(!RUN)return;const keep={x:cam.x,y:cam.y};RUN=null;BL=null;sparks=[];$('#pull').classList.remove('show');$('#journey').classList.remove('show');
+function exitFamily(){FH=[];if(!RUN)return;const keep={x:cam.x,y:cam.y};RUN=null;BL=null;sparks=[];$('#pull').classList.remove('show');$('#journey').classList.remove('show');
   if(cam.pitch>.02||cam.h>1)tweenTo({x:keep.x,y:keep.y,s:Math.max(cam.s*.7,fitView().s),h:0,pitch:0,yaw:0,roll:0},600);dirty=true;}
 function flyTo(id,s){const q=posOf(id);if(!q)return;const t={x:q.x+(VW>760&&$('#card').classList.contains('show')?-180/(s||Math.max(cam.s,.35)):0),y:q.y+(VW<=760?VH*.18/(s||Math.max(cam.s,.35)):0),s:s||Math.max(cam.s,.35),h:0,pitch:0,yaw:0,roll:0};tweenTo(t,900);}
 function browseSelect(id,s){exitFamily();SEL=id;selected=id;history.replaceState(null,'','#'+id);showCard(id);setHover(null);setCrumbs(id);flyTo(id,s);dirty=true;}
 // ===== البطاقة العائمة عند التمرير =====
+// الوردة/الدائرة ترتفع من مكانها: نقص العقدة من بلاطات الطبعة بدقتها الكاملة ونكبّرها مع ظل وارتداد ناعم
+const PTL=new Map(),PSP=new Map(),POPT={};
+function ptile(k){let i=PTL.get(k);if(!i){i=new Image();i.onload=()=>{dirty=true;};i.src=`../v4/tiles/${k}.jpg`;PTL.set(k,i);}return i.complete&&i.naturalWidth?i:null;}
+function nodeSprite(id){const sp=PSP.get(id);if(sp&&sp.ok)return sp.c;const q=posOf(id),rg=ringOf(id);if(!q)return null;
+  const R=Math.ceil(Math.max(rg.rx,rg.ry)*1.12)+2,c=sp?sp.c:document.createElement('canvas');c.width=c.height=R*2;const g=c.getContext('2d');let ok=true;
+  for(let ty=Math.floor((q.y-R)/TILE);ty<=Math.floor((q.y+R)/TILE);ty++)for(let tx=Math.floor((q.x-R)/TILE);tx<=Math.floor((q.x+R)/TILE);tx++){const im=ptile(tx+'_'+ty);if(!im){ok=false;continue;}g.drawImage(im,tx*TILE-(q.x-R),ty*TILE-(q.y-R));}
+  g.globalCompositeOperation='destination-in';const gr=g.createRadialGradient(R,R,R*.8,R,R,R);gr.addColorStop(0,'#000');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.beginPath();g.ellipse(R,R,rg.rx*1.12,rg.ry*1.12,0,0,7);g.fill();
+  PSP.set(id,{c,ok});return ok?c:null;}
+function popNode(g,id,S,rg,s,now){const c=nodeSprite(id);if(!c){dirty=true;return false;}if(!POPT[id]||POPT[id].gone)POPT[id]={t:now};for(const k in POPT)if(k!=id&&+k!==SEL&&+k!==HOV)delete POPT[k];
+  const t=Math.min(1,(now-POPT[id].t)/520),e=t<1?1+2.2*Math.pow(t-1,3)+1.2*Math.pow(t-1,2):1;if(t<1)dirty=true;   // ارتداد للأعلى
+  const base=Math.max(rg.rx,rg.ry)*s,tr=Math.max(base*1.9,VW<=760?34:44),rr=base+(tr-base)*e,lift=(rr*.9+8)*e,cx=S.x,cy=S.y-lift,k=rr/(c.width/2*0.893);
+  g.save();g.fillStyle=`rgba(40,25,5,${.28*e})`;g.beginPath();g.ellipse(S.x,S.y+base*.4,rr*.8,rr*.22,0,0,7);g.fill();   // ظل على الشجرة
+  g.strokeStyle=`rgba(255,214,90,${.8*e})`;g.lineWidth=2;g.beginPath();g.moveTo(S.x,S.y);g.lineTo(cx,cy+rr*.9);g.stroke();
+  g.shadowColor='rgba(30,15,0,.55)';g.shadowBlur=18*e;g.shadowOffsetY=8*e;g.drawImage(c,cx-c.width/2*k,cy-c.height/2*k,c.width*k,c.height*k);g.shadowColor='transparent';
+  g.strokeStyle='rgba(255,220,110,.95)';g.lineWidth=2.5;g.beginPath();g.ellipse(cx,cy,rg.rx/Math.max(rg.rx,rg.ry)*rr*1.02,rg.ry/Math.max(rg.rx,rg.ry)*rr*1.02,0,0,7);g.stroke();
+  const sh=(now/1400)%1;if(t>=1&&id===HOV){g.globalAlpha=.35*(1-sh);g.lineWidth=2;g.beginPath();g.arc(cx,cy,rr*(1.05+sh*.35),0,7);g.stroke();dirty=true;}   // نبض خفيف
+  g.restore();return true;}
 function setHover(id,x,y){if(id===HOV){if(id&&x!=null)moveTip(x,y);return;}HOV=id;hovT=performance.now();dirty=true;const el=$('#tip');
   if(!id){el.classList.remove('show');if(SEL)setCrumbs(SEL);else setCrumbs(null);return;}
   const p=people[id],f=people[p.father],ks=kidsOf(id),gk=ks.reduce((a,k)=>a+kidsOf(k.id).length,0),age=ageShort(p);
@@ -1821,7 +1838,7 @@ function drawBrowse(g,now){LHIT=[];if(!inBrowse())return;g.save();g.setTransform
       g.strokeStyle=`rgba(255,240,180,${.75*a})`;g.lineWidth=Math.max(2,6*s);g.setLineDash([8,10]);g.lineDashOffset=-now/40;g.beginPath();kp.forEach((p,i)=>i?g.lineTo(p.x,p.y):g.moveTo(p.x,p.y));g.stroke();g.setLineDash([]);
       const ks=w2s(kq.x,kq.y),kr=Math.max(6,ringOf(k.id).rx*s);g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=2;g.beginPath();g.arc(ks.x,ks.y,kr+2,0,7);g.stroke();}
     const r=Math.max(10,Math.max(rg.rx,rg.ry)*s)+4;g.shadowColor='#ffc83a';g.shadowBlur=20;g.strokeStyle=`rgba(255,214,90,${a})`;g.lineWidth=id===SEL?4:3;g.beginPath();g.ellipse(S.x,S.y,Math.max(10,rg.rx*s)+4,Math.max(10,rg.ry*s)+4,0,0,7);g.stroke();g.shadowBlur=0;
-    O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);if(id===SEL&&s<.3)marks.push([people[id].name,S.x,S.y-r-14]);}
+    O.put([S.x-r-4,S.y-r-30,S.x+r+4,S.y+r+4]);const pp=!(id===SEL&&HOV===SEL&&id!==HOV)&&popNode(g,id,S,rg,s,now);if(id===SEL&&s<.3&&!pp)marks.push([people[id].name,S.x,S.y-r-14]);}
   // أسماء الخريطة فوق كل شي ما عدا اسم المحدد
   for(const[t,x,y]of marks)tag(g,t,x,y,'#b8860b',1,14);
   g.restore();drawMini();}
@@ -2140,7 +2157,7 @@ function renderCard(id){
   const chips=l=>`<div class="chips">${l.map(k=>`<button class="chip ${k.gender}" data-go="${k.id}">${k.name}</button>`).join('')}</div>`;
   $('#card').innerHTML=`
     <div class="peekbar"><span class="grab"></span><div class="ph1">${avatar(p)}<div class="pt"><b>${p.name}${id===meId()?'<em>أنا</em>':''}</b><small>${nasabTail(id)}</small><span class="pg2">الجيل ${ar(c.length)} · ${familyOf(id)}${ageShort(p)?' · '+ageShort(p):''}</span></div><button class="pclose" data-act="pclose" aria-label="إغلاق">${SV(IC.x,16)}</button></div>
-      <div class="pacts"><button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button><button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><a class="pa" href="nasab.html?id=${id}" target="_blank" rel="noopener">${SV(IC.scroll,19)}شجرة النسب PDF</a><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button></div></div>
+      <div class="pacts"><button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button><button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><a class="pa" href="nasab.html?id=${id}" target="_blank" rel="noopener">${SV(IC.scroll,19)}النسب PDF</a><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button></div></div>
     <button class="x" data-act="close" title="إغلاق">×</button>
     <div class="medal ${p.gender}">${p.photo&&!isF?`<img src="${p.photo}" alt="${p.name}">`:(isF?'🌸':p.name[0])}</div>
     <h3>${p.name}</h3>${p.title?`<div class="ttl">${p.title}</div>`:''}
