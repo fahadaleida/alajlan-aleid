@@ -12,7 +12,7 @@
 
   // ===== التصفية: أي تغيير يعيد بناء المجلد =====
   const nav = o => {const u = new URLSearchParams(); const c = o.c ?? cat, y = o.y ?? yr, s = o.q ?? q;
-    if (c) u.set('c', c); if (y) u.set('y', y); if (s) u.set('q', s); location.href = 'news.html' + (String(u) ? '?' + u : '');};
+    if (c) u.set('c', c); if (y) u.set('y', y); if (s) u.set('q', s); location.href = 'volume.html' + (String(u) ? '?' + u : '');};
   const inYr = p => !yr || p.d.startsWith(yr);
   $('#vcat').innerHTML = CATS.map(([c, t]) => `<button role="tab" data-c="${c}" aria-selected="${c === cat}">${t}<small>${ar(posts.filter(p => (!c || p.c === c) && inYr(p)).length)}</small></button>`).join('');
   $('#vcat').onclick = e => {const b = e.target.closest('[data-c]'); if (b && b.dataset.c !== cat) nav({c: b.dataset.c});};
@@ -232,7 +232,7 @@
     const g = t.closest('[data-go]'); if (g) return go(+g.dataset.go);
     const m = t.closest('[data-album]'); if (m) {location.href = `album.html?id=${m.dataset.album}`; return;}
     const c = t.closest('[data-cat]'); if (c) return nav({c: c.dataset.cat});
-    if (t.closest('[data-reset]')) {location.href = 'news.html'; return;}
+    if (t.closest('[data-reset]')) {location.href = 'volume.html'; return;}
     const a = t.closest('a[href]'); if (a) location.href = a.href;
   }, true);
   bookEl.addEventListener('click', e => {if (e.target.closest('a')) e.preventDefault();});

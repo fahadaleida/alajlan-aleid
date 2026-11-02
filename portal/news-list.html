@@ -30,7 +30,7 @@
       <div class="tabs" id="tabs" style="margin:0"></div>
       <label class="search"><span style="color:var(--gold-d)" id="sic"></span><input id="q" type="search" placeholder="ابحث في الأخبار… (اسم، مناسبة، سنة)"></label>
     </div>
-    <div class="nm-bar"><div class="count" id="count"></div><a class="nm-vol" id="volLink" href="news.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>عرض كمجلد «سجل الأسرة»</a></div>
+    <div class="nm-bar"><div class="count" id="count"></div><a class="nm-vol" id="volLink" href="volume.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>عرض كمجلد «سجل الأسرة»</a></div>
     <a class="magslink" id="magsLink" href="coverages.html" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>تصفّح التغطيات كمجلات مصوّرة</a>
     <div class="nm-grid" id="grid"></div>
     <div class="pager" id="pager"></div>
@@ -99,7 +99,7 @@
     $('#pager').innerHTML = pages > 1 ? pg : '';
     const u = new URLSearchParams(); if (cat) u.set('c', cat); if (yr) u.set('y', yr); if (q) u.set('q', q); if (page > 1) u.set('p', page);
     history[push ? 'pushState' : 'replaceState'](null, '', '?' + u);
-    $('#volLink').href = 'news.html' + (String(u) ? '?' + u : '');
+    $("#volLink").href = "volume.html" + (String(u) ? '?' + u : '');
     reveal();
   }
   $('#tabs').addEventListener('click', e => {const b = e.target.closest('button'); if (!b) return; cat = b.dataset.c; page = 1; render(true);});

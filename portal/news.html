@@ -3,64 +3,114 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>سجل الأسرة · الأخبار والمناسبات | أسرة العجلان والعيد</title>
-<meta name="description" content="سجل أسرة العجلان والعيد: أخبار الأسرة ومناسباتها ودعواتها في مجلد تتقلّب صفحاته.">
-<meta name="theme-color" content="#E9D6BE">
+<title>الأخبار والمناسبات | أسرة العجلان والعيد</title>
+<meta name="description" content="أخبار أسرة العجلان والعيد ودعواتها ومناسباتها، كل خبر غلاف مجلة.">
+<meta name="theme-color" content="#1A1448">
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://alajlanandaleid.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="reader.css?v=202611031800">
-<link rel="stylesheet" href="album.css?v=202611031800">
-<link rel="stylesheet" href="volume.css?v=202611032030">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=202611021830">
+<link rel="stylesheet" href="home.css?v=202611021830">
+<link rel="stylesheet" href="shelf.css?v=202611032230">
 </head>
-<body class="reader album volume">
+<body class="scened shelfpg">
 <div id="scene" aria-hidden="true"></div>
-<div class="amb" aria-hidden="true"><i class="sun"></i></div>
-
-<header class="rbar">
-  <a class="rback" href="index.html" aria-label="الرئيسية">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span>الرئيسية</span></a>
-  <a class="rbrand" href="index.html" aria-label="الرئيسية"><img src="img/logo-mark.png" alt=""><span class="bname"><b>العجلان</b><b>والعيد</b></span></a>
-  <i class="rsep" aria-hidden="true"></i>
-  <div class="rtitle"><b id="rt">سجل الأسرة</b><small id="rs">الأخبار والمناسبات والدعوات</small></div>
-  <div class="ract">
-    <button class="ib vf-t" id="bFil" aria-label="التصفية والبحث" aria-pressed="false"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button>
-    <div class="tools">
-    <button class="ib" id="bThumbs" title="الصفحات" aria-label="عرض الصفحات" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
-    <button class="ib" id="bFull" title="ملء الشاشة" aria-label="ملء الشاشة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-    </div>
-    <a class="ib dl" id="bList" href="news-list.html" title="عرض الأخبار كقائمة" aria-label="عرض الأخبار كقائمة"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span>عرض كقائمة</span></a>
+<div class="page-top">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ الأخبار والمناسبات</div>
+    <span class="sh-kick">أرشيف أسرة العجلان والعيد</span>
+    <h1>الأخبار والمناسبات</h1>
+    <div class="sh-rule"><i></i><b></b><i></i></div>
+    <p id="sum">كل خبر غلاف مجلة</p>
   </div>
-</header>
-
-<div class="vfil" id="vfil">
-  <div class="vseg" id="vcat" role="tablist" aria-label="القسم"></div>
-  <label class="vsel"><span class="sr">السنة</span><select id="vyear" aria-label="السنة"></select></label>
-  <form class="vq" id="vqf" role="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="vq" type="search" placeholder="ابحث في السجل… (اسم، مناسبة)"></form>
 </div>
-
-<main class="stage" id="stage">
-  <button class="arr prev" id="bPrev" aria-label="الصفحة السابقة"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-  <div class="bookzone" id="zone">
-    <div class="glow" aria-hidden="true"></div>
-    <div class="rise"><div class="shift" id="shift"><div class="floor" aria-hidden="true"></div><div id="book" class="book"></div></div></div>
+<main class="sh-main"><div class="wrap">
+  <div class="sh-bar">
+    <div class="sh-tabs" id="tabs" role="tablist"></div>
+    <label class="sh-sel"><span class="sr">السنة</span><select id="year" aria-label="السنة"></select></label>
+    <form class="sh-q" id="qf" role="search"><span id="sic"></span><input id="q" type="search" placeholder="ابحث… (اسم، مناسبة)"></form>
   </div>
-  <button class="arr next" id="bNext" aria-label="الصفحة التالية"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <div class="intro" id="intro"><div class="icard"><div class="spin"></div><span>جارٍ فتح سجل الأسرة…</span></div></div>
-</main>
-
-<footer class="rfoot">
-  <div class="thumbs" id="thumbs" aria-label="صفحات السجل"></div>
-  <div class="ctrl">
-    <span class="cnt" id="cnt">—</span>
-    <input type="range" id="prog" min="1" max="2" value="1" dir="rtl" aria-label="الانتقال إلى صفحة">
-    <span class="hint" id="hint">اضغط على أي خبر لقراءته</span>
-  </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <div class="sh-sub"><span id="count"></span>
+    <span class="sh-alt"><a href="volume.html" id="toVol">عرض كمجلد «سجل الأسرة»</a><a href="news-list.html" id="toList">عرض كقائمة</a></span></div>
+  <div id="list"></div>
+  <div class="sh-more" id="more"></div>
+</div></main>
 <script src="common.js?v=202611032200"></script>
-<script src="volume.js?v=202611032100"></script>
+<script src="rockets.js?v=202611021830"></script>
+<script>
+(async () => {
+  const [site, posts, aidx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611032230').then(r => r.json()).catch(() => ({a: {}}))]);
+  buildChrome(site);
+  loadCrops();
+  $('#sic').innerHTML = svg('search', 18);
+  const albums = aidx.a || {};
+  const CATS = [['', 'الكل'], ['أخبار الاسرة', 'الأخبار'], ['دعوات الأسرة', 'الدعوات'], ['مناسبات الاسرة', 'المناسبات']];
+  const KICK = {'أخبار الاسرة': 'خبر', 'دعوات الأسرة': 'دعوة', 'مناسبات الاسرة': 'مناسبة'};
+  const P = new URLSearchParams(location.search);
+  let cat = P.get('c') || '', yr = P.get('y') || '', q = P.get('q') || '', shown = 0;
+  const STEP = 36;
+  const years = [...new Set(posts.map(p => p.d.slice(0, 4)))].sort((a, b) => b - a);
+  $('#year').innerHTML = `<option value="">كل السنوات</option>` + years.map(y => `<option value="${y}">${ar(+y)}</option>`).join('');
+  $('#q').value = q;
+  const norm = s => s.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[ً-ْ]/g, '');
+  // عنوان الغلاف: «تغطية حفل زواج فلان» ← نوع المناسبة + الاسم
+  const split = t => {
+    let s = t.replace(/ﮪ/g, 'هـ').replace(/^تغطية\s+/, '');
+    let m = s.match(/^(?:حفل\s+)?(زواج|زفاف)\s+(.+)$/); if (m) return [m[1] === 'زفاف' ? 'حفل زفاف' : 'حفل زواج', m[2]];
+    m = s.match(/^(دعوة\s+(?:حفل\s+)?(?:زواج|زفاف|عشاء|غداء|معايدة)?)\s*(.+)$/); if (m && m[2].length > 4) return [m[1].trim(), m[2]];
+    return ['', s];
+  };
+  let L = [];
+  function filter(push) {
+    $('#tabs').innerHTML = CATS.map(([c, t]) => `<button role="tab" data-c="${c}" aria-selected="${c === cat}">${t}<small>${ar(posts.filter(p => (!c || p.c === c) && (!yr || p.d.startsWith(yr))).length)}</small></button>`).join('');
+    $('#year').value = yr;
+    const nq = norm(q.trim());
+    L = posts.filter(p => (!cat || p.c === cat) && (!yr || p.d.startsWith(yr)) && (!nq || norm(p.t + ' ' + p.x + ' ' + p.d).includes(nq)));
+    $('#sum').textContent = `${ar(posts.length)} خبراً ودعوة ومناسبة، كل واحدة غلاف مجلة`;
+    $('#count').textContent = L.length ? `${ar(L.length)} ${L.length > 10 ? 'غلافاً' : 'أغلفة'}${yr ? ` · عام ${ar(+yr)}` : ''}` : 'لا توجد نتائج';
+    const u = new URLSearchParams(); if (cat) u.set('c', cat); if (yr) u.set('y', yr); if (q) u.set('q', q);
+    const qs = String(u) ? '?' + u : '';
+    history[push ? 'pushState' : 'replaceState'](null, '', location.pathname + qs);
+    $('#toVol').href = 'volume.html' + qs; $('#toList').href = 'news-list.html' + qs;
+    $('#list').innerHTML = ''; shown = 0; more();
+  }
+  const cover = p => {
+    const A = albums[p.id], [kind, name] = split(p.t), [y, m, d] = p.d.split('-').map(Number);
+    const img = A ? (/^https?:/.test(A[0]) ? A[0] : aidx.base + A[0]) : p.i;
+    const href = A ? `album.html?id=${p.id}` : `post.html?id=${p.id}`;
+    return `<a class="mz" href="${href}"><span class="mz-cv">
+      <span class="mz-ph">${img ? `<img data-src="${esc(img)}" data-id="${A ? '' : p.id}" alt="" decoding="async">` : '<i class="mz-no"></i>'}</span>
+      <span class="mz-m"><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></span>
+      <span class="mz-t"><span class="mz-k">${KICK[p.c] || 'خبر'}</span>${kind ? `<em>${esc(kind)}</em>` : ''}<b class="${name.length > 24 ? 'xs' : name.length > 17 ? 'sm' : ''}">${esc(name)}</b><i></i><small>${ar(d)} ${MONTHS[m - 1]} ${ar(y)}</small></span>
+      ${A ? `<span class="mz-n">${ar(A[2])}<small>صورة</small></span>` : ''}</span>
+      <span class="mz-cap">${A ? 'مجلة مصوّرة · تصفّح الصور' : 'اقرأ الخبر'}</span></a>`;
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {if (!e.isIntersecting) return; const im = e.target; io.unobserve(im);
+    im.onload = () => {if (im.dataset.id) fillFrame(im, im.dataset.id); im.classList.add('in');}; im.src = im.dataset.src;}), {rootMargin: '700px 0px'});
+  function more() {
+    const S = L.slice(shown, shown + STEP); if (!S.length && shown) return;
+    let html = '', lastY = shown ? L[shown - 1].d.slice(0, 4) : '';
+    for (let k = 0; k < S.length;) {
+      const y = S[k].d.slice(0, 4); let e = k; while (e < S.length && S[e].d.startsWith(y)) e++;
+      html += (y !== lastY ? `<h2 class="sh-year">${ar(+y)}<small>${ar(L.filter(p => p.d.startsWith(y)).length)} غلاف</small><i></i></h2>` : '') + `<div class="shelf">${S.slice(k, e).map(cover).join('')}</div>`;
+      lastY = y; k = e;
+    }
+    $('#list').insertAdjacentHTML('beforeend', html);
+    shown += S.length;
+    $('#list').querySelectorAll('img[data-src]:not([src])').forEach(im => io.observe(im));
+    const left = L.length - shown;
+    $('#more').innerHTML = left > 0 ? `<button id="moreB">عرض ${ar(Math.min(STEP, left))} غلافاً آخر <small>(بقي ${ar(left)})</small></button>` : '';
+    if (left > 0) $('#moreB').onclick = more;
+  }
+  addEventListener('resize', () => document.querySelectorAll('.mz-ph img.in').forEach(im => im.dataset.id && fillFrame(im, im.dataset.id)));
+  $('#tabs').onclick = e => {const b = e.target.closest('[data-c]'); if (b) {cat = b.dataset.c; filter(true);}};
+  $('#year').onchange = e => {yr = e.target.value; filter(true);};
+  let t; $('#q').oninput = e => {clearTimeout(t); t = setTimeout(() => {q = e.target.value.trim(); filter(false);}, 250);};
+  $('#qf').onsubmit = e => e.preventDefault();
+  addEventListener('popstate', () => {const P = new URLSearchParams(location.search); cat = P.get('c') || ''; yr = P.get('y') || ''; q = P.get('q') || ''; $('#q').value = q; filter(false);});
+  filter(false);
+})();
+</script>
 </body>
 </html>
