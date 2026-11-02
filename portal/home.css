@@ -293,47 +293,31 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
 }
 @media (min-width:640px) and (max-width:1023px){body.home:not(.mags) .hgrid>.log{margin-top:560px}}
 
-/* ===== سجل الأسرة شريط عريض قصير أسفل الشاشة (سطح المكتب): يبين الجبل والسماء فوقه ===== */
-.lnav{display:none}
+/* ===== الشجرة بعيدة ورا المرقب، والسجل لوحة كبيرة شبه مربعة (سطح المكتب) ===== */
+.towerfg{display:none}
 @media (min-width:1024px){
-  body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 372px));align-items:end}
-  body.home:not(.mags) .log{min-height:0;padding:20px 24px 16px!important;border-radius:26px;display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"h s n" "b b b" "y y y";align-items:center;column-gap:18px;
-    background:linear-gradient(180deg,rgba(251,250,247,.58),rgba(251,250,247,.72));backdrop-filter:blur(22px) saturate(1.35);-webkit-backdrop-filter:blur(22px) saturate(1.35);border:1px solid rgba(255,255,255,.55);box-shadow:0 24px 60px rgba(20,16,48,.3)}
-  body.home:not(.mags) .log-h{grid-area:h;gap:16px;align-items:center}
-  body.home:not(.mags) .log-h h2{font-size:24px;line-height:1.2}
-  body.home:not(.mags) .log-h small{font-size:12px}
-  body.home:not(.mags) .log-h>a{font-size:14px;white-space:nowrap;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.55)}
-  body.home:not(.mags) .log>div:has(>.seg){grid-area:s;justify-self:start}
-  body.home:not(.mags) .seg{margin-top:0;background:rgba(241,237,228,.75)}
-  body.home:not(.mags) .seg button{height:30px;padding:0 13px;font-size:13.5px}
-  body.home:not(.mags) .lnav{grid-area:n;display:flex;gap:8px}
-  body.home:not(.mags) .lnav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(192,133,55,.45);background:rgba(255,255,255,.7);color:#8A5A1C;display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s}
-  body.home:not(.mags) .lnav button:hover{background:#C08537;color:#fff}
-  body.home:not(.mags) .log-b{grid-area:b;display:block;margin-top:14px;min-width:0}
-  body.home:not(.mags) .pv{display:none}
-  body.home:not(.mags) .idx{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:2px;padding:2px 2px 6px;scrollbar-width:none;mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
-  body.home:not(.mags) .idx::-webkit-scrollbar{display:none}
-  body.home:not(.mags) .row{flex:0 0 calc((100% - 3 * 14px) / 4);display:flex;flex-direction:column;min-height:0;padding:0 0 12px;border:0;border-radius:16px;background:rgba(255,255,255,.72);box-shadow:0 6px 18px rgba(20,16,48,.12);overflow:hidden;scroll-snap-align:start;transition:transform .2s,box-shadow .2s,background .2s}
-  body.home:not(.mags) .row::before{display:none}
-  body.home:not(.mags) .row:hover,body.home:not(.mags) .row:focus-visible{transform:translateY(-3px);background:#fff;box-shadow:0 12px 26px rgba(20,16,48,.2)}
-  body.home:not(.mags) .row .th{display:block;order:-1;position:relative;width:100%;height:auto;aspect-ratio:16/10;margin:0;border-radius:0;background-size:cover;background-position:center 25%;overflow:hidden}
-  body.home:not(.mags) .row .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  body.home:not(.mags) .row .dt{position:absolute;margin:0;padding:3px 9px;border:0;top:8px;right:8px;z-index:2;display:flex;gap:4px;align-items:baseline;border-radius:999px;background:rgba(20,16,48,.62);backdrop-filter:blur(6px);color:#fff}
-  body.home:not(.mags) .row .dt b{display:inline;font-size:13px;color:#F6E2B6}
-  body.home:not(.mags) .row .dt small{font-size:11px;color:#fff}
-  body.home:not(.mags) .row .tx{padding:10px 12px 0}
-  body.home:not(.mags) .row .tx em{font-size:11.5px}
-  body.home:not(.mags) .row .tx b{font-size:14.5px;line-height:1.5;margin-top:2px}
-  body.home:not(.mags) .years{grid-area:y;margin-top:8px;gap:6px}
-  body.home:not(.mags) .years span{font-size:12px}
-  body.home:not(.mags) .years a{height:26px;padding:0 10px;font-size:12px;background:rgba(255,255,255,.5);border-color:rgba(192,133,55,.35)}
+  body.far{--S:max(calc(100vw / 2560),calc(100vh / 1441));--fth:calc(470 * var(--S));--ftw:calc(var(--fth) * 1790 / 2342);
+    --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 2085 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
+    --fhl:calc((100vw - min(1280px, 100vw - 32px)) / 2)}
+  /* المرقب مقصوص فوق الشجرة بنفس حساب الخلفية بالضبط */
+  body.far .towerfg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;background:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
+  body.far .towerfg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.10) 0%,rgba(20,16,48,.18) 45%,rgba(20,16,48,.55) 80%,rgba(20,16,48,.78) 100%);
+    -webkit-mask:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat;mask:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
+  /* الشجرة: صغيرة وبعيدة، قاعدتها على الأرض البعيدة (y=١٢١٥ من ١٤٤١) ونصف تاجها الأيمن ورا المرقب */
+  body.home.far:not(.mags) .hgrid>.htree{position:fixed;z-index:-1;right:auto;bottom:auto;transform:none;margin:0;width:var(--ftw);
+    left:var(--ftl);top:calc(100vh - 1441 * var(--S) + 1215 * var(--S) - .9716 * var(--fth))}
+  body.home.far:not(.mags) .hgrid>.htree .halo,body.home.far .htree .ground,body.home.far .htree .gbar{display:none}
+  body.home.far:not(.mags) .hgrid>.htree .st{height:var(--fth);--sh:var(--fth)}
+  body.home.far:not(.mags) .hgrid>.htree .st img#treeImg{height:var(--fth);bottom:0;
+    filter:saturate(.7) sepia(.22) brightness(.86) contrast(.9) blur(.25px) drop-shadow(0 0 10px rgba(255,170,90,.18))}
+  body.home.far:not(.mags) .hgrid>.htree .st img#treeImg.pulse{filter:saturate(.8) sepia(.2) brightness(1) contrast(.9) drop-shadow(0 0 10px rgba(255,190,110,.55))}
+  body.home.far:not(.mags) .hgrid>.htree .st img.soilimg{width:calc(var(--fth) * 1700 / 2342);bottom:calc(var(--fth) * -180 / 2342);filter:saturate(.7) brightness(.8) blur(.3px)}
+  body.home.far:not(.mags) .hgrid>.htree .st canvas{opacity:.9}
+  /* رابط البحث: حبة صغيرة تحت الشجرة يسار المرقب */
+  body.home.far:not(.mags) .hgrid>.htree .tlink{position:absolute;top:calc(100% + 14px);bottom:auto;left:50%;transform:translateX(-62%);z-index:3;font-size:11.5px;padding:4px 11px}
+  /* السجل: لوحة كبيرة شبه مربعة يسار الشجرة */
+  body.home.far:not(.mags) .hgrid{display:block;padding-top:calc(var(--nav) + 26px)}
+  body.home.far:not(.mags) .hgrid>.log{width:min(940px,calc(var(--ftl) - var(--fhl) - 36px));margin-left:0;margin-right:auto;min-height:0;position:relative;z-index:1}
+  body.home.far:not(.mags) .log-b{grid-template-columns:1fr 330px}
+  body.home.far:not(.mags) .quick{width:min(940px,calc(var(--ftl) - var(--fhl) - 36px));margin-left:0;margin-right:auto;grid-template-columns:repeat(3,1fr)}
 }
-@media (min-width:1024px) and (max-height:760px){body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 340px))}body.home:not(.mags) .row .th{aspect-ratio:2/1}}
-/* السجل أكبر شوي ومزاح لليسار */
-@media (min-width:1024px){
-  body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 470px))}
-  body.home:not(.mags) .log{margin-left:calc(-1 * min(150px, max(0px, (100vw - 1280px) / 2 - 24px)))}
-  body.home:not(.mags) .row .th{aspect-ratio:4/3}
-  body.home:not(.mags) .row .tx b{font-size:15px}
-}
-@media (min-width:1024px) and (max-height:760px){body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 400px))}body.home:not(.mags) .row .th{aspect-ratio:16/10}}

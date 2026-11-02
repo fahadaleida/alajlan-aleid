@@ -10,10 +10,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
-<link rel="stylesheet" href="home.css?v=202611040210">
+<link rel="stylesheet" href="home.css?v=202611040300">
 </head>
-<body class="home">
-<div id="scene" aria-hidden="true"></div>
+<body class="home far">
+<div id="scene" aria-hidden="true"></div><div class="towerfg" aria-hidden="true"></div>
 
 
 <main class="hwrap">
@@ -27,7 +27,6 @@
         <div class="pv" id="pv"><div class="ph" id="ph"></div><p id="pvx"></p></div>
       </div>
       <div class="years" id="years"></div>
-      <div class="lnav" aria-hidden="true"><button type="button" class="lpv" tabindex="-1" aria-label="السابق"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" class="lnx" tabindex="-1" aria-label="التالي"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button></div>
       <a class="allm" href="news.html">كل الأخبار والمناسبات</a>
     </section>
 
@@ -111,21 +110,17 @@ const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله و
     seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.c === cur));
     const on = seg.querySelector('button.on'), puck = $('#puck');
     puck.style.width = on.offsetWidth + 'px'; puck.style.left = on.offsetLeft + 'px';
-    const wide = matchMedia('(min-width:1024px)').matches;   // سطح المكتب: شريط بطاقات أفقي
-    L = posts.filter(p => !cur || p.c === cur).slice(0, mobile() ? 5 : wide ? 10 : 6);
+    L = posts.filter(p => !cur || p.c === cur).slice(0, mobile() ? 5 : 6);
     const idx = $('#idx'); idx.style.opacity = 0;
     setTimeout(() => {
       idx.innerHTML = L.map((p, k) => {const [y, m, d] = p.d.split('-').map(Number);
         return `<a class="row" href="post.html?id=${p.id}" data-k="${k}"><span class="dt"><b>${ar(d)}</b><small>${MONTHS[m - 1]} ${ar(y)}</small></span>
-          <span class="tx"><em><i style="background:${DIA[p.c] || '#322781'}"></i>${esc(catName(p.c))}</em><b>${esc(p.t)}</b></span><span class="th" style="background-image:url('${esc(p.i)}')">${wide ? `<img src="${esc(p.i)}" alt="" loading="lazy" decoding="async" data-id="${p.id}">` : ''}</span></a>`;}).join('');
-      idx.style.opacity = 1; show(0); idx.scrollLeft = 0;
-      idx.querySelectorAll('.th img').forEach(im => {const go = () => fillFrame(im, +im.dataset.id); im.complete && im.naturalWidth ? go() : im.addEventListener('load', go, {once: true});});
+          <span class="tx"><em><i style="background:${DIA[p.c] || '#322781'}"></i>${esc(catName(p.c))}</em><b>${esc(p.t)}</b></span><span class="th" style="background-image:url('${esc(p.i)}')"></span></a>`;}).join('');
+      idx.style.opacity = 1; show(0);
       idx.querySelectorAll('.row').forEach(r => {r.onmouseenter = r.onfocus = () => show(+r.dataset.k);});
     }, 180);
     $('#idx').closest('.log').querySelectorAll('.log-h a,.allm').forEach(a => a.href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : ''));
   };
-  {const idx = $('#idx'), st = d => idx.scrollBy({left: d * Math.max(200, idx.clientWidth * .8), behavior: 'smooth'});   // الأسهم: في العربي «التالي» يسار
-    $('.lnav .lnx').onclick = () => st(-1); $('.lnav .lpv').onclick = () => st(1);}
   seg.addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
   draw(); addEventListener('resize', () => {const on = seg.querySelector('button.on'); if (on) {$('#puck').style.width = on.offsetWidth + 'px'; $('#puck').style.left = on.offsetLeft + 'px';}});
   // تحميل صور الستة مسبقاً
