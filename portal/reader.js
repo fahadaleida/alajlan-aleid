@@ -110,7 +110,7 @@
   };
   const next = () => pf.flipPrev(), prev = () => pf.flipNext();
 
-  pf.on('flip', () => {ui(); $('#hint').classList.add('gone');});
+  pf.on('flip', () => {const was = curP; ui(); if (curP !== was && document.body.classList.contains('ready')) $('#hint').classList.add('gone');});
   // عند تغيّر الاتجاه (جوال/شاشة) نبقى على نفس الصفحة
   pf.on('changeOrientation', () => ui());
   pf.on('changeState', e => {
