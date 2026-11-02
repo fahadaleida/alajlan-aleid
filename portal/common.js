@@ -44,20 +44,20 @@ const SOC_NAME = {facebook: 'فيسبوك', twitter: 'إكس', instagram: 'ان�
 
 // الأقسام: الرابط يوجّه للرئيسية من الصفحات الأخرى
 const MENU = [
-  {k: 'home', t: 'الرئيسية', h: '#top'},
-  {k: 'vision', t: 'الرؤية والرسالة', h: '#vision'},
-  {k: 'people', t: 'عن العائلة', h: '#about'},
-  {k: 'tribe', t: 'قبيلة هذيل', h: '#hudhayl'},
-  {k: 'news', t: 'الأخبار والمناسبات', h: 'news.html', page: 1},
-  {k: 'mag', t: 'المجلات', h: '#magazines'},
-  {k: 'fund', t: 'صندوق العائلة', h: '#fund'},
-  {k: 'award', t: 'جائزة التفوق العلمي', h: '#award'},
-  {k: 'film', t: 'الفيلم الوثائقي', h: '#film'},
-  {k: 'sms', t: 'الاشتراك بجوال العائلة', h: '#sms'},
-  {k: 'mail', t: 'تواصل معنا', h: '#contact'},
+  {k: 'home', t: 'الرئيسية', h: 'index.html'},
+  {k: 'vision', t: 'الرؤية والرسالة', h: 'page.html?p=vision'},
+  {k: 'people', t: 'عن العائلة', h: 'page.html?p=about'},
+  {k: 'tribe', t: 'قبيلة هذيل', h: 'page.html?p=hudhayl'},
+  {k: 'news', t: 'الأخبار والمناسبات', h: 'news.html'},
+  {k: 'mag', t: 'المجلات', h: 'page.html?p=magazines'},
+  {k: 'fund', t: 'صندوق العائلة', h: 'page.html?p=fund'},
+  {k: 'award', t: 'جائزة التفوق العلمي', h: 'page.html?p=award'},
+  {k: 'film', t: 'الفيلم الوثائقي', h: 'page.html?p=film'},
+  {k: 'sms', t: 'الاشتراك بجوال العائلة', h: 'page.html?p=sms'},
+  {k: 'mail', t: 'تواصل معنا', h: 'page.html?p=contact'},
 ];
 const IS_HOME = !!document.body.dataset.home;
-const href = m => m.page || IS_HOME ? m.h : 'index.html' + m.h;
+const href = m => m.h;
 
 function buildChrome(site) {
   const top = MENU.filter(m => ['home', 'vision', 'people', 'tribe', 'news', 'mag', 'fund', 'mail'].includes(m.k));

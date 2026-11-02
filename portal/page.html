@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أسرة العجلان والعيد</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- رأس الصفحة: المشهد (الجبل والبرج) بارتفاع قصير -->
+<div class="sub-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ <span id="crumb"></span></div>
+    <h1 id="title"></h1>
+    <p id="lead"></p>
+  </div>
+</div>
+<section style="padding-top:44px">
+  <div class="wrap" id="body"></div>
+</section>
+<script src="common.js"></script>
+<script>
+(async () => {
+  const site = await loadJSON('data/site.json');
+  buildChrome(site);
+  const k = new URLSearchParams(location.search).get('p') || 'vision';
+  const set = (t, lead) => {document.title = `${t} | أسرة العجلان والعيد`; $('#title').textContent = t; $('#crumb').textContent = t; $('#lead').textContent = lead || '';};
+  const B = $('#body');
+  const ic = (k, s = 18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+  const P = {
+    vision() {
+      set('الرؤية والرسالة', 'رؤية الأسرة ورسالتها وأهدافها');
+      B.innerHTML = `<div class="vm"><div class="card rv"><h3>الرؤية</h3><p>${esc(site.vision)}</p></div><div class="card rv"><h3>الرسالة</h3><p>${esc(site.mission)}</p></div></div>
+        <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">الأهداف</h3><ol class="goals">${site.goals.map(g => `<li class="rv">${esc(g)}</li>`).join('')}</ol>`;
+    },
+    about() {
+      set('عن العائلة', 'أصل أسرة العجلان والعيد وذرية مطارفة الطير');
+      const md = site.tree.downloads.find(d => d.t.includes('مطارفة'));
+      B.innerHTML = `<div class="two"><div class="card rv" style="padding:28px"><div class="prose"><p>${esc(site.about.intro)}</p></div>
+          <h3 class="sub">مطارفة الطير</h3><div class="prose"><p>${esc(site.about.mutarifa)}</p></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px"><a class="btn navy" href="${TREE_URL}">الشجرة التفاعلية</a>${md ? `<a class="btn ghost" href="${esc(md.u)}" target="_blank" rel="noopener">تحميل شجرة مطارفة الطير</a>` : ''}</div></div>
+        <div class="card chain rv"><span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span></div></div>
+        <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">ذرية مطارفة الطير في نجد</h3>
+        <div class="fams">${site.about.branches.map((b, i) => `<div class="fam rv ${i ? '' : 'main'}"><h4>${esc(b.name)}</h4><p>${esc(b.text)}</p></div>`).join('')}</div>`;
+    },
+    hudhayl() {
+      set('قبيلة هذيل', 'هذيل بن مدركة بن إلياس بن مضر بن نزار بن معد بن عدنان');
+      const H = site.hudhayl, quotes = H.filter(l => /^قال عن/.test(l)), facts = H.filter(l => /^أن(ها| منها| كلاً|هم| عثمان)/.test(l)), paras = H.filter(l => !quotes.includes(l) && !facts.includes(l));
+      B.innerHTML = `<div class="card rv reading"><div class="prose">${paras.map(p => `<p>${esc(p)}</p>`).join('')}</div></div>
+        <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">من مزايا قبيلة هذيل</h3><ul class="facts reading">${facts.map(x => `<li class="rv">${esc(x)}</li>`).join('')}</ul>
+        <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">قالوا عن هذيل</h3><div class="quotes">${quotes.map(x => `<div class="rv">${esc(x)}</div>`).join('')}</div>`;
+    },
+    magazines() {
+      set('مجلة الأسرة', 'أعداد مجلة أسرة العجلان والعيد للتحميل والقراءة');
+      B.innerHTML = `<div class="shelf">${site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b>${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)} · ${esc(m.size)}</span><br><em>${ic('dl', 15)} تحميل</em></div></a>`).join('')}</div>
+        <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة</a></div>`;
+    },
+    film() {
+      set('الفيلم الوثائقي للعائلة', site.film.title);
+      B.innerHTML = `<div class="yt rv" id="yt" style="background-image:url(https://i.ytimg.com/vi/${site.film.youtube}/hqdefault.jpg)"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="cap">${esc(site.film.title)}</div></div>`;
+      $('#yt').onclick = e => {const y = e.currentTarget; y.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${site.film.youtube}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;};
+    },
+    fund() {
+      set('صندوق العائلة', 'الصندوق التكافلي لأسرة العجلان والعيد');
+      B.innerHTML = `<div class="two"><div class="card rv" style="padding:28px"><h3 class="sub" style="margin-top:0">أرقام حسابات الصندوق</h3><p style="color:var(--muted)">${esc(site.fund.bank)} · باسم: ${esc(site.fund.holder)}</p>
+          ${site.fund.accounts.map(a => `<div style="margin-top:14px"><b>${esc(a.name)}</b><div class="iban"><span>${esc(a.iban)}</span><button data-copy="${esc(a.iban)}">نسخ</button></div></div>`).join('')}</div>
+        <div class="card rv" style="padding:28px"><h3 class="sub" style="margin-top:0">أخبار الصندوق</h3><div class="mini-list" id="fundNews"></div><a class="btn ghost" href="news.html?q=صندوق" style="margin-top:12px">كل أخبار الصندوق</a></div></div>`;
+      loadJSON('data/posts.json').then(L => $('#fundNews').innerHTML = L.filter(p => p.t.includes('صندوق')).slice(0, 6).map(p => `<a href="post.html?id=${p.id}"><span class="th" style="background-image:url('${esc(p.i)}')"></span><span><b>${esc(p.t)}</b><br><small>${fmtDate(p.d)}</small></span></a>`).join(''));
+    },
+    award() {
+      set('جائزة التفوق العلمي', 'جائزة تكرّم المتفوقين من أبناء وبنات الأسرة');
+      B.innerHTML = `<div class="two"><div class="card rv" style="padding:28px"><p class="prose" style="font-size:18px">للجائزة موقعها الخاص، وفيه شروط الترشح والفئات والمكرّمون.</p><a class="btn navy" href="${esc(site.award.url)}" target="_blank" rel="noopener" style="margin-top:12px">زيارة موقع الجائزة</a></div>
+        <div class="card rv" style="padding:28px"><h3 class="sub" style="margin-top:0">أخبار الجائزة</h3><div class="mini-list" id="awNews"></div></div></div>`;
+      loadJSON('data/posts.json').then(L => $('#awNews').innerHTML = L.filter(p => /التفوق|جائزة/.test(p.t)).slice(0, 6).map(p => `<a href="post.html?id=${p.id}"><span class="th" style="background-image:url('${esc(p.i)}')"></span><span><b>${esc(p.t)}</b><br><small>${fmtDate(p.d)}</small></span></a>`).join('') || '<p style="color:var(--muted)">لا توجد أخبار بعد.</p>');
+    },
+    sms() {
+      set('الاشتراك بجوال العائلة', `رسائل قصيرة مجانية باسم (${site.sms.name})`);
+      B.innerHTML = `<div class="two"><div class="card rv reading" style="padding:28px"><div class="prose">${site.sms.lines.map(l => /^(–|-)/.test(l.trim()) ? `<p style="margin:0 0 6px;padding-inline-start:12px">${esc(l)}</p>` : /:$/.test(l.trim()) ? `<h3 class="sub">${esc(l)}</h3>` : `<p>${esc(l)}</p>`).join('')}</div></div>
+        <div class="card rv" style="padding:28px;align-self:start"><h3 class="sub" style="margin-top:0">اشترك الآن</h3><p style="color:var(--muted)">أرسل رسالة فيها اسمك الرباعي والحي إلى رقم جوال الأسرة:</p>
+          <div class="iban" style="font-size:20px;margin:12px 0"><b>${esc(site.sms.phone)}</b><button data-copy="${esc(site.sms.phone)}">نسخ</button></div>
+          <a class="btn primary" href="sms:${esc(site.sms.phone)}" style="width:100%">اشترك برسالة</a></div></div>`;
+    },
+    contact() {
+      set('تواصل معنا', 'يسعدنا تواصلك');
+      const c = site.contact;
+      B.innerHTML = `<div class="contact"><div class="card rv"><h3 class="sub" style="margin-top:0">بيانات التواصل</h3><div class="kv">
+          ${[[IC.pin, esc(c.city)], [IC.phone, `<a href="tel:${c.phone}" dir="ltr">${c.phone}</a>`], [IC.mail, `<a href="mailto:${c.email}">${c.email}</a>`], [IC.box, `${esc(c.pobox)} · ${esc(c.zip)}`]].map(([i, t]) => `<div><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${i}</svg></i><span>${t}</span></div>`).join('')}
+          </div><div class="socials" style="margin-top:16px;justify-content:flex-start">${socials(site)}</div></div>
+        <form class="card rv" id="cform"><div class="field"><label>الاسم</label><input name="n" required placeholder="اسمك واسم أبيك"></div>
+          <div class="field"><label>نوع الرسالة</label><select name="t"><option>خبر أو مناسبة</option><option>تصحيح في الشجرة</option><option>اقتراح</option><option>استفسار</option></select></div>
+          <div class="field"><label>الرسالة</label><textarea name="m" rows="5" required></textarea></div>
+          <button class="btn primary" style="width:100%">إرسال عبر البريد</button><p style="margin-top:10px;color:var(--muted);font-size:13px">تُفتح رسالة جاهزة في بريدك إلى عنوان الأسرة.</p></form></div>`;
+      $('#cform').onsubmit = e => {e.preventDefault(); const F = e.target; location.href = `mailto:${c.email}?subject=${encodeURIComponent(F.t.value + ' - ' + F.n.value)}&body=${encodeURIComponent(F.m.value + '\n\n' + F.n.value)}`;};
+    },
+  };
+  (P[k] || P.vision)();
+  document.addEventListener('click', e => {const b = e.target.closest('[data-copy]'); if (b) navigator.clipboard.writeText(b.dataset.copy).then(() => {b.textContent = 'تم ✓'; setTimeout(() => b.textContent = 'نسخ', 1600);});});
+  reveal();
+})();
+</script>
+</body>
+</html>
