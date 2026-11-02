@@ -162,3 +162,12 @@
 @media (max-width:639px){.lib.down .book{width:27vw}}
 .hgrid.inner>.maglib{width:100%;justify-self:stretch}
 .lib.down .book{flex:none}
+
+/* الغلاف الحقيقي للعدد فوق التصميم المرسوم (لو ما تحمّل الصورة يظهر المرسوم) */
+.cover img.real{position:absolute;inset:0;width:100%;height:100%;margin:0;object-fit:cover;object-position:50% 0;z-index:1;border-radius:inherit}
+.cover:has(img.real)::before{z-index:2;inset:0;border:0;border-radius:inherit;box-shadow:inset 5px 0 9px rgba(0,0,0,.35),inset 0 0 0 1px rgba(227,182,107,.35)}
+.cover::after{z-index:3}
+.cover .rtag{display:none}
+.cover:has(img.real) .rtag{display:block;position:absolute;z-index:2;left:0;right:0;bottom:0;padding:16px 4px 5px;text-align:center;font-size:clamp(9px,.85vw,11.5px);font-weight:800;color:#FFE7B8;white-space:nowrap;
+  background:linear-gradient(180deg,transparent,rgba(14,11,38,.88) 55%)}
+.lib.down .book .cover:has(img.real) time{visibility:hidden}

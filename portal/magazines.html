@@ -9,24 +9,24 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021730">
-<link rel="stylesheet" href="home.css?v=202611021730">
-<link rel="stylesheet" href="mag.css?v=202611021730">
+<link rel="stylesheet" href="style.css?v=202611021800">
+<link rel="stylesheet" href="home.css?v=202611021800">
+<link rel="stylesheet" href="mag.css?v=202611021800">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
 
 <main class="hwrap" style="padding-top:calc(var(--nav) + 30px)">
     <div class="maglib">
-      <div class="mhead"><div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div><h1>مكتبة مجلة الأسرة</h1><p>أعداد مجلة أسرة العجلان والعيد، اضغط على العدد لتحميله</p></div>
+      <div class="mhead"><div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div><h1>مكتبة مجلة الأسرة</h1><p>أعداد مجلة أسرة العجلان والعيد، اضغط على العدد لتقرأه بتقليب صفحاته</p></div>
       <section class="lib down" id="lib" aria-label="أعداد المجلة"><div class="track" id="track"></div></section>
       <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة والمشاركات</a></div>
     </div>
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021730"></script>
-<script src="rockets.js?v=202611021730"></script>
+<script src="common.js?v=202611021800"></script>
+<script src="rockets.js?v=202611021800"></script>
 <script>
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
 (async () => {
@@ -34,9 +34,11 @@ const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ?
   buildChrome(site);
   withTree(document.querySelector('.maglib'));
   const M = [...site.magazines].sort((a, b) => b.n - a.n);
-  const book = m => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" aria-label="تحميل العدد ${m.n}">
+  // الغلاف الحقيقي من صفحة العدد الأولى، ولو ما توفر يبقى التصميم المرسوم
+  const book = m => `<a class="book" href="reader.html?n=${m.n}" aria-label="قراءة العدد ${m.n}">
       <span class="b3"><span class="spine"><b>${ar(m.n)}</b></span><span class="cover">
         <img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time>
+        <img class="real" src="mags/${m.n}/cover.webp" alt="غلاف العدد ${ar(m.n)}" loading="lazy" onerror="this.remove()"><span class="rtag">العدد ${ar(m.n)} · ${esc(issueDate(m.date))}</span>
       </span><span class="pages"></span></span></a>`;
   const draw = () => {
     const n = innerWidth < 640 ? 3 : innerWidth < 1280 ? 4 : 5, rows = [];

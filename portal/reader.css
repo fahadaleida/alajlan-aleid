@@ -1,0 +1,133 @@
+/* قارئ المجلة: خلفية الغروب معتمة، والمجلة تحت ضوء ذهبي خافت */
+:root{--navy:#322781;--gold:#C08537;--gold2:#E3B66B;--ink:#0E0B26;--bar:62px;--foot:64px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body.reader{font-family:Cairo,Tajawal,system-ui,sans-serif;color:#F3EEDF;background:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased;
+  height:100dvh;display:grid;grid-template-rows:var(--bar) minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);-webkit-tap-highlight-color:transparent}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+#scene{position:fixed;inset:-40px;z-index:-3;background:url(img/bg-scene.jpg?v=3) center bottom/cover no-repeat;filter:blur(14px) brightness(.42) saturate(1.15)}
+@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=3);background-position:50% 78%}}
+.amb{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(227,182,107,.16),transparent 70%),
+             radial-gradient(ellipse 120% 90% at 50% 50%,transparent 40%,rgba(8,6,24,.82) 100%),
+             linear-gradient(180deg,rgba(14,11,38,.55),rgba(14,11,38,.25) 30%,rgba(14,11,38,.7))}
+
+/* الشريط العلوي */
+.rbar{position:relative;z-index:20;display:flex;align-items:center;gap:12px;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));
+  background:linear-gradient(180deg,rgba(12,9,34,.78),rgba(12,9,34,.45));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(227,182,107,.18)}
+.rback{display:inline-flex;align-items:center;gap:4px;height:40px;padding:0 12px 0 14px;border-radius:12px;font-weight:700;font-size:15px;color:#FFE7B8;border:1px solid rgba(227,182,107,.35);background:rgba(255,255,255,.04);transition:background .2s,border-color .2s}
+.rback:hover{background:rgba(227,182,107,.14);border-color:rgba(227,182,107,.6)}
+.rbrand img{display:block;width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.rtitle{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.rtitle b{font-size:17px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtitle small{font-size:12.5px;color:var(--gold2);font-weight:600;white-space:nowrap}
+.ract{margin-inline-start:auto;display:flex;align-items:center;gap:6px}
+.ib{position:relative;display:inline-grid;place-items:center;grid-auto-flow:column;gap:6px;min-width:42px;height:42px;padding:0 10px;border-radius:12px;color:#EDE6D2;transition:background .2s,color .2s}
+.ib:hover{background:rgba(255,255,255,.1);color:#fff}
+.ib[aria-pressed=true]{background:rgba(227,182,107,.2);color:#FFE7B8}
+.ib:disabled{opacity:.35;cursor:default}
+.ib.dl{background:linear-gradient(180deg,#E3B66B,#C08537);color:#1B1640;font-weight:800;font-size:14px;margin-inline-start:4px;box-shadow:0 4px 14px rgba(192,133,55,.35)}
+.ib.dl:hover{background:linear-gradient(180deg,#EDC27A,#C98E40);color:#1B1640}
+.rissue select{appearance:none;-webkit-appearance:none;height:40px;padding:0 14px 0 30px;border-radius:12px;font:700 14px Cairo,system-ui,sans-serif;color:#FFE7B8;cursor:pointer;
+  background:rgba(255,255,255,.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23E3B66B' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat 10px 50%;border:1px solid rgba(227,182,107,.3)}
+.rissue select option{color:#1B1640}
+
+/* المسرح */
+.stage{position:relative;display:grid;grid-template-columns:72px minmax(0,1fr) 72px;align-items:center;min-height:0;overflow:hidden;padding:22px 8px 14px}
+.bookzone{position:relative;height:100%;min-height:0;min-width:0;display:grid;place-items:center}
+.bookzone .glow{position:absolute;left:50%;top:50%;width:calc(var(--pw,400px) * 2.6);height:calc(var(--ph,540px) * 1.2);transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,214,140,.22),rgba(255,180,90,.06) 45%,transparent 70%);pointer-events:none}
+.shift{position:relative;transition:transform .7s cubic-bezier(.3,.8,.25,1);opacity:0}
+body.ready .shift{opacity:1;animation:bookin 1s cubic-bezier(.2,.8,.2,1)}
+@keyframes bookin{from{opacity:0;filter:blur(6px)}to{opacity:1;filter:none}}
+.book{margin:0 auto}
+.book .stf__parent{margin:0 auto}
+.floor{position:absolute;left:8%;right:8%;bottom:-26px;height:34px;border-radius:50%;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.6),transparent 70%);filter:blur(6px);z-index:-1;transition:left .7s,right .7s}
+.stage.closed .floor{left:30%;right:30%}
+
+/* الصفحات */
+.pg{background:#fbf8f1;overflow:hidden}
+.pg img{display:block;width:100%;height:100%;object-fit:fill;user-select:none;-webkit-user-drag:none;opacity:0;transition:opacity .35s}
+.pg img[src]{opacity:1}
+.pg:not(:has(img[src])){background:linear-gradient(110deg,#f3efe6 30%,#fbf8f1 50%,#f3efe6 70%) 0 0/300% 100%;animation:shim 1.4s linear infinite}
+@keyframes shim{to{background-position:-150% 0}}
+/* ظل الكعب في المنتصف */
+.pg .sp{position:absolute;top:0;bottom:0;width:9%;pointer-events:none}
+.pg.--left .sp{right:0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.06) 55%,rgba(0,0,0,.22))}
+.pg.--right .sp{left:0;background:linear-gradient(270deg,transparent,rgba(0,0,0,.06) 55%,rgba(0,0,0,.22))}
+.pg.cv .sp{width:4%}
+.stf__block{filter:drop-shadow(0 22px 30px rgba(0,0,0,.5)) drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+
+/* أسهم التقليب */
+.arr{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;justify-self:center;color:#FFE7B8;
+  background:rgba(20,16,52,.55);border:1px solid rgba(227,182,107,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .25s,background .25s,opacity .25s}
+.arr:hover:not(:disabled){background:rgba(192,133,55,.85);color:#1B1640;transform:scale(1.08)}
+.arr:disabled{opacity:.18;cursor:default}
+
+/* التحميل */
+.intro{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:14px;font-weight:700;color:#F6E2B6;transition:opacity .6s;pointer-events:none}
+body.ready .intro{opacity:0}
+.spin{width:46px;height:46px;border-radius:50%;border:3px solid rgba(227,182,107,.2);border-top-color:#E3B66B;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* الشريط السفلي */
+.rfoot{position:relative;z-index:10;padding:0 16px max(10px,env(safe-area-inset-bottom))}
+.ctrl{display:flex;align-items:center;gap:16px;max-width:900px;margin:0 auto;height:48px}
+.cnt{flex:none;min-width:128px;text-align:center;font-size:14px;font-weight:800;color:#fff;padding:6px 14px;border-radius:30px;background:rgba(20,16,52,.6);border:1px solid rgba(227,182,107,.3)}
+.hint{flex:none;font-size:12.5px;color:rgba(246,226,182,.75);transition:opacity .6s}
+.hint.gone{opacity:0}
+#prog{flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;background:linear-gradient(270deg,#E3B66B var(--pct,0%),rgba(255,255,255,.18) var(--pct,0%));outline-offset:6px;cursor:pointer}
+#prog::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE7B8,#C08537);box-shadow:0 0 0 4px rgba(227,182,107,.25),0 2px 8px rgba(0,0,0,.5)}
+#prog::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#E3B66B}
+.thumbs{display:flex;gap:14px;overflow-x:auto;padding:12px 6px 10px;scrollbar-width:thin;scrollbar-color:rgba(227,182,107,.4) transparent;animation:tin .35s ease}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}}
+.tg{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.72;transition:opacity .2s,transform .2s}
+.tg:hover{opacity:1;transform:translateY(-3px)}
+.tg .tp{display:flex;box-shadow:0 6px 14px rgba(0,0,0,.45);border-radius:2px;overflow:hidden;outline:2px solid transparent;outline-offset:2px;transition:outline-color .2s}
+.tg img{display:block;width:56px;height:76px;object-fit:cover;background:#2a2550}
+.tg small{font-size:11px;font-weight:700;color:#D9D2BC}
+.tg.on{opacity:1}.tg.on .tp{outline-color:#E3B66B}.tg.on small{color:#FFE7B8}
+
+/* التكبير */
+.zoom{position:fixed;inset:0;z-index:60;background:rgba(8,6,22,.97);display:grid;grid-template-rows:56px 1fr;animation:zin .3s ease}
+@keyframes zin{from{opacity:0}}
+.zbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(227,182,107,.18);font-weight:800;color:#FFE7B8}
+.zbar div{display:flex;gap:4px}
+.zpan{overflow:auto;cursor:grab;direction:ltr;overscroll-behavior:contain}
+.zpan.grab{cursor:grabbing}
+.zin{display:flex;width:max-content;min-width:100%;min-height:100%;align-items:center;justify-content:center;padding:12px;margin:auto}
+.zin img{display:block;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.6);user-select:none}
+
+.miss{position:fixed;inset:0;display:grid;place-content:center;justify-items:center;gap:18px;font-size:20px;font-weight:700;text-align:center;padding:20px}
+body.nomag .stage,body.nomag .rfoot{visibility:hidden}
+
+body.fs .rbar{background:rgba(12,9,34,.35)}
+
+/* الجوال: صفحة واحدة، والأسهم فوق المجلة */
+@media (max-width:899px){
+  .rtitle small{display:none}
+  .stage{grid-template-columns:minmax(0,1fr);padding:14px 10px 10px}
+  .stage .arr{position:absolute;top:50%;margin-top:-23px;width:46px;height:46px;z-index:5}
+  .arr.prev{right:4px}.arr.next{left:4px}
+  .bookzone{grid-column:1}
+  .hint{display:none}
+}
+@media (max-width:639px){
+  :root{--bar:56px}
+  .rbar{gap:8px;padding:0 10px}
+  .rback span,.rbrand,.rissue{display:none}
+  .rback{padding:0 8px}
+  .rtitle b{font-size:15px}
+  .ract{gap:2px}
+  .ib{min-width:38px;padding:0 8px}
+  .ib.dl span{display:none}
+  .ctrl{gap:10px}
+  .cnt{min-width:0;font-size:13px;padding:5px 12px}
+  .stage .arr{opacity:.85;width:40px;height:40px;margin-top:-20px}
+  .stage .arr:disabled{opacity:.12}
+}
+@media (prefers-reduced-motion:reduce){.shift,body.ready .shift{transition:none;animation:none}}
