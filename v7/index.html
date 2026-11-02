@@ -1684,7 +1684,7 @@ function pullBack(){const R=RUN;if(!R)return;const id=R.id;exitFamily();browseSe
 // تفاعل
 // ===================================================================
 $('#zin').onclick=()=>zoomAt(1.5,VW/2,VH/2);$('#zout').onclick=()=>zoomAt(1/1.5,VW/2,VH/2);
-$('#zall').onclick=()=>{exitFamily();tweenTo(fitView(),900);};
+$('#zall').onclick=()=>{exitFamily();clearSel();tweenTo(fitView(),900);dirty=true;};
 // زر الرجوع والشجرة كاملة: يرجعك خطوة أو للبداية بدون تحديث الصفحة
 function clearSel(){SEL=null;setHover(null);$('#card').classList.remove('show','peek');setCrumbs(null);if(location.hash)history.replaceState(null,'',location.pathname+location.search);}
 function goBack(){if(RUN){if(FH.length){openFamily(FH.pop(),1);return;}const id=RUN.id;exitFamily();if(people[id]&&VW<=760)browseSelect(id,.32);dirty=true;return;}if($('#card').classList.contains('show'))clearSel();tweenTo(fitView(),900);dirty=true;}   // الجوال: نطلع من العائلة لمكانه في الشجرة الكبيرة ومحدد
@@ -1910,7 +1910,7 @@ ov.addEventListener('pointerup',e=>{up(e);if(moved){if(performance.now()-lastMv<
   if(BL&&BL.snodes){const pb=BL.snodes.find(o=>(o.photo||o.age)&&Math.hypot(e.clientX-o.x,e.clientY-o.y)<o.r);if(pb){if(pb.age)askBirth(pb.id,e.clientX,e.clientY);else openPhotoFor(pb.id);return;}}
   const id=hit(e.clientX,e.clientY);
   if(BL){if(id<0){showCard(-id);sheetTo('full');}else if(id)openFamily(id);return;}   // «+N» للعيال الزايدين: القائمة الكاملة بالبطاقة
-  if(!id){const pi=panelAt(e.clientX,e.clientY);if(pi>=0){setHover(null);setPanelHover(-1);openPanel(pi);return;}if(e.pointerType==='touch'&&dblTap(e))return;setHover(null);return;}
+  if(!id){const pi=panelAt(e.clientX,e.clientY);if(pi>=0){setHover(null);setPanelHover(-1);openPanel(pi);return;}if(e.pointerType==='touch'&&dblTap(e))return;setHover(null);if(SEL&&!RUN)clearSel();dirty=true;return;}   // ضغطة على مكان فاضي تلغي الاختيار
   if(e.pointerType==='touch'){if(tapZoom(e,id))return;setHover(null);hap();}
   browseSelect(id);});   // باللمس: ضغطة وحدة تختار وتطلع البطاقة مثل تطبيقات الخرائط
 // باللمس من بعيد: الدوائر أصغر من الإصبع، فالضغط يقرّب للمكان بدل ما يختار أحد بالغلط (إلا الوردة المرفوعة أو اسم ظاهر)
@@ -2208,7 +2208,7 @@ function renderCard(id){
 $('#card').addEventListener('click',async e=>{
   const go=e.target.closest('[data-go]');if(go){e.preventDefault();select(+go.dataset.go);return;}
   const a=e.target.closest('[data-act]')?.dataset.act;if(!a)return;
-  if(a==='close')$('#card').classList.remove('show');
+  if(a==='close'){clearSel();dirty=true;}   // الإغلاق يلغي الاختيار كامل (الوردة تنزل مكانها والرابط ينظف)
   if(a==='place'){placing=selected;$('#card').classList.remove('show');toast('قرّب واضغط على مكان '+people[selected].name+' في الشجرة',0);}
   if(a==='add')openForm(null,selected);
   if(a==='edit')openForm(selected);
