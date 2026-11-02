@@ -1,8 +1,8 @@
 /* الصفحة الرئيسية «الديرة عند الغروب» — حسب portal/تصميم-الرئيسية.md */
 body.home{background:#2A2148}
-#scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg) center bottom/cover no-repeat}
+#scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg?v=3) center bottom/cover no-repeat}
 #scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.10) 0%,rgba(20,16,48,.18) 45%,rgba(20,16,48,.55) 80%,rgba(20,16,48,.78) 100%)}
-@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg);background-position:50% 78%}}
+@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=3);background-position:50% 78%}}
 .glass-panel{background:rgba(251,250,247,.88);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.6);box-shadow:0 24px 64px rgba(20,16,48,.28)}
 .hwrap{width:min(1280px,100% - 32px);margin-inline:auto}
 
@@ -140,7 +140,7 @@ body.home .tree-btn{background:rgba(50,39,129,.88);backdrop-filter:blur(6px);box
 
 /* ===== نافذة الديرة: المشهد ظاهر كامل بلا غطاء، والشجرة في الساحة بين الجبل والبرج ===== */
 .vista{position:relative;margin-top:28px;border-radius:26px;overflow:hidden;aspect-ratio:2.25/1;box-shadow:0 30px 60px -20px rgba(20,16,48,.55),0 0 0 1px rgba(255,255,255,.35)}
-.vista .vbg{position:absolute;inset:0;background:url(img/bg-scene.jpg) center 18%/100% auto no-repeat}
+.vista .vbg{position:absolute;inset:0;background:url(img/bg-scene.jpg?v=3) center 18%/100% auto no-repeat}
 .vista .vbg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,16,48,.45) 0%,transparent 26%)}
 /* الشجرة: قاعدتها على أرض الساحة (١١٪ من الأسفل) وبين الجبل (٣٦٪) والبرج (٧٧٪) */
 .vista .vtree{position:absolute;left:57%;bottom:9.5%;height:64%;transform:translateX(-50%);aspect-ratio:1790/2342}
@@ -167,11 +167,11 @@ body.home:not(.mags) #scene{filter:blur(16px) brightness(.72) saturate(1.15);tra
 .vista .vbg{background-size:cover;background-position:center 50%}
 .vista .vtree{left:56%;bottom:15%;height:62%}
 @media (max-width:639px){.vista .vbg{background-size:auto 100%;background-position:52% 0}.vista .vtree{left:50%;bottom:17%;height:50%}}
-@media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
+@media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg?v=3);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
 /* الخلفية كاملة وواضحة في الرئيسية بعد (بطلب فهد) */
 body.home:not(.mags) #scene{filter:none;transform:none}
 /* نافذة الديرة على الخلفية الجديدة (١٦:٩): الجبل والشمس يسار، والبرج يمين، والأرض عند ٨٣٪ */
 .vista{aspect-ratio:16/9}
-.vista .vbg{background-image:url(img/bg-scene.jpg);background-size:cover;background-position:center}
+.vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}
 .vista .vtree{left:64%;bottom:15%;height:60%}
-@media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}
+@media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}
