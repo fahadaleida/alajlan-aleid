@@ -271,3 +271,17 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
 }
 @media (max-width:1023px){body.home:not(.mags) .hgrid{grid-template-areas:"tree" "news";grid-template-columns:1fr;padding-top:calc(var(--nav) + 16px)}}
 @media (max-width:639px){body.home:not(.mags) #scene{background-image:url(img/bg-home-portrait.jpg?v=202611030100);background-position:50% 30%}}
+/* الجوال: ترتيب أهدأ للرئيسية */
+@media (max-width:639px){
+  body.home:not(.mags) .htree .st{--th:330px;height:380px}
+  body.home:not(.mags) .htree .st img{height:330px}
+  body.home:not(.mags) .htree .st img.soilimg{width:240px;height:auto;bottom:14px}
+  body.home:not(.mags) .log{padding:18px 14px}
+  body.home:not(.mags) .seg{display:flex;width:100%}
+  body.home:not(.mags) .seg button{flex:1 1 auto;padding:0 8px;font-size:13px}
+  body.home:not(.mags) .seg button small{font-size:11px;margin-inline-start:3px}
+  body.home:not(.mags) .row{grid-template-columns:44px minmax(0,1fr) 64px;margin-inline:0;padding-inline:8px;min-height:88px;overflow:hidden}
+  body.home:not(.mags) .row .th{width:64px;height:64px;margin-inline-start:8px}
+  body.home:not(.mags) .row .dt b{font-size:22px}
+  body.home:not(.mags) .row .tx b{font-size:14.5px}
+}
