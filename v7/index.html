@@ -346,6 +346,7 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
   .ab-t img{width:30px;height:auto;filter:drop-shadow(0 1px 2px rgba(0,0,0,.45))}
   .ab-t b{font:700 19px/1.2 "Aref Ruqaa",Amiri,serif;color:#f6dd8f;text-shadow:0 1px 0 rgba(0,0,0,.4);overflow:hidden;text-overflow:ellipsis}
   .abtn{width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:var(--gl1);display:grid;place-items:center;cursor:pointer;transition:background .2s,opacity .25s,transform .3s cubic-bezier(.2,.9,.25,1)}
+  .ab-home{position:absolute;inset-inline-start:4px;bottom:4px;color:var(--gl1);text-decoration:none}.appbar.bk .ab-home{opacity:0;pointer-events:none}
   .abtn:active{background:rgba(243,210,122,.18)}.abtn svg{width:25px;height:25px}
   .ab-back{opacity:0;pointer-events:none;transform:translateX(10px)}.appbar.bk .ab-back{opacity:1;pointer-events:auto;transform:none}
   html.standalone .appbar{background:linear-gradient(180deg,rgba(16,11,6,.94) 0,rgba(16,11,6,.94) var(--sat),rgba(22,15,8,.66))}
@@ -860,7 +861,7 @@ function initGL(){
     const upRep=(img,fmt)=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);try{gl.texImage2D(gl.TEXTURE_2D,0,fmt,fmt,gl.UNSIGNED_BYTE,img);}catch(e){return null;}gl.generateMipmap(gl.TEXTURE_2D);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.MIRRORED_REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return{tex:t,w:img.naturalWidth,h:img.naturalHeight};};
     // الخلفية: v7/bg/bg-scene.jpg (بانوراما المعلمين، يفضّل 3840×1600، تُعرض بملء الشاشة) و v7/bg/crown-mask.png (قناع قص الشجرة)
-    if(!POSTERBG)loadImg(innerHeight>innerWidth*1.15?'bg/bg-scene-portrait.jpg?v=3':'bg/bg-scene.jpg?v=3',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
+    if(!POSTERBG)loadImg(innerHeight>innerWidth*1.15?'bg/bg-home-portrait.jpg?v=4':'bg/bg-scene.jpg?v=3',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
     if(!POSTERBG)loadImg('bg/node-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.node=t;});
     if(!POSTERBG)loadImg('bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
     try{initStageGL();}catch(e){console.warn('stage off:',e);G.bb=null;}
@@ -1605,7 +1606,10 @@ function cardTreeHTML(id){const L=cardLayout(id);return`<canvas class="ftc" data
 let camTween=null,pulled=false;
 const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const DEG=Math.PI/180,wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a));
-function fitView(){if(VW<=760&&CH.b){const y0=POSTERBG?0:1240,t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/(PH-y0))*.98;return{x:PW/2,y:(y0+PH)/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
+function fitView(){if(!POSTERBG&&VH>VW*1.15){   // الجوال: الشجرة مغروسة على أرض الصورة قدّام الجبل، والبرج يمين
+    const SA=1200/2400,VA=VW/VH,k=VA<SA?VA/SA:SA/VA,gx=VA<SA?.5+(405/1200-.5)/k:405/1200,gy=VA<SA?1425/2400:.5+(1425/2400-.5)/k;
+    const s=Math.min(VW*.64/PW,(gy*VH-(CH.t||56)-12)/10520);return{x:PW/2-(gx*VW-VW/2)/s,y:10520-(gy*VH-VH/2)/s,s,h:0,pitch:0,yaw:0,roll:0};}
+  if(VW<=760&&CH.b){const y0=POSTERBG?0:1240,t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/(PH-y0))*.98;return{x:PW/2,y:(y0+PH)/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
 function tweenTo(t,ms=900){camTween={from:{...cam},to:{h:0,pitch:0,yaw:0,roll:0,...t},t0:performance.now(),ms};dirty=true;}
 function stepCamera(now){if(!camTween)return false;const{from,to,t0,ms}=camTween,t=Math.min(1,(now-t0)/ms),e=ez(t);
   for(const k of['x','y','h','pitch','roll'])cam[k]=(from[k]||0)+((to[k]||0)-(from[k]||0))*e;
@@ -1936,7 +1940,7 @@ ov.addEventListener('dblclick',e=>{if(performance.now()-LTZ<700)return;camTween=
 function zoomAt(f,sx,sy){const ns=Math.min(3,Math.max(fitView().s*.9,cam.s*f)),w=s2w(sx,sy);cam.s=ns;const b=s2w(sx,sy);cam.x+=w.x-b.x;cam.y+=w.y-b.y;clampCam();dirty=true;}
 function clampCam(){if(inBrowse()){const m=VW/2/cam.s*.6,n=VH/2/cam.s*.6;cam.x=Math.max(-m+PW*.05,Math.min(PW*.95+m,cam.x));cam.y=Math.max(-n+PH*.05,Math.min(PH*.95+n,cam.y));}groundCam();}
 // الشجرة مغروسة في أرض الخلفية: قاعدتها ما ترتفع عن مكانها الأصلي على الشاشة (التكبير والتحريك يمين ويسار وتحت مسموح)
-function groundCam(){if(POSTERBG)return;const f=fitView(),fy=VH/2+(PH-f.y)*f.s,by=w2s(PW/2,PH).y;if(by<fy-.5)cam.y-=(fy-by)/cam.s;}
+function groundCam(){if(POSTERBG)return;const f=fitView(),fy=VH/2+(10520-f.y)*f.s,by=w2s(PW/2,10520).y;if(by<fy-.5)cam.y-=(fy-by)/cam.s;}
 function stepInertia(dt){if(!INERT)return false;cam.x-=INERT.x*dt*1000/cam.s;cam.y-=INERT.y*dt*1000/cam.s;const k=Math.exp(-dt*3.6);INERT.x*=k;INERT.y*=k;clampCam();if(Math.hypot(INERT.x,INERT.y)<.01)INERT=null;return true;}
 
 // ===================================================================
@@ -2355,7 +2359,7 @@ const IC={tree:'<path d="M12 21.5v-7"/><path d="M12 14.5c-4.6 0-7.2-2.5-7.2-5.5a
 // شاشة البداية: تختفي لما تجهز صورة الطبعة وأول رسم (أو بعد ٦ ثواني كحد أقصى)
 let RDY=0;function appReady(){if(++RDY<2)return;const s=$('#splash');if(!s||s.classList.contains('out')||QS.includes('holdsplash'))return;s.classList.add('out');setTimeout(()=>s.remove(),700);}
 setTimeout(()=>{RDY=Math.max(RDY,1);appReady();},6000);
-document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة عائلة العجلان والعيد</b></div><a class="abtn" href="../portal/index.html" aria-label="بوابة الأسرة" style="display:grid;place-items:center;color:inherit"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg></a><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
+document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة عائلة العجلان والعيد</b></div><a class="abtn ab-home" href="../portal/index.html" aria-label="الرجوع للرئيسية"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg></a><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
 <nav class="tabbar" id="tabbar">${[['tree','الشجرة'],['search','بحث'],['branch','الفروع'],['user','عائلتي'],['more','المزيد']].map(([k,t])=>`<button class="tab${k==='tree'?' on':''}" data-tab="${k}"><i>${SV(IC[k])}</i><span>${t}</span></button>`).join('')}</nav>
 <div id="cscrim"></div><div class="litpill" id="litpill"><i></i><b></b><button aria-label="إلغاء الإضاءة">${SV(IC.x,16)}</button></div>
 <section class="sh fulls" id="shSearch"><div class="shp"><div class="shh shs"><label class="sfield">${SV(IC.search,20)}<input id="sq" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="اكتب اسمك واسم أبوك…"></label><button class="scan" data-close>إلغاء</button></div><div class="shb" id="sres"></div></div></section>
