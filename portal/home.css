@@ -285,3 +285,10 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
   body.home:not(.mags) .row .dt b{font-size:22px}
   body.home:not(.mags) .row .tx b{font-size:14.5px}
 }
+/* الجوال: الشجرة ثابتة مثل الخلفية، والسجل يمر فوقها عند التمرير */
+@media (max-width:1023px){
+  body.home:not(.mags) .hgrid>.htree{position:fixed;top:calc(var(--nav) + 8px);left:0;right:0;margin-inline:auto;z-index:0}
+  body.home:not(.mags) .hgrid>.log{position:relative;z-index:2;margin-top:430px}
+  body.home:not(.mags) .quick{position:relative;z-index:2}
+}
+@media (min-width:640px) and (max-width:1023px){body.home:not(.mags) .hgrid>.log{margin-top:560px}}

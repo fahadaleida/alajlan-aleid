@@ -96,3 +96,7 @@
   .nm-lead p{font-size:15px;-webkit-line-clamp:4}
   .newsmag .page-top #sum{font-size:16px}
 }
+/* قائمة الأخبار: زر الرجوع لعرض المجلد */
+.nm-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.nm-vol{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:99px;font-weight:800;font-size:14px;color:#322781;background:rgba(255,253,248,.95);border:1px solid rgba(227,182,107,.9);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.nm-vol svg{color:#C08537}.nm-vol:hover{background:#fff}
