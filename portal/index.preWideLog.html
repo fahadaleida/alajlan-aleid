@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أسرة العجلان والعيد</title>
+<meta name="description" content="الموقع الرسمي لأسرة العجلان والعيد: سجل أخبار الأسرة ومناسباتها، شجرة العائلة، المجلات، صندوق العائلة، والتواصل.">
+<meta name="theme-color" content="#1A1448">
+<link rel="icon" href="img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=202611021830">
+<link rel="stylesheet" href="home.css?v=202611031945">
+</head>
+<body class="home">
+<div id="scene" aria-hidden="true"></div>
+
+
+<main class="hwrap">
+  <div class="hgrid">
+    <!-- سجل الأسرة -->
+    <section class="log glass-panel" aria-labelledby="logT" style="padding-top:32px">
+      <div class="log-h"><div><small>يوميات الأسرة</small><h2 id="logT">سجلّ الأسرة</h2></div><a href="news.html">كل الأخبار <span>←</span></a></div>
+      <div><div class="seg" id="seg"><span class="puck" id="puck"></span></div></div>
+      <div class="log-b">
+        <div class="idx" id="idx"></div>
+        <div class="pv" id="pv"><div class="ph" id="ph"></div><p id="pvx"></p></div>
+      </div>
+      <div class="years" id="years"></div>
+      <a class="allm" href="news.html">كل الأخبار والمناسبات</a>
+    </section>
+
+    <!-- الشجرة مغروسة في الساحة -->
+    <aside class="htree" aria-label="شجرة العائلة">
+      <div class="halo"></div>
+      <div class="st" id="st">
+        <div class="ground"></div><div class="gbar" id="gbar"></div>
+        <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
+        <img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas>
+      </div>
+      <span class="live" id="live" hidden></span><a class="tlink" href="../v7/index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك</a>
+    </aside>
+  </div>
+
+  <!-- وصول سريع -->
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">وصول سريع</h2>
+  <nav class="quick" id="quick" aria-label="وصول سريع"></nav>
+  <div class="breath"></div>
+</main>
+
+<script src="common.js?v=202611021830"></script>
+<script src="rockets.js?v=202611031900"></script>
+<script>
+// ===== البانر (مع الموسمية) =====
+const BANNER = [
+  {src: 'slide4', alt: 'الموقع الرسمي لعائلة العجلان والعيد', href: 'page.html?p=about'},
+  {src: 'slide2', alt: 'عائلة العجلان والعيد: ١٠ سنوات من الصلة', href: 'news.html'},
+  {src: 'slide1', alt: 'دام عزك يا وطن', from: '09-10', to: '09-30'},   // اليوم الوطني
+  {src: 'slide3', alt: 'رب اجعل هذا البلد آمناً', from: '02-15', to: '02-28'},   // يوم التأسيس
+];
+(() => {
+  const now = new Date(), md = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  const inSeason = b => !b.from || (md >= b.from && md <= b.to);
+  const L = [...BANNER.filter(b => b.from && inSeason(b)), ...BANNER.filter(b => !b.from)];
+  const hb = $('#hb'); if (!hb) return;
+  L.forEach((b, k) => hb.insertAdjacentHTML('afterbegin', ''));
+  hb.insertAdjacentHTML('afterbegin', L.map((b, k) => `<${b.href ? `a href="${b.href}"` : 'div'} class="s${k ? '' : ' on'}" aria-roledescription="slide" aria-label="${k + 1} من ${L.length}">
+    <picture><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.webp" type="image/webp"><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.jpg"><source srcset="img/banner/${b.src}-d.webp" type="image/webp">
+    <img src="img/banner/${b.src}-d.jpg" alt="${b.alt}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></picture></${b.href ? 'a' : 'div'}>`).join(''));
+  const S = [...hb.querySelectorAll('.s')], bars = $('#bars'), pp = $('#pp'), DUR = 7000;
+  const PAUSE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>', PLAY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>';
+  if (S.length < 2) {bars.remove(); pp.remove(); hb.querySelectorAll('.ar').forEach(a => a.remove()); return;}
+  bars.innerHTML = S.map((_, k) => `<button aria-label="الصورة ${k + 1}"><i><b></b></i></button>`).join('');
+  const B = [...bars.querySelectorAll('b')];
+  let i = 0, el = 0, last = performance.now(), paused = matchMedia('(prefers-reduced-motion: reduce)').matches, hover = false, vis = true, user = paused;
+  const go = k => {S[i].classList.remove('on'); B[i].style.width = '0'; i = (k + S.length) % S.length; S[i].classList.add('on'); el = 0;};
+  [...bars.children].forEach((b, k) => b.onclick = () => go(k));
+  hb.querySelector('.next').onclick = () => go(i + 1); hb.querySelector('.prev').onclick = () => go(i - 1);
+  pp.innerHTML = user ? PLAY : PAUSE; pp.onclick = () => {user = !user; pp.innerHTML = user ? PLAY : PAUSE; pp.setAttribute('aria-label', user ? 'تشغيل' : 'إيقاف');};
+  hb.onmouseenter = () => hover = true; hb.onmouseleave = () => hover = false;
+  new IntersectionObserver(e => vis = e[0].isIntersecting).observe(hb);
+  let sx = null; hb.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
+  hb.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(i + (dx < 0 ? -1 : 1)); sx = null;});
+  const tick = t => {requestAnimationFrame(tick); const dt = t - last; last = t; if (user || hover || !vis || document.hidden) return; el += dt; B[i].style.width = Math.min(100, el / DUR * 100) + '%'; if (el >= DUR) go(i + 1);};
+  requestAnimationFrame(tick);
+})();
+
+const DIA = {'أخبار الاسرة': '#322781', 'دعوات الأسرة': '#C08537', 'مناسبات الاسرة': '#9B4F6B'};
+const DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله وبركاته\s*/, '');
+(async () => {
+  const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
+  buildChrome(site);
+  // ===== سجل الأسرة =====
+  const cats = [['', 'الكل'], ['أخبار الاسرة', 'أخبار'], ['دعوات الأسرة', 'دعوات'], ['مناسبات الاسرة', 'مناسبات']];
+  const seg = $('#seg');
+  seg.insertAdjacentHTML('beforeend', cats.map(([c, t]) => `<button data-c="${c}">${t}<small>${ar(posts.filter(p => !c || p.c === c).length)}</small></button>`).join(''));
+  const mobile = () => matchMedia('(max-width:1023px)').matches;
+  let cur = '', L = [];
+  const ph = $('#ph');
+  const show = k => {const p = L[k]; if (!p) return; $('#idx').querySelectorAll('.row').forEach((r, j) => r.classList.toggle('on', j === k));
+    const d = new Date(p.d + 'T12:00:00'), [y, m, dd] = p.d.split('-').map(Number);
+    ph.querySelectorAll('img').forEach(im => {im.style.opacity = 0; setTimeout(() => im.remove(), 300);});
+    ph.insertAdjacentHTML('beforeend', `<img src="${esc(p.i)}" alt="" style="opacity:0;transform:scale(1.02)">`);
+    const im = ph.lastElementChild; requestAnimationFrame(() => requestAnimationFrame(() => {im.style.opacity = 1; im.style.transform = 'none';}));
+    let dt = ph.querySelector('.date'); if (!dt) {ph.insertAdjacentHTML('beforeend', '<span class="date"></span>'); dt = ph.querySelector('.date');}
+    dt.textContent = `${DAYS[d.getDay()]} ${ar(dd)} ${MONTHS[m - 1]}`;
+    $('#pvx').textContent = clean(p.x);};
+  const draw = () => {
+    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.c === cur));
+    const on = seg.querySelector('button.on'), puck = $('#puck');
+    puck.style.width = on.offsetWidth + 'px'; puck.style.left = on.offsetLeft + 'px';
+    L = posts.filter(p => !cur || p.c === cur).slice(0, mobile() ? 5 : 6);
+    const idx = $('#idx'); idx.style.opacity = 0;
+    setTimeout(() => {
+      idx.innerHTML = L.map((p, k) => {const [y, m, d] = p.d.split('-').map(Number);
+        return `<a class="row" href="post.html?id=${p.id}" data-k="${k}"><span class="dt"><b>${ar(d)}</b><small>${MONTHS[m - 1]} ${ar(y)}</small></span>
+          <span class="tx"><em><i style="background:${DIA[p.c] || '#322781'}"></i>${esc(catName(p.c))}</em><b>${esc(p.t)}</b></span><span class="th" style="background-image:url('${esc(p.i)}')"></span></a>`;}).join('');
+      idx.style.opacity = 1; show(0);
+      idx.querySelectorAll('.row').forEach(r => {r.onmouseenter = r.onfocus = () => show(+r.dataset.k);});
+    }, 180);
+    $('#idx').closest('.log').querySelectorAll('.log-h a,.allm').forEach(a => a.href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : ''));
+  };
+  seg.addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
+  draw(); addEventListener('resize', () => {const on = seg.querySelector('button.on'); if (on) {$('#puck').style.width = on.offsetWidth + 'px'; $('#puck').style.left = on.offsetLeft + 'px';}});
+  // تحميل صور الستة مسبقاً
+  addEventListener('load', () => posts.slice(0, 6).forEach(p => {const i = new Image(); i.src = p.i;}));
+  const years = [...new Set(posts.map(p => p.d.slice(0, 4)))].sort().reverse();
+  $('#years').innerHTML = '<span>الأرشيف</span>' + years.map(y => `<a href="news.html?y=${y}">${ar(+y)}</a>`).join('');
+  // ===== وصول سريع =====
+  const Q = [['tribe', 'قبيلة هذيل', 'الأصل والنسب', 'page.html?p=hudhayl'], ['vision', 'الرؤية والرسالة', 'ما نسعى إليه', 'page.html?p=vision'], ['mag', 'المجلات', 'أعداد مجلة الأسرة', 'magazines.html'],
+    ['film', 'الفيلم الوثائقي', 'قصة الأسرة مصوّرة', 'page.html?p=film'], ['fund', 'صندوق العائلة', 'الحسابات والمساهمة', 'page.html?p=fund'], ['sms', 'جوال العائلة', 'اشترك برسائل الأسرة', 'page.html?p=sms']];
+  $('#quick').innerHTML = Q.map(([k, t, d, h]) => `<a class="qa" href="${h}"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></i><b>${t}</b><small>${d}</small></a>`).join('');
+})();
+
+startRockets();
+</script>
+</body>
+</html>
