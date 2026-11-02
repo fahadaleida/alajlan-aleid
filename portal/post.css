@@ -212,3 +212,25 @@ a.ps-fact{transition:border-color .2s,transform .2s}a.ps-fact:hover{border-color
 .mc-tx>span{font-size:15px;color:rgba(27,22,64,.72);line-height:1.7}
 .mc-tx em{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:8px 18px;border-radius:99px;font-style:normal;font-weight:800;font-size:14.5px;color:#fff;background:#322781}
 @media (max-width:640px){.ps-magcard{gap:16px;padding:14px}.mc-cv{width:96px}.mc-tx b{font-size:17px}.mc-tx>span{font-size:13px}}
+
+/* ===== المجلة المضمّنة: مجلة مفتوحة على طاولة تحت ضوء دافئ ===== */
+.ps-gbtns{display:flex;flex-wrap:wrap;gap:10px}
+.ps-gbtns .ps-btn[aria-pressed=true]{background:rgba(255,255,255,.22);border-color:rgba(227,182,107,.8)}
+.ps-mag[hidden]{display:none}
+.ps-table{position:relative;border-radius:22px;overflow:hidden;min-height:320px;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 42%,rgba(255,214,150,.30),rgba(255,190,120,.08) 55%,transparent 75%),
+    radial-gradient(ellipse 120% 90% at 50% 50%,transparent 55%,rgba(10,4,0,.55)),
+    repeating-linear-gradient(176deg,rgba(255,220,170,.035) 0 2px,transparent 2px 7px),
+    linear-gradient(180deg,#4A2E1C,#2E1B10);
+  box-shadow:inset 0 1px 0 rgba(255,230,190,.18),inset 0 0 0 1px rgba(227,182,107,.22),0 24px 50px -22px rgba(0,0,0,.6)}
+.ps-table iframe{display:block;width:100%;border:0;background:transparent;opacity:0;transition:opacity .6s}
+.ps-table.on iframe{opacity:1}
+.ps-mload{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;color:rgba(255,236,205,.85);font-weight:700;font-size:14px;transition:opacity .4s;pointer-events:none}
+.ps-mload i{width:38px;height:38px;border-radius:50%;border:3px solid rgba(227,182,107,.25);border-top-color:#E3B66B;animation:psmsp 1s linear infinite}
+@keyframes psmsp{to{transform:rotate(360deg)}}
+.ps-table.on .ps-mload{opacity:0}
+.ps-mnote{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 8px;margin-top:14px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.72);text-align:center}
+.ps-mnote svg{color:#E3B66B}
+.ps-mnote a{color:#E3B66B;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+@media (max-width:640px){.ps-table{border-radius:16px;margin-inline:-6px}.ps-mnote{font-size:12.5px}}

@@ -2,7 +2,9 @@
 // الصفحات تُبنى من الصور حسب أبعادها: صورة كاملة، صورتان، صورة كبيرة وصغيرتان…
 // StPageFlip يقلّب من اليسار لليمين، فنعطيه الصفحات بالعكس مثل reader.js
 (async () => {
-  const id = +new URLSearchParams(location.search).get('id');
+  const Q = new URLSearchParams(location.search), id = +Q.get('id');
+  const EMBED = Q.get('embed') === '1' && window.parent !== window;
+  if (EMBED) document.body.classList.add('embed');
   const stage = $('#stage'), zone = $('#zone'), shift = $('#shift'), bookEl = $('#book');
   const miss = () => {$('#intro').remove(); $('#miss').hidden = false; document.body.classList.add('nomag');};
   const COVS = 'news.html?c=' + encodeURIComponent('مناسبات الاسرة');
@@ -84,47 +86,65 @@
   photos.forEach((x, j) => {x.n = j; x.a = x.w / x.h;});
   $('#rs').textContent = `${hDate || gDate} · ${ar(gal.length + 1)} صورة`;
 
-  // ===== تخطيط الصفحات =====
-  // الصفحة ١٠٠ × ١٤١٫٤ وحدة. الإطار: هامش جانبي ٧، علوي ١١، سفلي ١٠
-  const PW = 100, PH = 141.4, X0 = 7, Y0 = 11.5, CW = 86, CH = PH - Y0 - 10.5, G = 2.2;
-  const half = (CW - G) / 2;
+  // ===== تخطيط الصفحات: شبكة واحدة ثابتة لكل المجلة =====
+  // الصفحة ١٠٠ × ١٤١٫٤ وحدة. هوامش ثابتة (جانبي ٨، علوي ١٢، سفلي ١١) وفاصل ٢٫٤ بين الصور
+  // كل الصور مطبوعة داخل الإطار نفسه؛ الصورة الكاملة حتى الحافة تُستخدم نادراً وللصفحة كلها فقط
+  const PW = 100, PH = 141.4, X0 = 8, Y0 = 12, CW = 84, G = 2.4, YB = PH - 11, CH = YB - Y0;
+  const half = (CW - G) / 2, hrow = (CH - G) / 2, sm = 27.2, headH = CH - (sm * 3 + G * 2) - G;
+  const XR = X0 + half + G;   // العمود الأيمن (القراءة من اليمين)
+  const topH = 56, botH = CH - topH - G;
+  const hy = YB - (sm * 3 + G * 2);   // بداية الصور تحت عنوان القسم
   const LAY = {
     bleed: {n: 1, bleed: 1, s: [[0, 0, PW, PH]]},
-    stack: {n: 2, s: [[X0, Y0, CW, (CH - G) / 2], [X0, Y0 + (CH + G) / 2, CW, (CH - G) / 2]]},
-    stackb: {n: 2, bleed: 1, s: [[0, 0, PW, PH / 2 - .5], [0, PH / 2 + .5, PW, PH / 2 - .5]]},
-    top: {n: 2, bleed: 1, s: [[0, 0, PW, 66.7], [X0, 66.7 + 3, CW, PH - 66.7 - 3 - 10.5]]},
-    l2p: {n: 3, s: [[X0, Y0, CW, CW / 1.5], [X0 + half + G, Y0 + CW / 1.5 + G, half, CH - CW / 1.5 - G], [X0, Y0 + CW / 1.5 + G, half, CH - CW / 1.5 - G]]},
-    p2l: {n: 3, s: [[X0 + half + G, Y0, half, CH - CW / 1.5 - G], [X0, Y0, half, CH - CW / 1.5 - G], [X0, PH - 10.5 - CW / 1.5, CW, CW / 1.5]]},
-    grid: {n: 4, s: [[X0 + half + G, Y0, half, (CH - G) / 2], [X0, Y0, half, (CH - G) / 2], [X0 + half + G, Y0 + (CH + G) / 2, half, (CH - G) / 2], [X0, Y0 + (CH + G) / 2, half, (CH - G) / 2]]},
-    sq: {n: 2, s: [[(PW - (CH - G) / 2) / 2, Y0, (CH - G) / 2, (CH - G) / 2], [(PW - (CH - G) / 2) / 2, Y0 + (CH + G) / 2, (CH - G) / 2, (CH - G) / 2]]},
+    stack: {n: 2, s: [[X0, Y0, CW, hrow], [X0, Y0 + hrow + G, CW, hrow]]},
+    grid: {n: 4, s: [[XR, Y0, half, hrow], [X0, Y0, half, hrow], [XR, Y0 + hrow + G, half, hrow], [X0, Y0 + hrow + G, half, hrow]]},
+    l2p: {n: 3, s: [[X0, Y0, CW, topH], [XR, Y0 + topH + G, half, botH], [X0, Y0 + topH + G, half, botH]]},
+    p2l: {n: 3, s: [[XR, Y0, half, botH], [X0, Y0, half, botH], [X0, YB - topH, CW, topH]]},
+    sq: {n: 2, s: [[(PW - hrow) / 2, Y0, hrow, hrow], [(PW - hrow) / 2, Y0 + hrow + G, hrow, hrow]]},
     solo: {n: 1, solo: 1},
-    // صفحات بعنوان قسم في أعلاها
-    feat: {n: 3, head: 1, s: [[X0, PH - 10.5 - 29.6 - G - 60.8, CW, 60.8], [X0 + half + G, PH - 10.5 - 29.6, half, 29.6], [X0, PH - 10.5 - 29.6, half, 29.6]]},
-    six: {n: 6, head: 1, s: [0, 1, 2].flatMap(r => [[X0 + half + G, PH - 10.5 - 29.6 * (3 - r) - G * (2 - r), half, 29.6], [X0, PH - 10.5 - 29.6 * (3 - r) - G * (2 - r), half, 29.6]])},
+    // صفحات تفتتح قسماً: عنوان في الأعلى ثم الصور على نفس خطوط الشبكة
+    feat: {n: 3, head: 1, s: [[X0, hy, CW, sm * 2 + G], [XR, YB - sm, half, sm], [X0, YB - sm, half, sm]]},
+    six: {n: 6, head: 1, s: [0, 1, 2].flatMap(r => [[XR, hy + r * (sm + G), half, sm], [X0, hy + r * (sm + G), half, sm]])},
   };
-  const BIAS = {feat: -.02, six: .06, bleed: -.06, stack: 0, stackb: .04, top: .03, l2p: -.04, p2l: -.04, grid: .02, sq: .1, solo: .55};
+  const MIRROR = {l2p: 'p2l', p2l: 'l2p'};
+  const BIAS = {feat: -.04, six: .05, bleed: -.12, stack: 0, l2p: -.05, p2l: -.05, grid: .02, sq: .12, solo: .6};
   const TOL = .17;
-  const fitCost = (a, w, h) => {const r = w / h, c = 1 - Math.min(a, r) / Math.max(a, r); return c <= TOL ? c * 1.6 : .7 + c;};
+  const fitCost = (a, w, h) => {const r = w / h, c = 1 - Math.min(a, r) / Math.max(a, r); return c <= TOL ? c * 1.6 : 1.2 + c;};
   const perms = n => n === 1 ? [[0]] : perms(n - 1).flatMap(q => Array.from({length: n}, (_, k) => [...q.slice(0, k), n - 1, ...q.slice(k)]));
   const PERM = [0, 1, 2, 3, 4].map(n => n ? perms(n) : []);
   PERM[6] = [[0, 1, 2, 3, 4, 5]];
   const plan = [];
   {
-    let i = 0, prev = [], first = true, sinceHead = 9;
+    let i = 0, sinceHead = 3, sinceBleed = 6, sinceSpread = 4, lastHead = '', pages = 0;
+    const wide = innerWidth >= 700;   // الصورة الممتدة على صفحتين تناسب عرض الصفحتين معاً
     while (i < gal.length) {
+      const pg = 3 + pages, right = pg % 2 === 0;
+      // لحظة مصمّمة: صورة عريضة ممتدة على الصفحتين كل بضع صفحات
+      if (wide && right && sinceSpread >= 9 && gal.length - i > 6) {
+        const k = [0, 1, 2].map(j => i + j).find(j => j < gal.length && gal[j].w >= 1200 && fitCost(gal[j].a, PW * 2, PH) <= TOL * .8);
+        if (k != null) {const [im] = gal.splice(k, 1); gal.splice(i, 0, im);
+          plan.push({name: 'spread', ims: [im]}); i++; pages += 2; sinceSpread = 0; sinceHead++; sinceBleed += 2; continue;}
+      }           // الصفحات الزوجية يمين الكتاب
+      const facing = !right && plan.length && plan[plan.length - 1].name !== 'spread' ? plan[plan.length - 1].name : null;
+      const prevSpread = right ? plan.slice(-2).map(x => x.name) : plan.slice(-3, -1).map(x => x.name);
       let best = null;
       for (const [name, L] of Object.entries(LAY)) {
         const n = L.n; if (i + n > gal.length) continue;
-        if (first && !['bleed', 'top', 'stackb', 'stack', 'solo'].includes(name)) continue;
+        if (L.head && (!right || pg < 4)) continue;                  // عناوين الأقسام تفتتح الصفحة اليمنى فقط
         const ims = gal.slice(i, i + n);
+        if (L.bleed && (fitCost(ims[0].a, PW, PH) > TOL * 1.6 || sinceBleed < 7)) continue;
         let bc = 1e9, bp = null;
         if (L.solo) {bc = 0; bp = [0];}
         else for (const q of PERM[n]) {let c = 0; q.forEach((k, s) => c += fitCost(ims[k].a, L.s[s][2], L.s[s][3])); if (c < bc) {bc = c; bp = q;}}
-        let score = (bc + .42 + BIAS[name] + (prev[0] === name ? .3 : 0) + (prev[1] === name ? .16 : 0) + (prev[2] === name ? .08 : 0)) / Math.pow(n, .8) + (L.head ? (sinceHead < 6 ? .5 : sinceHead < 9 ? .08 : -.05) : 0);
-        if (first && name === 'bleed' && ims[0].a < .9) score -= .2;
+        let score = (bc + .42 + BIAS[name] + (prevSpread.includes(name) ? .2 : 0)) / Math.pow(n, .8);
+        if (L.head) score += (sinceHead < 5 ? .6 : -.06) + (lastHead === name ? .12 : 0);
+        if (facing && (facing === name || MIRROR[facing] === name)) score -= .14;   // الصفحتان المتقابلتان متوازنتان
+        if (facing === 'bleed' && name === 'solo') score += .3;
         if (!best || score < best.score) best = {name, score, ims: bp.map(k => ims[k])};
       }
-      plan.push(best); prev = [best.name, prev[0], prev[1]]; sinceHead = LAY[best.name].head ? 0 : sinceHead + 1; i += best.ims.length; first = false;
+      plan.push(best); i += best.ims.length; pages++; sinceSpread++;
+      if (LAY[best.name].head) lastHead = best.name;
+      sinceHead = LAY[best.name].head ? 0 : sinceHead + 1; sinceBleed = best.name === 'bleed' ? 0 : sinceBleed + 1;
     }
   }
 
@@ -184,12 +204,19 @@
   let hk = 0;
   // صفحات الصور
   plan.forEach(pl => {
+    if (pl.name === 'spread') {
+      const im = pl.ims[0];
+      const f = side => `<figure class="ph bl spr ${side}" data-n="${im.n}"><img alt="" draggable="false" decoding="async" data-w="200" data-h="141.4" style="object-fit:cover;object-position:50% 40%"></figure>`;
+      pages.push({cls: 'pp lay-spread isbleed', imgs: [im.n], html: f('sr1')});
+      pages.push({cls: 'pp lay-spread isbleed', imgs: [im.n], html: f('sl1')});
+      return;
+    }
     const L = LAY[pl.name];
     let html;
     if (L.solo) {
-      const im = pl.ims[0], a = im.a, maxH = CH - 14;
+      const im = pl.ims[0], a = im.a, maxH = CH - 16;
       let w = CW, h = CW / a; if (h > maxH) {h = maxH; w = h * a;}
-      html = `${run}${fig(im, [(PW - w) / 2, Y0 + 4 + (maxH - h) / 2, w, h])}<div class="orn"><i></i><b></b><i></i></div>`;
+      html = `${run}${fig(im, [(PW - w) / 2, Y0 + 3 + (maxH - h) / 2, w, h])}<div class="orn"><i></i><b></b><i></i></div>`;
     } else html = (L.bleed ? '' : run) + pl.ims.map((im, s) => fig(im, L.s[s], {bleed: L.bleed})).join('');
     if (L.head) {const [k, t] = HEADS[hk++ % HEADS.length], top = L.s[0][1];
       html += `<div class="shd" style="top:${pct(Y0, PH)};height:${pct(top - Y0 - G, PH)}"><span>${k}</span><h3>${t}</h3><div class="orn2"><i></i><b></b><i></i></div></div>`;}
@@ -217,7 +244,7 @@
   const P = i => N - i, IX = q => N - q;
   bookEl.innerHTML = pages.map((_, i) => {const q = P(i), pg = pages[q - 1];
     const side = q === 1 ? '' : q % 2 ? ' s-l' : ' s-r';
-    return `<div class="pg ${pg.cls}${side}" data-density="${pg.hard ? 'hard' : 'soft'}" data-p="${q}">${pg.html}${q > 1 && q < N && !/^(ed|end)$/.test(pg.cls) ? folio(q, /lay-(bleed|stackb)\b/.test(pg.cls)) : q === 2 ? folio(q) : ''}<i class="sp"></i></div>`;}).join('');
+    return `<div class="pg ${pg.cls}${side}" data-density="${pg.hard ? 'hard' : 'soft'}" data-p="${q}">${pg.html}${q > 1 && q < N && !/^(ed|end)$/.test(pg.cls) ? folio(q, /lay-(bleed|spread)\b/.test(pg.cls)) : q === 2 ? folio(q) : ''}<i class="sp"></i></div>`;}).join('');
   const els = [...bookEl.children];
 
   // ===== دقة الصور: أصغر نسخة تكفي حجم الخانة × كثافة الشاشة =====
@@ -374,8 +401,15 @@
     if (!down) return; const d = Math.hypot(e.clientX - down.x, e.clientY - down.y), dt = Date.now() - down.t; down = null;
     if (d > 8 || dt > 600 || pf.getState() !== 'read') return;
     const a = e.target.closest('a[href]'); if (a) {location.href = a.href; return;}
-    const fg = e.target.closest('figure.ph'); if (fg) lopen(+fg.dataset.n);
+    const fg = e.target.closest('figure.ph'); if (!fg) return;
+    if (EMBED) parent.postMessage({album: 'photo', key: photos[+fg.dataset.n].k, n: +fg.dataset.n}, '*'); else lopen(+fg.dataset.n);
   }, true);
+  $('#bOpen').onclick = () => {window.top.location.href = `album.html?id=${id}${curP > 1 ? '#p=' + curP : ''}`;};
+  if (EMBED) {
+    $('#hint').textContent = 'اسحب طرف الصفحة لتقليبها، واضغط أي صورة لعرضها';
+    // نبلغ الصفحة الأم بعدد الصفحات والصفحة الحالية
+    const tell = () => parent.postMessage({album: 'page', p: curP, N}, '*'); pf.on('flip', tell); tell();
+  }
   $('#bZoom').onclick = () => {const v = visible(); const n = v.map(q => pages[q - 1].imgs[0]).find(x => x != null); lopen(n ?? 0);};
   $('#zClose').onclick = lclose;
   $('#lbN').onclick = () => show(cur + 1); $('#lbP').onclick = () => show(cur - 1);

@@ -277,7 +277,7 @@ body.home:not(.mags) .hgrid{grid-template-areas:"news tree";grid-template-column
 .stree-l .st-sh{mix-blend-mode:multiply;opacity:.9}
 .stree-l .st-tr{transform-origin:50% 93.68%;will-change:transform}
 .stree-l .st-nm{z-index:1}
-@media (max-width:639px){body.stree #scene{background-image:url(img/bg-home-portrait.jpg?v=202611022200);background-position:50% 35%}}
+@media (max-width:639px){body.stree #scene{background-image:url(img/bg-home-portrait.jpg?v=202611030100);background-position:50% 35%}}
 body.home.stree:not(.mags) .hgrid>.htree{position:fixed;z-index:0;left:var(--tree-bx,25vw);right:auto;top:min(calc(var(--tree-by,90vh) + 8px),calc(100vh - 40px));bottom:auto;width:auto;transform:translateX(-50%)}
 body.home.stree .htree .tlink{position:static;transform:none;margin:0;display:inline-flex;box-shadow:0 4px 14px rgba(20,8,0,.35)}
 @media (max-width:1023px){body.home.stree:not(.mags) .hgrid{pointer-events:none}body.home.stree .hgrid>*{pointer-events:auto}}
@@ -298,3 +298,12 @@ body.home.stree .htree .tlink{position:static;transform:none;margin:0;display:in
   body.home.stree .row:nth-child(n+5){display:none}
   body.home.stree .log .allm{height:44px;margin-top:10px}
 }
+/* الشجرة وأسماء جذعها تحت تظليل أخف حتى يبان الضوء الخلفي (الرئيسية فقط) */
+body.stree #scene::after{background:linear-gradient(180deg,rgba(20,16,48,.08) 0%,rgba(20,16,48,.12) 45%,rgba(20,16,48,.26) 80%,rgba(20,16,48,.4) 100%)}
+.stree-l .st-gl{z-index:1;mix-blend-mode:screen;opacity:.75;animation:stglow 5.5s ease-in-out infinite alternate}
+@keyframes stglow{from{opacity:.55}to{opacity:.95}}
+@media (prefers-reduced-motion:reduce){.stree-l .st-gl{animation:none}}
+/* رابط البحث على الأرض يمين الجذع حتى لا يغطي «الهذلي» */
+@media (min-width:640px){body.home.stree:not(.mags) .hgrid>.htree{left:calc(var(--tree-bx,25vw) + 64px);transform:none;top:min(calc(var(--tree-by,90vh) - 14px),calc(100vh - 40px))}}
+/* الوصول السريع تحت السجل فقط، فيبقى عمود الشجرة وجذعها ظاهراً */
+@media (min-width:1024px){body.home.stree:not(.mags) .quick{width:calc(100% - 472px);grid-template-columns:repeat(3,1fr)}}

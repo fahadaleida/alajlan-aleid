@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مجلات التغطيات | أسرة العجلان والعيد</title>
+<meta name="description" content="تغطيات مناسبات أسرة العجلان والعيد كمجلات مصوّرة تتقلّب صفحاتها.">
+<meta name="theme-color" content="#1A1448">
+<link rel="icon" href="img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://alajlanandaleid.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=202611021830">
+<link rel="stylesheet" href="home.css?v=202611021830">
+<style>
+/* رف التغطيات: كل مناسبة غلاف مجلة مرسوم من صورتها */
+.cvg{padding:40px 0 70px}
+.cvg-year{display:flex;align-items:center;gap:16px;margin:46px 0 22px;font-size:22px;font-weight:800;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.cvg-year:first-child{margin-top:0}
+.cvg-year i{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(227,182,107,.8))}
+.cvg-year small{font-size:14px;font-weight:700;color:#E3B66B}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:34px 26px;padding:26px 26px 0;border-radius:24px;
+  background:linear-gradient(180deg,rgba(251,250,247,.16),rgba(251,250,247,.06));border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 -18px 0 -8px rgba(120,70,30,.45)}
+.mz{display:block;text-decoration:none;color:#fff;padding-bottom:26px}
+.mz-cv{position:relative;display:block;aspect-ratio:1/1.414;border-radius:3px 7px 7px 3px;overflow:hidden;background:#1A1450;container-type:inline-size;
+  box-shadow:-5px 0 0 -2px #EAE0CB,-8px 1px 0 -3px #D5C7AB,0 18px 28px -10px rgba(10,4,20,.7);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.mz:hover .mz-cv{transform:translateY(-8px) rotate(-1.2deg);box-shadow:-5px 0 0 -2px #EAE0CB,-8px 1px 0 -3px #D5C7AB,0 30px 40px -14px rgba(10,4,20,.75)}
+.mz-cv>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;opacity:0;transition:opacity .5s}
+.mz-cv>img.in{opacity:1}
+.mz-cv::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(14,9,36,.86),rgba(14,9,36,.2) 26%,transparent 42%,rgba(11,7,28,.55) 62%,rgba(11,7,28,.95) 90%)}
+.mz-cv::after{content:"";position:absolute;inset:3cqw;z-index:2;border:1px solid rgba(227,182,107,.4)}
+.mz-m{position:absolute;z-index:3;top:6cqw;left:6cqw;right:6cqw;text-align:center}
+.mz-m small{display:block;font-size:4.6cqw;font-weight:700;color:#E3B66B;white-space:nowrap}
+.mz-m b{display:flex;align-items:center;justify-content:center;gap:2cqw;margin-top:1.4cqw;padding-bottom:2.4cqw;border-bottom:1px solid rgba(227,182,107,.5);font-size:7.4cqw;font-weight:900;white-space:nowrap}
+.mz-m b img{width:9cqw;height:auto;border-radius:1.6cqw}
+.mz-m b em{font-style:normal;color:#E3B66B}
+.mz-t{position:absolute;z-index:3;left:7cqw;right:7cqw;bottom:8cqw;text-align:center}
+.mz-t span{display:inline-block;padding:.6cqw 3.4cqw;font-size:5cqw;font-weight:800;color:#1B1640;background:linear-gradient(180deg,#F1CF8C,#D29B4C);border-radius:1cqw}
+.mz-t em{display:block;margin-top:2.4cqw;font-family:Amiri,serif;font-style:normal;font-weight:700;font-size:7.6cqw;line-height:1.1;color:#E3B66B}
+.mz-t b{display:block;margin-top:1cqw;font-size:8.4cqw;font-weight:900;line-height:1.3;text-wrap:balance;text-shadow:0 1cqw 3cqw rgba(0,0,0,.6)}
+.mz-t b.sm{font-size:7cqw}
+.mz-t i{display:block;width:20cqw;height:1px;margin:3cqw auto 2.4cqw;background:linear-gradient(90deg,transparent,#E3B66B,transparent)}
+.mz-t small{font-size:4.6cqw;font-weight:700;color:rgba(255,255,255,.85)}
+.mz-n{position:absolute;z-index:3;left:6cqw;top:40%;width:17cqw;height:17cqw;border-radius:50%;display:grid;place-content:center;text-align:center;line-height:1.05;transform:rotate(-8deg);
+  background:rgba(30,22,80,.9);border:.6cqw solid #E3B66B;font-size:6cqw;font-weight:900}
+.mz-n small{font-size:3.4cqw;color:#E3B66B}
+.mz>p{margin-top:12px;font-size:14px;font-weight:700;line-height:1.5;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+@media (max-width:640px){.shelf{grid-template-columns:repeat(2,1fr);gap:26px 16px;padding:18px 14px 0}.mz>p{font-size:12.5px}}
+</style>
+</head>
+<body class="scened">
+<div id="scene" aria-hidden="true"></div>
+<div class="page-top">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ <a href="news.html">الأخبار والمناسبات</a> ‹ مجلات التغطيات</div>
+    <h1>مجلات التغطيات</h1>
+    <p id="sum">مناسبات الأسرة كمجلات مصوّرة تتقلّب صفحاتها</p>
+  </div>
+</div>
+<main class="cvg"><div class="wrap" id="list"></div></main>
+<script src="common.js?v=202611022230"></script>
+<script>
+(async () => {
+  const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611022230').then(r => r.json()).catch(() => ({a: {}}))]);
+  buildChrome(site);
+  const L = posts.filter(p => p.c === 'مناسبات الاسرة' || idx.a[p.id]);
+  const short = t => {
+    let s = t.replace(/ﮪ/g, 'هـ').replace(/^تغطية\s+/, '');
+    let m = s.match(/^(?:حفل\s+)?(زواج|زفاف)\s+(.+?)(?:\s+(?:على|علي)\s+كريمة.*)?$/);
+    if (m) return {k: m[1] === 'زفاف' ? 'حفل زفاف' : 'حفل زواج', n: m[2]};
+    m = s.match(/^(?:حفل\s+)?(?:معايدة\s+)?(عيد (?:الفطر|الأضحى|الاضحى))(?:\s+المبارك)?\s*(?:لعام\s*)?([\d٠-٩]+\s*هـ)?/);
+    if (m) return {k: 'معايدة الأسرة', n: m[1].replace('الاضحى', 'الأضحى') + (m[2] ? ' ' + m[2].replace(/\s+/g, '') : '')};
+    m = s.match(/^(.+?)\s+(?:على شرف|في ضيافة|بمنزل|بمجلس|بمناسبة)\s/);
+    return {k: '', n: m ? m[1] : s};
+  };
+  $('#sum').textContent = `${ar(L.length)} تغطية من مناسبات الأسرة، كل واحدة مجلة مصوّرة تتقلّب صفحاتها`;
+  const years = [...new Set(L.map(p => p.d.slice(0, 4)))];
+  $('#list').innerHTML = years.map(y => {const G = L.filter(p => p.d.startsWith(y));
+    return `<h2 class="cvg-year">${ar(+y)}<small>${ar(G.length)} تغطية</small><i></i></h2><div class="shelf">${G.map(p => {
+      const a = idx.a[p.id], T = short(p.t), img = a ? (/^https?:/.test(a[0]) ? a[0] : idx.base + a[0]) : p.i;
+      return `<a class="mz" href="album.html?id=${p.id}"><span class="mz-cv"><img data-src="${esc(img)}" alt="" decoding="async">
+        <span class="mz-m"><small>عدد خاص · ${fmtDate(p.d)}</small><b><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></b></span>
+        ${a ? `<span class="mz-n">${ar(a[2])}<small>صورة</small></span>` : ''}
+        <span class="mz-t"><span>تغطية خاصة</span>${T.k ? `<em>${esc(T.k)}</em>` : ''}<b class="${T.n.length > 26 ? 'sm' : ''}">${esc(T.n)}</b><i></i><small>${fmtDate(p.d)}</small></span></span>
+        <p>${esc(p.t)}</p></a>`;}).join('')}</div>`;}).join('');
+  const io = new IntersectionObserver(es => es.forEach(e => {if (!e.isIntersecting) return; const im = e.target; io.unobserve(im); im.onload = () => im.classList.add('in'); im.src = im.dataset.src;}), {rootMargin: '600px 0px'});
+  document.querySelectorAll('.mz-cv>img').forEach(im => io.observe(im));
+})();
+</script>
+</body>
+</html>

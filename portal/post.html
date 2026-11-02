@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611021830">
-<link rel="stylesheet" href="post.css?v=202611022230">
+<link rel="stylesheet" href="post.css?v=202611030130">
 </head>
 <body class="scened ps">
 <div id="scene" aria-hidden="true"></div>
@@ -193,15 +193,13 @@
   let shown = 0;
   if (gal.length) {
     const G = $('#gallery'); G.hidden = false;
-    G.innerHTML = `<div class="ps-ghead"><div><small>ألبوم المناسبة</small><h2>صور من المناسبة<em>${ar(gal.length)} صورة</em></h2></div>
-      <button class="ps-btn" id="slides2">${I(ICO.play, 16)}عرض الشرائح</button></div>
-      ${magOK ? `<a class="ps-magcard" href="${magUrl}" aria-label="تصفّح التغطية كمجلة">
-        <span class="mc-cv"><img id="mcImg" alt=""><i class="mc-sh"></i><span class="mc-mast"><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></span><span class="mc-t"><small>تغطية خاصة</small>${esc(p.t.replace(/^تغطية\s+(حفل\s+)?/, ''))}</span></span>
-        <span class="mc-tx"><small>جديد · مجلة التغطية</small><b>تصفّح الصور كمجلة مصوّرة</b><span>غلاف خاص، وافتتاحية، و${ar(all.length)} صورة مرتبة في صفحات تتقلّب كالمجلة المطبوعة.</span>
-          <em>افتح المجلة ${I(ICO.l, 16)}</em></span></a>` : ''}
-      <div class="ps-jg${gal.length <= 3 ? ' few' : ''}" id="jg"></div><div class="ps-gmore" id="gmore"></div>`;
+    const MAG = all.length >= 4;   // الألبوم يظهر كمجلة تتقلّب صفحاتها هنا مباشرة
+    G.innerHTML = `<div class="ps-ghead"><div><small>${MAG ? 'مجلة المناسبة' : 'ألبوم المناسبة'}</small><h2>صور من المناسبة<em>${ar(gal.length)} صورة</em></h2></div>
+      <div class="ps-gbtns">${MAG ? `<button class="ps-btn" id="gridT" aria-pressed="false">${I(ICO.grid, 16)}<span>عرض الصور كشبكة</span></button>` : ''}<button class="ps-btn" id="slides2">${I(ICO.play, 16)}عرض الشرائح</button></div></div>
+      ${MAG ? `<div class="ps-mag" id="pmag"><div class="ps-table"><div class="ps-mload"><i></i><span>جارٍ فتح المجلة…</span></div></div>
+        <p class="ps-mnote">${I(MAGI, 16)}اسحب طرف الصفحة أو استخدم الأسهم، واضغط أي صورة لعرضها كاملة · <a href="${magUrl}">افتح المجلة بملء الشاشة</a></p></div>` : ''}
+      <div class="ps-jg${gal.length <= 3 ? ' few' : ''}" id="jg"${MAG ? ' hidden' : ''}></div><div class="ps-gmore" id="gmore"${MAG ? ' hidden' : ''}></div>`;
     const jg = $('#jg'), gm = $('#gmore');
-    if ($('#mcImg')) getThumb(/^phonto/i.test(key(all[0])) && all.length > 1 ? 1 : 0).then(r => {if (r) $('#mcImg').src = r.src;});
     let busy = false;
     const more = async n => {
       if (busy || shown >= gal.length) return; busy = true;
@@ -221,8 +219,26 @@
       if (left > 0) {$('#gm1').onclick = () => more(BATCH); const a = $('#gmA'); if (a) a.onclick = () => more(left);}
     };
     // الدفعة الأولى تتحمل لما يقترب الزائر من الألبوم
-    const io = new IntersectionObserver(es => {if (es.some(e => e.isIntersecting)) {io.disconnect(); more(BATCH);}}, {rootMargin: '900px 0px'});
+    const io = new IntersectionObserver(es => {if (!es.some(e => e.isIntersecting)) return; io.disconnect();
+      if (MAG) mountMag(); else more(BATCH);}, {rootMargin: '700px 0px'});
     io.observe(G);
+    // المجلة المضمّنة: نفس صفحات album.html داخل إطار، تُحمَّل فقط عند الاقتراب منها
+    function mountMag() {
+      const box = $('#pmag .ps-table');
+      const fr = document.createElement('iframe');
+      fr.title = 'مجلة المناسبة'; fr.src = `album.html?id=${id}&embed=1&v=202611030130`; fr.setAttribute('allow', 'fullscreen');
+      fr.onload = () => box.classList.add('on');
+      box.appendChild(fr);
+      const size = () => {const w = box.clientWidth, wide = w >= 700;
+        fr.style.height = Math.round(wide ? Math.min(w * .64, innerHeight - 150, 860) : Math.min(w * 1.414 + 96, innerHeight * .86)) + 'px';};
+      size(); addEventListener('resize', size);
+    }
+    if (MAG) $('#gridT').onclick = () => {
+      const on = $('#jg').hidden; $('#jg').hidden = $('#gmore').hidden = !on; $('#pmag').hidden = on;
+      $('#gridT').setAttribute('aria-pressed', on); $('#gridT span').textContent = on ? 'عرض الصور كمجلة' : 'عرض الصور كشبكة';
+      if (on && !shown) more(BATCH);
+      if (!on && !$('#pmag iframe')) mountMag();
+    };
   }
 
   // ===== العارض الكامل =====
@@ -268,6 +284,9 @@
       history.replaceState(null, '', `#photo-${cur + 1}`);
     };
     const open = k => {pv.classList.add('open'); pv.setAttribute('aria-hidden', 'false'); document.documentElement.style.overflow = 'hidden'; show(k); $('#pvX').focus({preventScroll: true});};
+    // ضغط صورة داخل المجلة المضمّنة يفتح العارض الكامل نفسه
+    addEventListener('message', e => {if (e.source !== $('#pmag iframe')?.contentWindow || !e.data || e.data.album !== 'photo') return;
+      const k = all.findIndex(u => key(u) === e.data.key); open(k >= 0 ? k : 0);});
     const close = () => {pv.classList.remove('open'); pv.setAttribute('aria-hidden', 'true'); document.documentElement.style.overflow = ''; if (document.fullscreenElement) document.exitFullscreen(); history.replaceState(null, '', location.pathname + location.search);};
     document.addEventListener('click', e => {const t = e.target.closest('[data-k]'); if (t && !pv.contains(t)) {e.preventDefault(); open(+t.dataset.k);}});
     [$('#slides'), $('#slides2')].forEach(b => b && (b.onclick = () => open(0)));

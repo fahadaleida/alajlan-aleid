@@ -11,7 +11,10 @@
 .ph{position:absolute;margin:0;overflow:hidden;background:#E8E0CF}
 .ph img{position:absolute;inset:0;width:100%;height:100%;opacity:0!important;transition:opacity .45s ease;user-select:none;-webkit-user-drag:none}
 .ph img.in{opacity:1!important}
-.ph:not(.bl):not(.cvph){box-shadow:0 0 0 1px rgba(60,40,10,.06),0 .5cqw 1.6cqw -0.6cqw rgba(40,24,6,.28)}
+.ph img.in{mix-blend-mode:multiply}
+.cvph img.in,.ph.bl img.in{mix-blend-mode:normal}
+/* الصورة مطبوعة على الورق: بلا ظل، مع حد حبر رفيع جداً */
+.ph:not(.cvph)::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 .5px rgba(40,24,6,.18)}
 .ph.mat{background:linear-gradient(180deg,#F1EBDD,#E9E1D0)}
 .ph.mat img{padding:2.2cqw}
 .ph.mat.bl{background:radial-gradient(ellipse at 50% 45%,#2A2260,#141032)}
@@ -21,13 +24,13 @@
 @media (hover:hover){.ph img.in{transition:opacity .45s ease,transform .6s var(--ease)}.ph:hover img.in{transform:scale(1.015)}}
 
 /* الترويسة الجارية وأرقام الصفحات */
-.rh{position:absolute;top:4.6cqw;left:7cqw;right:7cqw;display:flex;align-items:center;gap:1.6cqw;font-size:1.75cqw;line-height:1;white-space:nowrap}
+.rh{position:absolute;top:4.2cqw;left:8cqw;right:8cqw;display:flex;align-items:center;gap:1.6cqw;font-size:1.75cqw;line-height:1.8;white-space:nowrap}
 .rh b{font-weight:800;color:var(--gold-d);letter-spacing:.02em}
 .rh i{flex:1;height:1px;background:linear-gradient(90deg,rgba(192,133,55,.15),rgba(192,133,55,.6),rgba(192,133,55,.15))}
-.rh span{font-weight:600;color:rgba(27,22,64,.62);overflow:hidden;text-overflow:ellipsis;max-width:55%}
-.fo{position:absolute;bottom:3.6cqw;left:7cqw;right:7cqw;display:flex;align-items:center;gap:1.6cqw;font-size:1.6cqw;line-height:1;color:rgba(27,22,64,.55);pointer-events:none}
-.fo b{display:grid;place-items:center;min-width:4.6cqw;height:4.6cqw;padding:0 1cqw;border-radius:99px;font-size:2.1cqw;font-weight:800;color:var(--navy);border:1px solid rgba(192,133,55,.55)}
-.fo span{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rh span{font-weight:600;color:rgba(27,22,64,.62);overflow:hidden;text-overflow:ellipsis;max-width:55%;padding:.2em 0 .25em}
+.fo{position:absolute;bottom:3.4cqw;left:8cqw;right:8cqw;display:flex;align-items:center;gap:1.6cqw;font-size:1.6cqw;line-height:1.8;color:rgba(27,22,64,.55);pointer-events:none}
+.fo b{display:grid;place-items:center;min-width:4.6cqw;height:4.6cqw;line-height:1;padding-top:.15em;padding:0 1cqw;border-radius:99px;font-size:2.1cqw;font-weight:800;color:var(--navy);border:1px solid rgba(192,133,55,.55)}
+.fo span{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.2em 0 .25em}
 .pg.s-l .fo{flex-direction:row-reverse}
 .fo.dk{bottom:3cqw;color:rgba(255,255,255,.85);text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .fo.dk b{color:#fff;border-color:rgba(255,255,255,.55);background:rgba(20,14,40,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
@@ -155,3 +158,36 @@
 .orn2 i:last-child{transform:scaleX(-1)}
 .orn2 b{width:1.1cqw;height:1.1cqw;transform:rotate(45deg);background:var(--gold)}
 @media (max-width:639px){.album .stage .arr{width:36px;height:36px;margin-top:-18px;opacity:.78}.album .stage .arr.prev{right:2px}.album .stage .arr.next{left:2px}}
+
+/* ===== ملمس الورق وظل الكعب فوق الصور: الصفحة تبدو مطبوعة ===== */
+.album .pg::before{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .45  0 0 0 0 .3  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.album .pg.cv::before{opacity:.35}
+.album .pg .sp{z-index:7;width:13%}
+.album .pg.--left .sp{background:linear-gradient(90deg,transparent,rgba(40,24,6,.05) 50%,rgba(40,24,6,.16) 85%,rgba(30,16,4,.32))}
+.album .pg.--right .sp{background:linear-gradient(270deg,transparent,rgba(40,24,6,.05) 50%,rgba(40,24,6,.16) 85%,rgba(30,16,4,.32)),linear-gradient(90deg,rgba(255,255,255,.18),transparent 6%)}
+.album .pg.cv .sp{width:5%}
+/* الحافة الخارجية للورقة: ظل خفيف جداً */
+.album .pg.--left:not(.cv){box-shadow:inset 1.2cqw 0 2cqw -1.6cqw rgba(60,40,10,.18)}
+.album .pg.--right:not(.cv){box-shadow:inset -1.2cqw 0 2cqw -1.6cqw rgba(60,40,10,.18)}
+/* صورة ممتدة على الصفحتين: كل صفحة تعرض نصفها */
+.ph.spr{inset:0;width:100%;height:100%}
+.ph.spr img{width:200%;max-width:none}
+.ph.spr.sr1 img{left:auto;right:0}
+.ph.spr.sl1 img{left:0;right:auto}
+
+/* ===== وضع التضمين داخل صفحة الخبر (post.html) ===== */
+.efs{display:none}
+body.embed{background:transparent;grid-template-rows:minmax(0,1fr) auto}
+body.embed #scene,body.embed .amb,body.embed .rbar,body.embed .thumbs{display:none}
+body.embed .stage{grid-template-columns:62px minmax(0,1fr) 62px;padding:18px 4px 18px}
+body.embed .arr{width:48px;height:48px}
+body.embed .bookzone .glow{display:none}
+body.embed .rfoot{padding:0 12px 12px}
+body.embed .ctrl{max-width:640px;height:48px;padding:0 6px 0 16px}
+body.embed .cnt{height:36px;min-width:120px;font-size:13.5px}
+body.embed .efs{display:inline-grid;height:36px;padding:0 14px;background:var(--gold-soft);color:var(--gold-d);font-weight:800;font-size:13px;flex:none}
+body.embed .efs:hover{background:var(--navy);color:#fff}
+body.embed .hint{max-width:300px}
+@media (max-width:899px){body.embed .stage{grid-template-columns:minmax(0,1fr);padding:10px 4px 14px}body.embed .efs span{display:none}body.embed .efs{padding:0 10px}}
+@media (max-width:639px){body.embed .ctrl{gap:10px}body.embed .cnt{min-width:0}}

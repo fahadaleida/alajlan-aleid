@@ -1,22 +1,24 @@
-// شجرة السدر في خلفية الرئيسية: صورة مرسومة مسبقاً (scratchpad/tree/gen.py، بذرة ثابتة) مغروسة في أرض المشهد بنفس حساب cover للخلفية،
-// وفوقها لوحة تتساقط فيها أسماء الأسرة من السماء وتستقر كل واحدة على طرف غصنها
+// شجرة العائلة (img/tree-cut.webp) معالجة بإضاءة الغروب ومغروسة في أرض مشهد الخلفية بنفس حساب cover للخلفية
+// (المعالجة: scratchpad/ftree/proc.py). فوقها لوحة تتساقط فيها الأسماء وتستقر كل واحدة على ورقتها الحقيقية (names.json)
 (() => {
   const scene = document.getElementById('scene'); if (!scene) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // حدود صورة الشجرة وظلها بالنسبة لقاعدة الجذع (بكسل المشهد العرضي ٢٥٦٠)
-  const IMG = [-560, 560, -830, 56], SHD = [-560, 2200, -40, 160], ORG = [50, 93.68];
-  // الخلفيات: الأبعاد، موضع cover، قاعدة الجذع داخلها، ومقياس الشجرة
+  const V = '202611030100';
+  // صورة الشجرة بإحداثيات المصدر: العرض، الارتفاع، ارتفاع الملصق الأصلي (لـ names.json)، قاعدة الجذع وخط الأرض
+  const SRC = {w: 1790, h: 2400, h0: 2342, bx: 896.6, by: 2318};
+  const KL = 1025 / 2305;                       // بكسل مشهد عرضي لكل بكسل مصدر (حُسب عليه الظل)
+  const SHD = [-560, 2200, -40, 160];          // صندوق الظل بالنسبة للقاعدة (بكسل المشهد العرضي)
   const BG = {
-    land: {W: 2560, H: 1441, px: .5, py: 1, bx: 570, by: 1385, k: 1.1},
-    port: {W: 1200, H: 2400, px: .5, py: .35, bx: 440, by: 1425, k: 1},
+    land: {W: 2560, H: 1441, px: .5, py: 1, bx: 570, by: 1385, k: KL},
+    port: {W: 1200, H: 2400, px: .5, py: .35, bx: 405, by: 1425, k: .407},
   };
-  const SPOTS = [[0.6993,0.6358,0.0],[0.559,0.4911,0.35],[0.6926,0.3959,0.0],[0.5426,0.6172,0.36],[0.6182,0.4418,0.0],[0.5675,0.628,0.0],[0.2845,0.6137,0.0],[0.5407,0.3351,0.01],[0.4395,0.4589,0.05],[0.5313,0.4053,0.0],[0.7266,0.6307,0.0],[0.3964,0.5197,0.0],[0.6686,0.6559,0.0],[0.6953,0.5671,0.0],[0.355,0.3996,0.41],[0.5822,0.3384,0.0],[0.5255,0.3535,0.0],[0.3945,0.3472,0.11],[0.2678,0.5543,0.29],[0.4104,0.4303,0.12],[0.5859,0.6117,0.0],[0.3306,0.483,0.07],[0.3825,0.5557,0.0],[0.4693,0.4021,0.0],[0.501,0.548,0.0],[0.7221,0.4069,0.0],[0.4663,0.4998,0.0],[0.2695,0.4879,0.19],[0.1589,0.549,0.45],[0.4671,0.4303,0.08],[0.1852,0.493,0.22],[0.3619,0.3814,0.29],[0.4449,0.2982,0.4],[0.4,0.3348,0.26],[0.5069,0.5693,0.15],[0.5334,0.4681,0.0],[0.2621,0.5413,0.57],[0.7247,0.5878,0.0],[0.2134,0.4479,0.61],[0.4276,0.436,0.06],[0.8376,0.5322,0.0],[0.8055,0.5268,0.0],[0.2445,0.6145,0.1],[0.6419,0.64,0.0],[0.3956,0.6349,0.0],[0.6608,0.5737,0.0],[0.5892,0.6726,0.03],[0.1645,0.5746,0.72],[0.3071,0.4634,0.37],[0.5338,0.6282,0.02],[0.6373,0.622,0.0],[0.3186,0.5272,0.0],[0.5412,0.3665,0.0],[0.6701,0.4662,0.0],[0.27,0.5852,0.15],[0.4891,0.4688,0.02],[0.4668,0.3839,0.0],[0.5985,0.3735,0.0],[0.5534,0.3892,0.0],[0.1818,0.5476,0.56],[0.5056,0.5878,0.0],[0.6479,0.5721,0.0],[0.2735,0.446,0.68],[0.6589,0.405,0.0],[0.4483,0.5039,0.0],[0.4962,0.4366,0.02],[0.4556,0.33,0.67],[0.4836,0.2926,0.32],[0.7305,0.5596,0.0],[0.4274,0.5829,0.0],[0.6569,0.5991,0.0],[0.3276,0.4616,0.05],[0.4805,0.4073,0.0],[0.4207,0.4741,0.02],[0.4489,0.5883,0.0],[0.3095,0.4341,0.62],[0.38,0.4228,0.02],[0.4691,0.4784,0.0],[0.5382,0.6474,0.01],[0.1962,0.5922,0.38],[0.6576,0.5444,0.0],[0.4265,0.3354,0.14],[0.6621,0.6194,0.0],[0.3395,0.4998,0.0],[0.5458,0.5158,0.0],[0.7731,0.5904,0.0],[0.6508,0.5103,0.0],[0.4846,0.5466,0.0],[0.2874,0.5127,0.01],[0.6362,0.4025,0.0],[0.3963,0.4598,0.01],[0.7528,0.454,0.0],[0.1757,0.5297,0.51],[0.8085,0.492,0.0],[0.746,0.4033,0.0],[0.5654,0.3849,0.0],[0.216,0.5797,0.49],[0.5102,0.3737,0.2],[0.7896,0.4692,0.0],[0.2448,0.4833,0.38],[0.8288,0.4894,0.0],[0.4855,0.3592,0.0],[0.5169,0.457,0.0],[0.3319,0.6069,0.0],[0.4833,0.4945,0.0],[0.8286,0.5698,0.0],[0.224,0.5026,0.5],[0.4752,0.3232,0.12],[0.3377,0.3841,0.62],[0.5616,0.5596,0.0],[0.4115,0.3601,0.12],[0.6345,0.5851,0.0],[0.6387,0.5093,0.0],[0.3116,0.566,0.0],[0.3169,0.5039,0.01],[0.2523,0.4452,0.41],[0.2326,0.573,0.16],[0.1869,0.5144,0.61],[0.2401,0.5292,0.0],[0.3384,0.5168,0.01],[0.6868,0.4693,0.0],[0.2409,0.5444,0.0],[0.7874,0.5398,0.0],[0.7619,0.4302,0.0],[0.2129,0.4778,0.05],[0.2902,0.4781,0.01],[0.1734,0.502,0.58],[0.4386,0.5427,0.0],[0.4653,0.5477,0.0],[0.2084,0.5646,0.34],[0.7167,0.5132,0.0],[0.6974,0.4905,0.0],[0.5908,0.3268,0.0],[0.7329,0.4408,0.06],[0.5588,0.5812,0.48],[0.3876,0.5762,0.0],[0.1644,0.5218,0.6],[0.6094,0.6568,0.0],[0.625,0.5153,0.01],[0.7592,0.5138,0.0],[0.3612,0.6355,0.01],[0.1699,0.4843,0.61],[0.2273,0.4769,0.56],[0.5757,0.358,0.0],[0.8435,0.5557,0.0],[0.4818,0.3877,0.0],[0.4196,0.6265,0.0],[0.5125,0.3447,0.16],[0.5319,0.4376,0.0],[0.3094,0.613,0.04],[0.5705,0.4388,0.0],[0.3753,0.5347,0.0],[0.587,0.3525,0.07],[0.7797,0.4806,0.0],[0.4087,0.5632,0.0],[0.3269,0.423,0.28],[0.5017,0.3868,0.0],[0.4149,0.6429,0.02],[0.673,0.582,0.0],[0.5978,0.5041,0.0],[0.649,0.4374,0.0],[0.5475,0.4748,0.0],[0.5543,0.4469,0.02],[0.3664,0.5504,0.0],[0.6785,0.5471,0.0],[0.5441,0.3505,0.03],[0.4293,0.3824,0.03],[0.4997,0.5038,0.0],[0.3288,0.6343,0.27],[0.5399,0.5535,0.07],[0.4531,0.4032,0.01],[0.4138,0.5969,0.0],[0.401,0.4471,0.02],[0.3846,0.3332,0.56],[0.4933,0.5284,0.0],[0.7769,0.5071,0.0],[0.5117,0.6374,0.21],[0.5684,0.3247,0.02],[0.375,0.6239,0.0],[0.6978,0.6541,0.0],[0.6005,0.4647,0.0],[0.6094,0.372,0.0],[0.2499,0.5937,0.02],[0.5473,0.6739,0.24],[0.6827,0.4324,0.0],[0.2109,0.6075,0.13],[0.3492,0.4451,0.31],[0.5961,0.6281,0.0],[0.6095,0.3233,0.11],[0.3954,0.5407,0.0],[0.627,0.4583,0.0],[0.6674,0.494,0.0],[0.3458,0.5678,0.0],[0.4585,0.5216,0.0],[0.3966,0.3673,0.55],[0.6568,0.4652,0.0],[0.375,0.3972,0.47],[0.5908,0.4585,0.0],[0.658,0.662,0.0],[0.4077,0.4593,0.05],[0.5847,0.3854,0.0],[0.504,0.4007,0.12],[0.4461,0.4798,0.02],[0.3459,0.4219,0.48],[0.4636,0.3629,0.01],[0.7753,0.458,0.0],[0.4036,0.5778,0.0],[0.5142,0.6213,0.23],[0.3658,0.4277,0.37],[0.6487,0.3542,0.0],[0.3316,0.5925,0.0],[0.51,0.5378,0.0],[0.4841,0.3097,0.24],[0.5575,0.4029,0.0],[0.2597,0.5065,0.66],[0.2851,0.4614,0.49],[0.5222,0.4816,0.52],[0.3981,0.3178,0.41],[0.3764,0.3594,0.64],[0.7585,0.4874,0.0],[0.6235,0.4126,0.0],[0.1827,0.5849,0.7],[0.3146,0.5898,0.03],[0.6766,0.5015,0.0],[0.2383,0.4643,0.64],[0.7682,0.5306,0.0],[0.4016,0.5058,0.04],[0.5856,0.4175,0.0],[0.5423,0.3087,0.16],[0.7328,0.5304,0.0],[0.4292,0.4828,0.0],[0.8491,0.5339,0.0],[0.5567,0.4312,0.0],[0.6302,0.3817,0.0],[0.8291,0.5449,0.0],[0.5023,0.3584,0.0],[0.4256,0.5352,0.0],[0.832,0.51,0.0],[0.7936,0.4539,0.0],[0.764,0.4731,0.0],[0.6417,0.5422,0.01],[0.5773,0.5315,0.0],[0.3005,0.5045,0.0],[0.495,0.312,0.04],[0.5287,0.513,0.66],[0.3917,0.4044,0.06],[0.3539,0.3551,0.54],[0.3641,0.3406,0.48],[0.2738,0.4642,0.29],[0.2017,0.4571,0.67],[0.3801,0.6387,0.12],[0.5315,0.391,0.0],[0.5239,0.6367,0.0],[0.7796,0.5551,0.0],[0.3432,0.6003,0.0],[0.5421,0.457,0.0],[0.6641,0.6403,0.0],[0.4106,0.3992,0.06],[0.231,0.5517,0.01],[0.6037,0.6105,0.0],[0.585,0.4928,0.0],[0.5469,0.4208,0.0],[0.3144,0.4885,0.01],[0.4938,0.5639,0.0],[0.3736,0.3787,0.67],[0.7177,0.4243,0.0],[0.4725,0.5322,0.0],[0.1961,0.5394,0.29],[0.3956,0.5596,0.0],[0.4138,0.4162,0.04],[0.4813,0.444,0.0],[0.7158,0.4481,0.0],[0.6225,0.6215,0.01],[0.593,0.4076,0.0],[0.1961,0.5666,0.42],[0.6146,0.3486,0.0],[0.2086,0.5044,0.43],[0.8421,0.4902,0.0],[0.6162,0.4616,0.0],[0.5123,0.418,0.0],[0.4306,0.3561,0.03],[0.2824,0.4878,0.1],[0.3014,0.5289,0.02],[0.3508,0.5806,0.0],[0.4758,0.594,0.0],[0.6844,0.6182,0.0],[0.6217,0.5887,0.0],[0.3632,0.5864,0.0],[0.6072,0.4383,0.0],[0.5634,0.6092,0.39],[0.7092,0.5463,0.0],[0.5701,0.4156,0.0],[0.388,0.4716,0.01],[0.5547,0.3083,0.14],[0.6758,0.5326,0.0],[0.6737,0.4799,0.0],[0.4781,0.5805,0.0],[0.1952,0.5258,0.15],[0.3965,0.6181,0.0],[0.4476,0.3703,0.05],[0.2983,0.5579,0.0],[0.61,0.4145,0.0],[0.3621,0.6184,0.0],[0.6476,0.4842,0.0],[0.5051,0.6126,0.0],[0.6581,0.5602,0.0],[0.3716,0.4542,0.26],[0.6087,0.5964,0.0],[0.7162,0.4879,0.0],[0.5944,0.4409,0.11],[0.4298,0.3118,0.55],[0.6392,0.3405,0.01],[0.7256,0.602,0.0],[0.5741,0.4551,0.0],[0.5474,0.4921,0.0],[0.386,0.5945,0.0],[0.711,0.4726,0.0],[0.3973,0.6022,0.0],[0.4886,0.3742,0.35],[0.5732,0.6734,0.27],[0.5609,0.5299,0.0],[0.6833,0.52,0.0],[0.3275,0.5617,0.0],[0.4215,0.5517,0.0],[0.7091,0.4984,0.0],[0.2194,0.5328,0.03],[0.6894,0.5877,0.0],[0.3857,0.522,0.0],[0.2943,0.4301,0.56],[0.7347,0.5035,0.0],[0.3346,0.4025,0.4],[0.6188,0.3334,0.01],[0.6118,0.6325,0.0],[0.5175,0.3211,0.07],[0.2926,0.5382,0.0],[0.5204,0.6091,0.0],[0.6126,0.5807,0.0],[0.7446,0.5955,0.0],[0.6653,0.4453,0.0],[0.4417,0.5272,0.0],[0.6518,0.3803,0.0],[0.6242,0.4907,0.0],[0.2871,0.5967,0.0],[0.5357,0.5755,0.5],[0.4931,0.6013,0.07],[0.3697,0.5163,0.0],[0.7139,0.6129,0.0],[0.3777,0.5026,0.0],[0.6628,0.4248,0.0],[0.7335,0.4183,0.0],[0.2547,0.6204,0.04],[0.2977,0.5833,0.22],[0.6065,0.3968,0.0],[0.5988,0.561,0.0],[0.4436,0.4387,0.0],[0.5755,0.4727,0.55],[0.2761,0.5647,0.02],[0.7397,0.4695,0.0],[0.2716,0.618,0.25],[0.4761,0.4204,0.0],[0.6277,0.5582,0.0],[0.3429,0.5415,0.0],[0.6695,0.3984,0.0],[0.7013,0.6155,0.0],[0.749,0.5586,0.0],[0.3227,0.4092,0.57],[0.2018,0.491,0.06],[0.3549,0.6031,0.0],[0.5167,0.3617,0.02],[0.6853,0.6448,0.0],[0.5503,0.6379,0.0],[0.2348,0.5974,0.17],[0.5749,0.58,0.18],[0.5865,0.3706,0.0],[0.5242,0.5916,0.0],[0.5643,0.371,0.0],[0.5913,0.6473,0.0],[0.4691,0.3067,0.08],[0.7604,0.5537,0.0],[0.3411,0.6295,0.0],[0.2953,0.622,0.01],[0.3603,0.468,0.25],[0.5991,0.5364,0.01],[0.2539,0.4705,0.1],[0.5474,0.5405,0.0],[0.6695,0.5592,0.0],[0.593,0.5781,0.13],[0.3418,0.4735,0.17],[0.3458,0.4878,0.01],[0.7102,0.6404,0.0],[0.6193,0.5411,0.0],[0.4273,0.5977,0.0],[0.5569,0.6498,0.03],[0.5075,0.2961,0.46],[0.851,0.5133,0.0],[0.7183,0.5678,0.0]];
   const mq = matchMedia('(max-width:639px)');
   const wrap = document.createElement('div'); wrap.className = 'stree-l';
-  wrap.innerHTML = '<img class="st-sh" alt="" decoding="async" src="img/scenetree-shadow.webp?v=202611022200"><img class="st-tr" alt="" decoding="async"><canvas class="st-nm"></canvas>';
+  wrap.innerHTML = `<img class="st-sh" alt="" decoding="async" src="img/scenetree-shadow.webp?v=${V}"><img class="st-tr" alt="" decoding="async"><img class="st-gl" alt="" decoding="async" src="img/scenetree-glow.webp?v=${V}"><canvas class="st-nm"></canvas>`;
   scene.appendChild(wrap);
-  const sh = wrap.children[0], tr = wrap.children[1], cv = wrap.children[2], g = cv.getContext('2d');
-  let G = null, dpr = 1, lastW = 0;
+  const sh = wrap.children[0], tr = wrap.children[1], gl = wrap.children[2], cv = wrap.children[3], g = cv.getContext('2d');
+  tr.style.transformOrigin = `${SRC.bx / SRC.w * 100}% ${SRC.by / SRC.h * 100}%`;
+  let G = null, dpr = 1, lastW = 0, N = [];
 
   function layout() {
     const c = mq.matches ? BG.port : BG.land, vw = scene.clientWidth || innerWidth, vh = scene.clientHeight || innerHeight;
@@ -25,15 +27,18 @@
     const visL = -ox / s;   // الشاشات الضيقة (لوحي): نزحزح الشجرة على الأرض لتبقى ظاهرة
     if (!mq.matches && visL > 140) bx = Math.min(visL + 430, c.W * .5);
     const ts = s * c.k, X = ox + bx * s, Y = oy + c.by * s;
-    const iw = (IMG[1] - IMG[0]) * ts, ih = (IMG[3] - IMG[2]) * ts, il = X + IMG[0] * ts, it = Y + IMG[2] * ts;
+    const iw = SRC.w * ts, ih = SRC.h * ts, il = X - SRC.bx * ts, it = Y - SRC.by * ts;
     Object.assign(tr.style, {left: il + 'px', top: it + 'px', width: iw + 'px', height: ih + 'px'});
-    Object.assign(sh.style, {left: X + SHD[0] * ts + 'px', top: Y + SHD[2] * ts + 'px', width: (SHD[1] - SHD[0]) * ts + 'px', height: (SHD[3] - SHD[2]) * ts + 'px'});
+    // توهج أسماء الجذع: صندوق المصدر x ٤٩٦..١٢٩٦، y ١٧٠٠..٢٤٠٠
+    Object.assign(gl.style, {left: il + 496 * ts + 'px', top: it + 1700 * ts + 'px', width: 800 * ts + 'px', height: 700 * ts + 'px'});
+    const f = ts / KL;
+    Object.assign(sh.style, {left: X + SHD[0] * f + 'px', top: Y + SHD[2] * f + 'px', width: (SHD[1] - SHD[0]) * f + 'px', height: (SHD[3] - SHD[2]) * f + 'px'});
     dpr = Math.min(2, devicePixelRatio || 1);
-    const want = iw * dpr > 900 ? 'img/scenetree.webp?v=202611022200' : 'img/scenetree-sm.webp?v=202611022200';
-    if (!tr.src.endsWith(want) && !(tr.dataset.big && want.includes('-sm'))) {tr.src = want; if (!want.includes('-sm')) tr.dataset.big = 1;}
+    const big = iw * dpr > 620, want = `img/scenetree${big ? '' : '-sm'}.webp?v=${V}`;
+    if (!tr.src.endsWith(want) && !(tr.dataset.big && !big)) {tr.src = want; if (big) tr.dataset.big = 1;}
     // لوحة الأسماء: صندوق الشجرة + فسحة فوقه للسقوط
-    const top = Math.max(0, it - ih * .45), cl = Math.max(0, il), cr = Math.min(vw, il + iw);
-    G = {il, it, iw, ih, X, Y, top, cl, cw: cr - cl, ch: it + ih * .8 - top, fs: Math.max(11, Math.min(15, ih * .027))};
+    const top = Math.max(0, it - ih * .2), cl = Math.max(0, il), cr = Math.min(vw, il + iw);
+    G = {il, it, iw, ih, ts, X, Y, top, cl, cw: cr - cl, ch: Y - top, fs: Math.max(11, Math.min(15, ih * .019))};
     Object.assign(cv.style, {left: cl + 'px', top: top + 'px', width: G.cw + 'px', height: G.ch + 'px'});
     cv.width = Math.round(G.cw * dpr); cv.height = Math.round(G.ch * dpr);
     // موضع رابط «ابحث عن اسمك» والمسافة قبل البطاقة في الجوال (ثابتة مع تغير شريط العنوان)
@@ -42,43 +47,38 @@
     if (vw !== lastW) {R.setProperty('--tree-by0', Y + 'px'); lastW = vw;}
     if (RM) drawStatic();
   }
-  // نقطة على الشجرة → إحداثيات اللوحة
-  const P = (sp, a = 0) => {let x = G.il + sp[0] * G.iw, y = G.it + sp[1] * G.ih;
+  // اسم i → إحداثيات اللوحة (مع زاوية تمايل حول القاعدة)
+  const P = (i, a = 0) => {const q = N[i]; let x = G.il + q[0] * SRC.w * G.ts, y = G.it + q[1] * SRC.h0 * G.ts;
     if (a) {const dx = x - G.X, dy = y - G.Y, c = Math.cos(a), s = Math.sin(a); x = G.X + dx * c - dy * s; y = G.Y + dx * s + dy * c;}
     return [x - G.cl, y - G.top];};
 
-  // ومضة صغيرة مرسومة مسبقاً (مثل حبة نبق يلمع عليها الغروب)
-  const glint = document.createElement('canvas'); glint.width = glint.height = 32;
-  {const q = glint.getContext('2d'), rg = q.createRadialGradient(16, 16, 0, 16, 16, 16);
-    rg.addColorStop(0, 'rgba(255,240,200,1)'); rg.addColorStop(.18, 'rgba(255,205,120,.9)'); rg.addColorStop(.45, 'rgba(255,150,60,.25)'); rg.addColorStop(1, 'rgba(255,120,40,0)');
-    q.fillStyle = rg; q.fillRect(0, 0, 32, 32);}
-  const ph = SPOTS.map((_, i) => (i * 2.399) % 6.283), lit = new Float32Array(SPOTS.length);
+  // توهج دافئ مرسوم مسبقاً (ضوء الغروب من خلف الورقة)
+  const glint = document.createElement('canvas'); glint.width = glint.height = 64;
+  {const q = glint.getContext('2d'), rg = q.createRadialGradient(32, 32, 0, 32, 32, 32);
+    rg.addColorStop(0, 'rgba(255,236,190,1)'); rg.addColorStop(.15, 'rgba(255,200,110,.85)'); rg.addColorStop(.42, 'rgba(255,140,50,.28)'); rg.addColorStop(1, 'rgba(255,110,30,0)');
+    q.fillStyle = rg; q.fillRect(0, 0, 64, 64);}
+  const lit = new Map();   // أوراق استقرت عليها أسماء: تبقى تتوهج قليلاً
 
-  let names = [], order = [], oi = 0;
-  const spotOf = i => (i * 2654435761 >>> 0) % SPOTS.length;
+  let order = [], oi = 0;
   const font = () => `700 ${G.fs}px Cairo, "Noto Kufi Arabic", sans-serif`;
   function label(x, y, txt, a, glow) {
     g.font = font(); g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.globalAlpha = a;
-    if (glow) {g.shadowColor = 'rgba(255,170,70,.9)'; g.shadowBlur = 12 * glow;}
-    g.lineJoin = 'round'; g.lineWidth = 3.2; g.strokeStyle = 'rgba(28,10,4,.62)'; g.strokeText(txt, x, y);
-    g.shadowBlur = 0; g.fillStyle = '#FFF1D6'; g.fillText(txt, x, y); g.globalAlpha = 1;
+    const w = g.measureText(txt).width;   // هالة ضوء خلف الاسم
+    g.globalAlpha = a * (.55 + .45 * glow); g.drawImage(glint, x - w * .9, y - G.fs * 1.55, w * 1.8, G.fs * 2.1); g.globalAlpha = a;
+    if (glow) {g.shadowColor = 'rgba(255,170,70,.95)'; g.shadowBlur = 12 * glow;}
+    g.lineJoin = 'round'; g.lineWidth = 3; g.strokeStyle = 'rgba(40,14,4,.7)'; g.strokeText(txt, x, y);
+    g.shadowBlur = 0; g.fillStyle = '#FFEFCF'; g.fillText(txt, x, y); g.globalAlpha = 1;
   }
-  function drawGlints(t, a) {
-    for (let i = 0; i < SPOTS.length; i++) {
-      const sp = SPOTS[i], [x, y] = P(sp, a), tw = .5 + .5 * Math.sin(t * .0011 + ph[i]);
-      const al = Math.min(1, (.24 + sp[2] * .3 + lit[i] * .45) * (.5 + .5 * tw)), r = (2.4 + lit[i] * 1.6 + sp[2]) * (G.fs / 13);
-      if (al < .03) continue; g.globalAlpha = al; g.drawImage(glint, x - r, y - r, r * 2, r * 2);
-    }
-    g.globalAlpha = 1;
-  }
+  function glowAt(x, y, v) {const r = G.fs * (.55 + .7 * v); g.globalAlpha = Math.min(1, v); g.drawImage(glint, x - r, y - r, r * 2, r * 2); g.globalAlpha = 1;}
+  const inView = (x, y) => x > G.fs * 3 && x < G.cw - G.fs * 3 && y > G.fs * 2;
   function drawStatic() {
-    if (!G || !names.length) return;
-    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, G.cw, G.ch); drawGlints(0, 0);
+    if (!G || !N.length) return;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, G.cw, G.ch);
     const used = [];
-    for (let k = 0; k < 400 && used.length < (mq.matches ? 4 : 8); k++) {
-      const i = order[k], si = spotOf(i), [x, y] = P(SPOTS[si]);
-      if (x < 30 || x > G.cw - 30 || used.some(([ux, uy]) => Math.abs(ux - x) < G.fs * 6 && Math.abs(uy - y) < G.fs * 2.4)) continue;
-      used.push([x, y]); label(x, y - 6, names[i], .95, 0);
+    for (let k = 0; k < 600 && used.length < (mq.matches ? 4 : 8); k++) {
+      const i = order[k], [x, y] = P(i);
+      if (!inView(x, y) || used.some(([ux, uy]) => Math.abs(ux - x) < G.fs * 6 && Math.abs(uy - y) < G.fs * 2.4)) continue;
+      used.push([x, y]); glowAt(x, y, .7); label(x, y - 7, N[i][2], .95, .3);
     }
   }
 
@@ -87,11 +87,10 @@
   const FALL = 4300, HOLD = 5600, FADE = 1300;
   function spawn() {
     for (let tries = 0; tries < 40; tries++) {
-      const i = order[oi++ % order.length], si = spotOf(i), [x, y] = P(SPOTS[si]);
-      if (x < G.fs * 3 || x > G.cw - G.fs * 3) continue;
+      const i = order[oi++ % order.length], [x, y] = P(i);
+      if (!inView(x, y)) continue;
       if (act.some(o => Math.abs(o.x - x) < G.fs * 6.5 && Math.abs(o.y - y) < G.fs * 2.6)) continue;
-      const drop = y + G.fs * 2 + Math.random() * G.ih * .12;
-      act.push({i, si, x, y, sx: x + (Math.random() - .5) * G.fs * 5, sy: Math.max(-G.fs, y - drop), t0: clock, w: .9 + Math.random() * .5, ph: Math.random() * 6.28, dir: Math.random() < .5 ? -1 : 1});
+      act.push({i, x, y, sx: x + (Math.random() - .5) * G.fs * 5, sy: Math.max(-G.fs, y - G.fs * 3 - Math.random() * G.ih * .18), t0: clock, w: .9 + Math.random() * .5, ph: Math.random() * 6.28, dir: Math.random() < .5 ? -1 : 1});
       return;
     }
   }
@@ -99,32 +98,32 @@
   function frame(now) {
     raf = requestAnimationFrame(frame);
     const dt = prev ? Math.min(50, now - prev) : 16; prev = now; clock += dt;
-    if (!G) return;
+    if (!G || !N.length) return;
     const mob = mq.matches, gap = mob ? 2300 : 1500, maxA = mob ? 5 : 9;
-    if (clock > nextSpawn) {if (act.length < maxA && names.length) spawn(); nextSpawn = clock + gap * (.75 + Math.random() * .5);}
-    // تمايل الريح: زاوية صغيرة جداً حول القاعدة
-    const a = (Math.sin(clock * .00083) * .6 + Math.sin(clock * .0021 + 1.3) * .25 + Math.sin(clock * .0047) * .08) * .0021;
+    if (clock > nextSpawn) {if (act.length < maxA) spawn(); nextSpawn = clock + gap * (.75 + Math.random() * .5);}
+    // تمايل ريح خفيف جداً حول القاعدة
+    const a = (Math.sin(clock * .00083) * .6 + Math.sin(clock * .0021 + 1.3) * .25 + Math.sin(clock * .0047) * .08) * .0016;
     tr.style.transform = `rotate(${a}rad)`;
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, G.cw, G.ch);
-    drawGlints(clock, a);
+    for (const [i, v] of lit) {const [x, y] = P(i, a); glowAt(x, y, v * (.75 + .25 * Math.sin(clock * .0016 + i)));
+      const nv = v - dt * .00004; if (nv < .12) lit.delete(i); else lit.set(i, nv);}
     for (let k = act.length - 1; k >= 0; k--) {
-      const o = act[k], e = clock - o.t0, [tx, ty] = P(SPOTS[o.si], a);
+      const o = act[k], e = clock - o.t0, [tx, ty] = P(o.i, a);
       if (e < FALL) {   // يسقط مثل ورقة: يتمايل ثم يهدأ عند الوصول
         const p = e / FALL, q = ease(p), fade = Math.min(1, p * 5), sw = Math.sin(e * .0021 * o.w + o.ph) * G.fs * 1.4 * (1 - q);
-        const x = o.sx + (tx - o.sx) * q + sw, y = o.sy + (ty - 6 - o.sy) * q;
-        g.save(); g.translate(x, y); g.rotate(Math.cos(e * .0021 * o.w + o.ph) * .14 * (1 - q) * o.dir); label(0, 0, names[o.i], fade * .92, 0); g.restore();
+        const x = o.sx + (tx - o.sx) * q + sw, y = o.sy + (ty - 7 - o.sy) * q;
+        g.save(); g.translate(x, y); g.rotate(Math.cos(e * .0021 * o.w + o.ph) * .14 * (1 - q) * o.dir); label(0, 0, N[o.i][2], fade * .92, 0); g.restore();
       } else if (e < FALL + HOLD + FADE) {
         const h = e - FALL, land = Math.max(0, 1 - h / 900);
-        if (h < 1100) {   // حلقة ضوء عند الاستقرار
-          const r = G.fs * (.4 + 1.6 * (h / 1100)); g.globalAlpha = (1 - h / 1100) * .7; g.strokeStyle = '#FFD08A'; g.lineWidth = 1.2;
+        if (h < 1100) {   // وميض وحلقة ضوء عند الاستقرار على الورقة
+          glowAt(tx, ty, 1.4 * (1 - h / 1100) + .4);
+          const r = G.fs * (.4 + 1.8 * (h / 1100)); g.globalAlpha = (1 - h / 1100) * .7; g.strokeStyle = '#FFD08A'; g.lineWidth = 1.2;
           g.beginPath(); g.arc(tx, ty, r, 0, 6.283); g.stroke(); g.globalAlpha = 1;
-          lit[o.si] = Math.max(lit[o.si], 1 - h / 1100 * .3);
-        }
+        } else glowAt(tx, ty, .55);
         const al = h < HOLD ? 1 : 1 - (h - HOLD) / FADE;
-        label(tx, ty - 6 - land * 2, names[o.i], al * .95, land);
-      } else {lit[o.si] = Math.max(lit[o.si], .55); act.splice(k, 1);}
+        label(tx, ty - 7 - land * 2, N[o.i][2], al * .95, Math.max(land, .25));
+      } else {lit.set(o.i, .5); if (lit.size > 160) lit.delete(lit.keys().next().value); act.splice(k, 1);}
     }
-    for (let i = 0; i < lit.length; i++) if (lit[i] > .55) lit[i] = Math.max(.55, lit[i] - dt * .0004);
   }
   const run = () => {if (!raf && !RM && !document.hidden) {prev = 0; raf = requestAnimationFrame(frame);}};
   const stop = () => {cancelAnimationFrame(raf); raf = 0;};
@@ -134,8 +133,8 @@
   mq.addEventListener?.('change', layout);
   layout();
   fetch('names.json').then(r => r.json()).then(async D => {
-    names = D.n.map(q => q[2]);
-    order = names.map((_, i) => i); for (let i = order.length - 1; i > 0; i--) {const j = (Math.random() * (i + 1)) | 0; [order[i], order[j]] = [order[j], order[i]];}
+    N = D.n;
+    order = N.map((_, i) => i); for (let i = order.length - 1; i > 0; i--) {const j = (Math.random() * (i + 1)) | 0; [order[i], order[j]] = [order[j], order[i]];}
     try {await document.fonts.load('700 13px Cairo');} catch (e) {}
     if (RM) drawStatic(); else run();
   }).catch(() => {});
