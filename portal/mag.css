@@ -139,3 +139,11 @@
 @media (max-width:900px){.orbit{width:min(560px,100%)}}
 @media (max-width:639px){.orbit .book{width:21%}.orbit .book .cover em{display:none}}
 @media (max-width:900px){.orbit-wrap{grid-template-columns:1fr}}
+/* تفتح والدائرة كاملة داخل الشاشة فوق الجبل والغروب (مثل لقطة فهد) */
+@media (min-width:901px){
+  body.mags main.hwrap{padding-top:calc(var(--nav) + 8px)!important}
+  .orbit-wrap{min-height:0;align-items:center}
+  .orbit{width:min(860px,100%,calc(100vh - var(--nav) - 24px))}
+  .oinfo h1{font-size:clamp(30px,3.2vw,44px)}
+}
+@media (min-width:901px){.orbit{width:min(860px,100%,calc(100vh - var(--nav) - 170px));margin-block:70px 60px}}
