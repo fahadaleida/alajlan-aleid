@@ -3,7 +3,8 @@
 (() => {
   const scene = document.getElementById('scene'); if (!scene) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const V = '202611030100';
+  const V = '202611031400';
+  const TK = .72;                               // تصغير الشجرة ليبان الجبل وراها
   // صورة الشجرة بإحداثيات المصدر: العرض، الارتفاع، ارتفاع الملصق الأصلي (لـ names.json)، قاعدة الجذع وخط الأرض
   const SRC = {w: 1790, h: 2400, h0: 2342, bx: 896.6, by: 2318};
   const KL = 1025 / 2305;                       // بكسل مشهد عرضي لكل بكسل مصدر (حُسب عليه الظل)
@@ -14,7 +15,7 @@
   };
   const mq = matchMedia('(max-width:639px)');
   const wrap = document.createElement('div'); wrap.className = 'stree-l';
-  wrap.innerHTML = `<img class="st-sh" alt="" decoding="async" src="img/scenetree-shadow.webp?v=${V}"><img class="st-tr" alt="" decoding="async"><img class="st-gl" alt="" decoding="async" src="img/scenetree-glow.webp?v=${V}"><canvas class="st-nm"></canvas>`;
+  wrap.innerHTML = `<img class="st-sh" alt="" decoding="async" src="img/scenetree-shadow.webp?v=${V}"><img class="st-tr" alt="" decoding="async"><img class="st-gl" hidden alt="" decoding="async" src="img/scenetree-glow.webp?v=${V}"><canvas class="st-nm"></canvas>`;
   scene.appendChild(wrap);
   const sh = wrap.children[0], tr = wrap.children[1], gl = wrap.children[2], cv = wrap.children[3], g = cv.getContext('2d');
   tr.style.transformOrigin = `${SRC.bx / SRC.w * 100}% ${SRC.by / SRC.h * 100}%`;
@@ -26,7 +27,7 @@
     let bx = c.bx;
     const visL = -ox / s;   // الشاشات الضيقة (لوحي): نزحزح الشجرة على الأرض لتبقى ظاهرة
     if (!mq.matches && visL > 140) bx = Math.min(visL + 430, c.W * .5);
-    const ts = s * c.k, X = ox + bx * s, Y = oy + c.by * s;
+    const ts = s * c.k * TK, X = ox + bx * s, Y = oy + c.by * s;
     const iw = SRC.w * ts, ih = SRC.h * ts, il = X - SRC.bx * ts, it = Y - SRC.by * ts;
     Object.assign(tr.style, {left: il + 'px', top: it + 'px', width: iw + 'px', height: ih + 'px'});
     // توهج أسماء الجذع: صندوق المصدر x ٤٩٦..١٢٩٦، y ١٧٠٠..٢٤٠٠
@@ -34,7 +35,7 @@
     const f = ts / KL;
     Object.assign(sh.style, {left: X + SHD[0] * f + 'px', top: Y + SHD[2] * f + 'px', width: (SHD[1] - SHD[0]) * f + 'px', height: (SHD[3] - SHD[2]) * f + 'px'});
     dpr = Math.min(2, devicePixelRatio || 1);
-    const big = iw * dpr > 620, want = `img/scenetree${big ? '' : '-sm'}.webp?v=${V}`;
+    const big = iw * dpr > 620, want = `img/scenetree-orig${big ? '' : '-sm'}.webp?v=${V}`;
     if (!tr.src.endsWith(want) && !(tr.dataset.big && !big)) {tr.src = want; if (big) tr.dataset.big = 1;}
     // لوحة الأسماء: صندوق الشجرة + فسحة فوقه للسقوط
     const top = Math.max(0, it - ih * .2), cl = Math.max(0, il), cr = Math.min(vw, il + iw);
