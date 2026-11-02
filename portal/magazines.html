@@ -9,9 +9,9 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611020915">
-<link rel="stylesheet" href="home.css?v=202611020915">
-<link rel="stylesheet" href="mag.css?v=202611020915">
+<link rel="stylesheet" href="style.css?v=202611020940">
+<link rel="stylesheet" href="home.css?v=202611020940">
+<link rel="stylesheet" href="mag.css?v=202611020940">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
@@ -53,8 +53,8 @@
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611020915"></script>
-<script src="rockets.js?v=202611020915"></script>
+<script src="common.js?v=202611020940"></script>
+<script src="rockets.js?v=202611020940"></script>
 <script>
 // تاريخ الإصدار: «مايو 12, 2026» ← «مايو ٢٠٢٦»
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
@@ -72,7 +72,9 @@ const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ?
     const n = per(), rows = [];
     for (let i = 0; i < M.length; i += n) rows.push(M.slice(i, i + n));
     let k = 0;
-    $('#shelves').innerHTML = rows.map(r => `<div class="shelf">${r.map(m => book(m, k++)).join('')}<div class="board"></div></div>`).join('');
+    $('#shelves').innerHTML = rows.map(r => `<div class="shelf"><span class="bookend r"></span>${r.map(m => book(m, k++)).join('')}<span class="bookend l"></span><div class="board"></div></div>`).join('');
+    // آخر كتاب في كل رف مائل على المسند
+    document.querySelectorAll('.shelf').forEach(sh => {const b = sh.querySelectorAll('.book'); if (b.length > 2) b[b.length - 1].classList.add('lean');});
   };
   draw();
   let w = innerWidth; addEventListener('resize', () => {if (Math.abs(innerWidth - w) > 60) {w = innerWidth; draw(); $('#cab').classList.add('open', 'shown');}});
@@ -80,6 +82,20 @@ const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ?
   const cab = $('#cab');
   const go = () => {cab.classList.add('open'); setTimeout(() => cab.classList.add('shown'), 650);};
   new IntersectionObserver((e, o) => {if (e[0].isIntersecting) {setTimeout(go, 250); o.disconnect();}}, {threshold: .25}).observe(cab);
+  // الموجة: كل ٩ ثواني ترتفع الكتب من الرف السفلي إلى العلوي، ثم تستقر من فوق لتحت
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let busy = false;
+  const wave = () => {
+    if (busy || document.hidden || RM || !cab.classList.contains('shown')) return; busy = true;
+    const shelves = [...document.querySelectorAll('.shelf')], up = [], down = [];
+    [...shelves].reverse().forEach(sh => up.push(...sh.querySelectorAll('.book')));   // من تحت لفوق
+    shelves.forEach(sh => down.push(...sh.querySelectorAll('.book')));               // من فوق لتحت
+    up.forEach((b, i) => setTimeout(() => b.classList.add('up'), i * 90));
+    const t = up.length * 90 + 700;
+    down.forEach((b, i) => setTimeout(() => b.classList.remove('up'), t + i * 90));
+    setTimeout(() => busy = false, t + down.length * 90 + 600);
+  };
+  setTimeout(() => {wave(); setInterval(wave, 9000);}, 3200);
   startRockets();
 })();
 </script>
