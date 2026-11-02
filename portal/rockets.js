@@ -3,7 +3,7 @@ async function startRockets() {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cv = $('#rockets'), g = cv.getContext('2d'), img = $('#treeImg'), live = $('#live'), gbar = $('#gbar');
   let D; try {D = await loadJSON('names.json');} catch (e) {return;}
-  const N = D.n.filter(q => !q[3]), [bx, by] = D.base, tx = D.trunkX;
+  const N = D.n, [bx, by] = D.base, tx = D.trunkX;
   let W = 0, H = 0, dpr = 1, R = {x: 0, y: 0, w: 0, h: 0}, onScreen = true;
   const size = () => {dpr = Math.min(2, devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr;
     const ir = img.getBoundingClientRect(); R = {x: ir.left - r.left, y: ir.top - r.top, w: ir.width, h: ir.height};};

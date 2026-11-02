@@ -229,3 +229,19 @@ body.home:not(.mags) #scene{filter:none;transform:none}
 .orbit .otree img.soilimg{inset:auto;left:50%;bottom:-7.686%;width:94.97%;height:auto;filter:drop-shadow(0 5px 8px rgba(24,10,20,.5));transform:translateX(-50%);z-index:2}
 .htree canvas,.orbit .otree canvas{z-index:3}
 .htree .gbar{display:none}
+
+/* الشجرة ثابتة مثل جزء من الخلفية: مغروسة في الأرض يمين الشاشة، والمحتوى يتحرك وهي مكانها */
+@media (min-width:1024px){
+  .hgrid>.htree{position:fixed;z-index:1;bottom:12px;right:max(16px,calc((100vw - 1280px)/2));width:392px;
+    --sh:min(560px,calc(100vh - var(--nav) - 200px))}
+  .hgrid>.htree .st{height:var(--sh)}
+  .hgrid>.htree .st img#treeImg{height:calc(var(--sh) - 60px)}
+  .hgrid.inner>.htree{top:auto}
+  .hgrid>.htree .tinfo{margin-top:-4px}
+  .hgrid::after{content:"";grid-area:tree}
+  footer{position:relative;z-index:3}
+}
+@media (min-width:1024px){
+  .hgrid>.htree,.hgrid.inner>.htree{position:fixed;top:auto;z-index:0}
+  .hb,.hgrid>.log,.hgrid.inner>.inner-main,.quick,.more,.mhead{position:relative;z-index:1}
+}
