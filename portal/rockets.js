@@ -19,9 +19,9 @@ async function startRockets() {
     rk.push({sx, sy, up: 30 + Math.random() * 30, name: q[2], t0: t, dur: 2400 + Math.random() * 800, trail: []});}
   function arrive(t, name) {arrived++;
     flash = Math.min(.8, flash + (t - lastFlash < 600 ? .15 : .55)); lastFlash = t;
-    if (t - lastLive > 1200) {lastLive = t; live.style.opacity = 0; setTimeout(() => {live.textContent = `وصل الآن: ${name}`; live.style.opacity = 1;}, 200);}
+    if (live && t - lastLive > 1200) {lastLive = t; live.style.opacity = 0; setTimeout(() => {live.textContent = `وصل الآن: ${name}`; live.style.opacity = 1;}, 200);}
     img.classList.add('pulse'); setTimeout(() => img.classList.remove('pulse'), 500);
-    if (arrived % 10 === 0) {gbar.style.opacity = 1; gbar.style.boxShadow = '0 0 12px #E3B66B'; setTimeout(() => {gbar.style.opacity = .35; gbar.style.boxShadow = 'none';}, 900);}}
+    if (gbar && arrived % 10 === 0) {gbar.style.opacity = 1; gbar.style.boxShadow = '0 0 12px #E3B66B'; setTimeout(() => {gbar.style.opacity = .35; gbar.style.boxShadow = 'none';}, 900);}}
   if (RM) {   // بلا حركة: عشرة أسماء ساكنة
     setTimeout(() => {size(); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.font = '700 13px Cairo'; g.textAlign = 'center';
       for (let k = 0; k < 10; k++) {const q = N[(Math.random() * N.length) | 0], [x, y] = P(q[0], q[1]); g.lineWidth = 3; g.strokeStyle = 'rgba(27,24,51,.85)'; g.strokeText(q[2], x, y); g.fillStyle = '#FBFAF7'; g.fillText(q[2], x, y);}}, 600);
