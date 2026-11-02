@@ -163,3 +163,8 @@ body.home .tree-btn{background:rgba(50,39,129,.88);backdrop-filter:blur(6px);box
 }
 /* الخلفية الثابتة خلف الرئيسية تصير جو مغبش، والمعالم الواضحة في نافذة الديرة فقط */
 body.home:not(.mags) #scene{filter:blur(16px) brightness(.72) saturate(1.15);transform:scale(1.08)}
+/* نافذة الديرة مع الخلفية السابقة (٢٫٤:١): الجبل يسار، البرج يمين، والأرض عند ٧٩٪ */
+.vista .vbg{background-size:cover;background-position:center 50%}
+.vista .vtree{left:56%;bottom:15%;height:62%}
+@media (max-width:639px){.vista .vbg{background-size:auto 100%;background-position:52% 0}.vista .vtree{left:50%;bottom:17%;height:50%}}
+@media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
