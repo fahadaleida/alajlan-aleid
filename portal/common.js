@@ -60,30 +60,48 @@ const IS_HOME = !!document.body.dataset.home;
 const href = m => m.h;
 
 function buildChrome(site) {
-  const top = MENU.filter(m => ['home', 'vision', 'people', 'tribe', 'news', 'mag', 'fund', 'mail'].includes(m.k));
+  const L = k => MENU.find(m => m.k === k);
+  const dd = (title, ks) => `<div class="dd"><button class="dd-b" aria-haspopup="true" aria-expanded="false">${title}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="dd-m">${ks.map(k => `<a href="${L(k).h}"><i>${svg(L(k).k, 18)}</i>${L(k).t}</a>`).join('')}</div></div>`;
+  const here = location.pathname.split('/').pop() + location.search;
+  const cur = h => (here === h || (h === 'index.html' && (here === '' || here === 'index.html'))) ? ' aria-current="page"' : '';
   document.body.insertAdjacentHTML('afterbegin', `
   <header class="nav" id="nav"><div class="wrap">
-    <a class="brand" href="${IS_HOME ? '#top' : 'index.html'}"><img src="img/logo-full.png" alt="شعار أسرة العجلان والعيد"><b>أسرة العجلان والعيد</b></a>
-    <nav class="menu" aria-label="الأقسام">${top.map(m => `<a href="${href(m)}">${m.t}</a>`).join('')}<a href="${TREE_URL}" class="tree">شجرة العائلة</a></nav>
+    <a class="brand" href="index.html"><img src="img/logo-full.png" alt="أسرة العجلان والعيد"></a>
+    <nav class="menu" aria-label="الأقسام">
+      <a href="index.html"${cur('index.html')}>الرئيسية</a><a href="news.html"${cur('news.html')}>الأخبار</a>
+      ${dd('الأسرة', ['vision', 'people', 'tribe', 'film'])}
+      <a href="page.html?p=magazines"${cur('page.html?p=magazines')}>المجلات</a>
+      ${dd('المبادرات', ['fund', 'award', 'sms'])}
+      <a href="page.html?p=contact"${cur('page.html?p=contact')}>تواصل معنا</a>
+    </nav>
+    <a class="tree-btn" href="${TREE_URL}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${IC.tree}</svg><span>شجرة العائلة</span></a>
     <button class="burger" id="burger" aria-label="القائمة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
   </div></header>
   <div class="drawer" id="drawer"><div class="scrim" data-close></div><div class="sheet">
-    <h4>أقسام البوابة</h4>
-    <a href="${TREE_URL}" data-close><i>${svg('tree', 18)}</i>شجرة العائلة التفاعلية</a>
-    ${MENU.map(m => `<a href="${href(m)}" data-close><i>${svg(m.k, 18)}</i>${m.t}</a>`).join('')}
+    <a href="index.html" data-close><i>${svg('home', 18)}</i>الرئيسية</a><a href="news.html" data-close><i>${svg('news', 18)}</i>الأخبار والمناسبات</a>
+    <h5>الأسرة</h5>${['vision', 'people', 'tribe', 'film', 'mag'].map(k => `<a href="${L(k).h}" data-close><i>${svg(k, 18)}</i>${L(k).t}</a>`).join('')}
+    <h5>المبادرات</h5>${['fund', 'award', 'sms'].map(k => `<a href="${L(k).h}" data-close><i>${svg(k, 18)}</i>${L(k).t}</a>`).join('')}
+    <h5>التواصل</h5><a href="page.html?p=contact" data-close><i>${svg('mail', 18)}</i>تواصل معنا</a><a href="${TREE_URL}" data-close><i>${svg('tree', 18)}</i>شجرة العائلة التفاعلية</a>
   </div></div>`);
   const dr = $('#drawer');
   $('#burger').onclick = () => dr.classList.add('open');
   dr.addEventListener('click', e => {if (e.target.closest('[data-close]')) dr.classList.remove('open');});
+  // القوائم المنسدلة: تفتح بالمرور والنقر و Enter
+  document.querySelectorAll('.dd').forEach(d => {let t; const b = d.querySelector('.dd-b');
+    const open = v => {clearTimeout(t); d.classList.toggle('open', v); b.setAttribute('aria-expanded', v);};
+    d.onmouseenter = () => open(true); d.onmouseleave = () => {t = setTimeout(() => open(false), 150);};
+    b.onclick = () => open(!d.classList.contains('open'));});
+  document.addEventListener('click', e => {if (!e.target.closest('.dd')) document.querySelectorAll('.dd.open').forEach(d => d.classList.remove('open'));});
   const nav = $('#nav');
-  if (IS_HOME) addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 40), {passive: true});
+  addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 8), {passive: true});
+  const col = ks => ks.map(k => `<a href="${L(k).h}">${L(k).t}</a>`).join('');
   document.body.insertAdjacentHTML('beforeend', `
-  <footer><div class="wrap">
-    <img src="img/logo-full.png" alt="أسرة العجلان والعيد" class="flogo">
-    <q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q>
-    <div class="socials" style="margin:22px 0 6px">${socials(site)}</div>
-    <small>© ${ar(new Date().getFullYear())}، ${esc(site.copyright)} · <a href="${TREE_URL}" style="color:var(--gold-l)">شجرة العائلة</a></small>
-  </div></footer>`);
+  <footer><div class="wrap fgrid">
+    <div class="fid"><div class="fname"><img src="img/logo-mark.png" alt=""><b><span>العجلان</span> والعيد</b></div><q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q></div>
+    <div class="flinks"><div>${col(['news', 'vision', 'people', 'tribe', 'film'])}</div><div>${col(['mag', 'fund', 'award', 'sms', 'mail'])}</div></div>
+    <div class="fcon"><a href="tel:${site.contact.phone}" dir="ltr">${site.contact.phone}</a><a href="mailto:${site.contact.email}" dir="ltr">${site.contact.email}</a><div class="socials">${socials(site)}</div></div>
+  </div><div class="wrap fcopy">© ${ar(new Date().getFullYear())}، ${esc(site.copyright)} · صورة جبل المركب: naklaj21</div></footer>`);
 }
 function socials(site) {
   return Object.entries(site.social || {}).map(([k, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener" title="${SOC_NAME[k] || k}" aria-label="${SOC_NAME[k] || k}">

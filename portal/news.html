@@ -38,7 +38,7 @@
   const cats = ['', 'أخبار الاسرة', 'دعوات الأسرة', 'مناسبات الاسرة'];
   const counts = c => posts.filter(p => !c || p.c === c).length;
   const P = new URLSearchParams(location.search);
-  let cat = P.get('c') || '', q = P.get('q') || '', page = +(P.get('p') || 1);
+  let cat = P.get('c') || '', q = P.get('q') || '', yr = P.get('y') || '', page = +(P.get('p') || 1);
   const PER = 24;
   $('#q').value = q;
   $('#sum').textContent = `${ar(posts.length)} خبراً ودعوة ومناسبة من أخبار الأسرة`;
@@ -46,17 +46,17 @@
   function render(push) {
     $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cat ? 'on' : ''}">${c ? catName(c) : 'الكل'} <small style="opacity:.7">${ar(counts(c))}</small></button>`).join('');
     const nq = norm(q.trim());
-    const L = posts.filter(p => (!cat || p.c === cat) && (!nq || norm(p.t + ' ' + p.x + ' ' + p.d).includes(nq)));
+    const L = posts.filter(p => (!cat || p.c === cat) && (!yr || p.d.startsWith(yr)) && (!nq || norm(p.t + ' ' + p.x + ' ' + p.d).includes(nq)));
     const pages = Math.max(1, Math.ceil(L.length / PER));
     page = Math.min(Math.max(1, page), pages);
-    $('#count').textContent = L.length ? `${ar(L.length)} نتيجة · صفحة ${ar(page)} من ${ar(pages)}` : 'لا توجد نتائج';
+    $('#count').innerHTML = (yr ? `أخبار عام ${ar(+yr)} · <a href="news.html" style="color:var(--gold-d);font-weight:700">كل السنوات</a> · ` : '') + (L.length ? `${ar(L.length)} نتيجة · صفحة ${ar(page)} من ${ar(pages)}` : 'لا توجد نتائج');
     $('#grid').innerHTML = L.slice((page - 1) * PER, page * PER).map(newsCard).join('');
     const btn = (n, t = ar(n), dis = false) => `<button data-p="${n}" class="${n === page ? 'on' : ''}" ${dis ? 'disabled' : ''}>${t}</button>`;
     let pg = btn(page - 1, '‹ السابق', page === 1);
     for (let n = 1; n <= pages; n++) if (n === 1 || n === pages || Math.abs(n - page) <= 2) pg += btn(n); else if (Math.abs(n - page) === 3) pg += '<span style="align-self:center">…</span>';
     pg += btn(page + 1, 'التالي ›', page === pages);
     $('#pager').innerHTML = pages > 1 ? pg : '';
-    const u = new URLSearchParams(); if (cat) u.set('c', cat); if (q) u.set('q', q); if (page > 1) u.set('p', page);
+    const u = new URLSearchParams(); if (cat) u.set('c', cat); if (yr) u.set('y', yr); if (q) u.set('q', q); if (page > 1) u.set('p', page);
     history[push ? 'pushState' : 'replaceState'](null, '', '?' + u);
     reveal();
   }

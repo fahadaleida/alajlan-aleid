@@ -4,252 +4,202 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>أسرة العجلان والعيد</title>
-<meta name="description" content="الموقع الرسمي لأسرة العجلان والعيد: الأخبار والمناسبات، شجرة العائلة، المجلات، صندوق العائلة، جائزة التفوق العلمي، والتواصل.">
-<meta name="theme-color" content="#ffffff">
+<meta name="description" content="الموقع الرسمي لأسرة العجلان والعيد: سجل أخبار الأسرة ومناسباتها، شجرة العائلة، المجلات، صندوق العائلة، والتواصل.">
+<meta name="theme-color" content="#1A1448">
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="home.css">
 </head>
-<body data-home="1">
+<body class="home">
+<div id="scene" aria-hidden="true"></div>
 
-<!-- ===== البانر المتحرك ===== -->
-<div class="banner" id="top">
-  <div class="wrap">
-    <div class="slider" id="slider">
-      <a class="slide on" href="#about"><img src="img/banner/slide4.jpg" alt="الموقع الرسمي لعائلة العجلان والعيد"></a>
-      <a class="slide" href="#news"><img src="img/banner/slide2.jpg" alt="عائلة العجلان والعيد: ١٠ سنوات من الصلة" loading="lazy"></a>
-      <div class="slide"><img src="img/banner/slide1.jpg" alt="دام عزك يا وطن" loading="lazy"></div>
-      <div class="slide"><img src="img/banner/slide3.jpg" alt="رب اجعل هذا البلد آمناً" loading="lazy"></div>
-      <button class="arr prev" aria-label="السابق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
-      <button class="arr next" aria-label="التالي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="dots" id="dots"></div>
-      <div class="progress" id="prog"></div>
-    </div>
-  </div>
+<!-- البانر بعرض الشاشة -->
+<div class="hb" id="hb" role="region" aria-roledescription="carousel" aria-label="صور الأسرة">
+  <button class="ar prev" aria-label="السابق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <button class="ar next" aria-label="التالي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div class="bars" id="bars"></div>
+  <button class="pp" id="pp" aria-label="إيقاف"></button>
 </div>
 
-<!-- ===== الأخبار يمين، والشجرة يسار ===== -->
-<div class="wrap lead" id="news">
-  <div class="box rv">
-    <div class="box-h"><h2>آخر الأخبار</h2><div class="tabs" id="tabs"></div></div>
-    <div class="squares" id="squares"></div>
-    <div style="display:flex;justify-content:center;padding:0 22px 22px"><a class="btn navy" href="news.html" id="allNews">كل الأخبار والمناسبات</a></div>
-  </div>
-  <div class="tree-card rv" id="treeCard">
-    <div class="bg"></div>
-    <div class="head"><h2>شجرة العائلة</h2><p>من الهذلي إلى أصغر الأحفاد</p></div>
-    <div class="stage" id="stage">
-      <img src="img/tree-cut.webp" alt="شجرة عائلة العجلان والعيد" id="treeImg">
-      <canvas id="rockets"></canvas>
-    </div>
-    <div class="foot">
-      <a class="btn primary" href="../v7/index.html">ابحث عن اسمك في الشجرة</a>
-      <div class="dl" id="treeDl"></div>
-    </div>
-  </div>
-</div>
+<main class="hwrap">
+  <div class="hgrid">
+    <!-- سجل الأسرة -->
+    <section class="log glass-panel" aria-labelledby="logT" style="padding-top:32px">
+      <div class="log-h"><div><small>يوميات الأسرة</small><h2 id="logT">سجلّ الأسرة</h2></div><a href="news.html">كل الأخبار <span>←</span></a></div>
+      <div><div class="seg" id="seg"><span class="puck" id="puck"></span></div></div>
+      <div class="log-b">
+        <div class="idx" id="idx"></div>
+        <div class="pv" id="pv"><div class="ph" id="ph"></div><p id="pvx"></p></div>
+      </div>
+      <div class="years" id="years"></div>
+      <a class="allm" href="news.html">كل الأخبار والمناسبات</a>
+    </section>
 
-<!-- ===== الرؤية والرسالة والأهداف ===== -->
-<section id="vision">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">من نحن</span><h2>الرؤية والرسالة</h2><div class="orn">◆</div></div>
-    <div class="vm">
-      <div class="card rv"><h3>الرؤية</h3><p id="vis"></p></div>
-      <div class="card rv"><h3>الرسالة</h3><p id="mis"></p></div>
-    </div>
-    <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">الأهداف</h3>
-    <ol class="goals" id="goals"></ol>
+    <!-- الشجرة مغروسة في الساحة -->
+    <aside class="htree" aria-label="شجرة العائلة">
+      <div class="halo"></div>
+      <div class="st" id="st">
+        <div class="ground"></div><div class="gbar" id="gbar"></div>
+        <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
+        <canvas id="rockets"></canvas>
+      </div>
+      <div class="tinfo glass-panel">
+        <div class="l1">أبناء الأسرة يعودون إلى <b>الهذلي</b></div>
+        <div class="live" id="live" aria-hidden="true">&nbsp;</div>
+        <a class="cta" href="../v7/index.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك في الشجرة</a>
+      </div>
+    </aside>
   </div>
-</section>
 
-<!-- ===== عن العائلة ===== -->
-<section id="about" class="alt">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">عن العائلة</span><h2>أصل الأسرة</h2><div class="orn">◆</div></div>
-    <div class="two">
-      <div class="card rv" style="padding:28px"><div class="prose"><p id="aboutIntro"></p></div>
-        <h3 class="sub">مطارفة الطير</h3><div class="prose"><p id="mutarifa"></p></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px"><a class="btn navy" href="../v7/index.html">الشجرة التفاعلية</a><a class="btn ghost" id="mutarifaDl" target="_blank" rel="noopener">تحميل شجرة مطارفة الطير</a></div></div>
-      <div class="card chain rv" aria-label="جذع الشجرة"><span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span></div>
-    </div>
-    <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">ذرية مطارفة الطير في نجد</h3>
-    <div class="fams" id="fams"></div>
-  </div>
-</section>
-
-<!-- ===== قبيلة هذيل ===== -->
-<section id="hudhayl">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">الأصل</span><h2>قبيلة هذيل</h2><div class="orn">◆</div></div>
-    <div class="card rv" style="padding:28px"><div class="fold" id="hudFold"><div class="prose" id="hud"></div></div>
-      <div class="more" style="margin-top:12px"><button class="btn ghost" id="hudMore">اقرأ المزيد</button></div></div>
-  </div>
-</section>
-
-<!-- ===== المجلات ===== -->
-<section id="magazines" class="alt">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">إصدارات الأسرة</span><h2>مجلة أسرة العجلان والعيد</h2><p>أعداد المجلة للتحميل والقراءة.</p></div>
-    <div class="shelf" id="shelf"></div>
-  </div>
-</section>
-
-<!-- ===== الفيلم الوثائقي ===== -->
-<section id="film">
-  <div class="wrap rv">
-    <div class="sec-head"><span class="k">بالصوت والصورة</span><h2>الفيلم الوثائقي للعائلة</h2></div>
-    <div class="yt" id="yt"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="cap" id="ytCap"></div></div>
-  </div>
-</section>
-
-<!-- ===== الصندوق والجائزة والجوال ===== -->
-<section id="fund" class="alt">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">مبادرات الأسرة</span><h2>نتكاتف معاً</h2></div>
-    <div class="trio">
-      <div class="card rv"><h3>صندوق العائلة</h3><p style="color:var(--muted)">أرقام حسابات الصندوق في <b id="bank"></b> باسم: <span id="holder"></span></p><div id="ibans"></div>
-        <a class="btn ghost" href="news.html?q=صندوق" style="margin-top:auto">أخبار الصندوق</a></div>
-      <div class="card rv" id="award"><h3>جائزة التفوق العلمي</h3><p style="color:var(--muted)">جائزة تكرّم المتفوقين من أبناء وبنات الأسرة، ولها موقعها الخاص.</p>
-        <a class="btn navy" id="awardLink" target="_blank" rel="noopener" style="margin-top:auto">موقع الجائزة</a>
-        <a class="btn ghost" href="news.html?q=التفوق">أخبار الجائزة</a></div>
-      <div class="card rv" id="sms"><h3>الاشتراك بجوال العائلة</h3><p style="color:var(--muted)" id="smsIntro"></p>
-        <div class="iban" style="direction:rtl;font-family:Cairo"><span>رقم جوال الأسرة: <b dir="ltr" id="smsPhone"></b></span><a class="btn primary" id="smsBtn" style="padding:7px 12px;font-size:14px">اشترك برسالة</a></div>
-        <button class="btn ghost" id="smsMore">طريقة الاشتراك والإلغاء</button>
-        <div id="smsFull" hidden style="color:var(--muted);font-size:15px;line-height:1.9"></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== التواصل ===== -->
-<section id="contact">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">تواصل معنا</span><h2>يسعدنا تواصلك</h2></div>
-    <div class="contact">
-      <div class="card rv"><h3 class="sub" style="margin-top:0">بيانات التواصل</h3><div class="kv" id="kv"></div>
-        <div class="socials" id="soc2" style="margin-top:16px;justify-content:flex-start"></div></div>
-      <form class="card rv" id="cform">
-        <div class="field"><label>الاسم</label><input name="n" required placeholder="اسمك واسم أبيك"></div>
-        <div class="field"><label>نوع الرسالة</label><select name="t"><option>خبر أو مناسبة</option><option>تصحيح في الشجرة</option><option>اقتراح</option><option>استفسار</option></select></div>
-        <div class="field"><label>الرسالة</label><textarea name="m" rows="4" required></textarea></div>
-        <button class="btn primary" style="width:100%">إرسال عبر البريد</button>
-        <p style="margin-top:10px;color:var(--muted);font-size:13px">تُفتح رسالة جاهزة في بريدك إلى عنوان الأسرة.</p>
-      </form>
-    </div>
-  </div>
-</section>
+  <!-- وصول سريع -->
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">وصول سريع</h2>
+  <nav class="quick" id="quick" aria-label="وصول سريع"></nav>
+  <div class="breath"></div>
+</main>
 
 <script src="common.js"></script>
 <script>
-// ===== البانر =====
+// ===== البانر (مع الموسمية) =====
+const BANNER = [
+  {src: 'slide4', alt: 'الموقع الرسمي لعائلة العجلان والعيد', href: 'page.html?p=about'},
+  {src: 'slide2', alt: 'عائلة العجلان والعيد: ١٠ سنوات من الصلة', href: 'news.html'},
+  {src: 'slide1', alt: 'دام عزك يا وطن', from: '09-10', to: '09-30'},   // اليوم الوطني
+  {src: 'slide3', alt: 'رب اجعل هذا البلد آمناً', from: '02-15', to: '02-28'},   // يوم التأسيس
+];
 (() => {
-  const S = [...document.querySelectorAll('.slide')], D = $('#dots'), prog = $('#prog'), DUR = 6000;
-  let i = 0, t0 = performance.now(), paused = false;
-  D.innerHTML = S.map((_, k) => `<button aria-label="الصورة ${k + 1}"></button>`).join('');
-  const B = [...D.children];
-  const go = k => {S[i].classList.remove('on'); B[i].classList.remove('on'); i = (k + S.length) % S.length; S[i].classList.add('on'); B[i].classList.add('on'); t0 = performance.now();};
-  go(0);
-  B.forEach((b, k) => b.onclick = () => go(k));
-  $('.slider .next').onclick = () => go(i + 1); $('.slider .prev').onclick = () => go(i - 1);
-  const sl = $('#slider'); sl.onmouseenter = () => paused = true; sl.onmouseleave = () => {paused = false; t0 = performance.now() - parseFloat(prog.style.width || 0) / 100 * DUR;};
-  let sx = null; sl.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
-  sl.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(i + (dx < 0 ? -1 : 1)); sx = null;});
-  const tick = t => {requestAnimationFrame(tick); if (paused || document.hidden) {t0 += 16; return;} const p = (t - t0) / DUR; prog.style.width = Math.min(100, p * 100) + '%'; if (p >= 1) go(i + 1);};
+  const now = new Date(), md = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  const inSeason = b => !b.from || (md >= b.from && md <= b.to);
+  const L = [...BANNER.filter(b => b.from && inSeason(b)), ...BANNER.filter(b => !b.from)];
+  const hb = $('#hb');
+  L.forEach((b, k) => hb.insertAdjacentHTML('afterbegin', ''));
+  hb.insertAdjacentHTML('afterbegin', L.map((b, k) => `<${b.href ? `a href="${b.href}"` : 'div'} class="s${k ? '' : ' on'}" aria-roledescription="slide" aria-label="${k + 1} من ${L.length}">
+    <picture><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.webp" type="image/webp"><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.jpg"><source srcset="img/banner/${b.src}-d.webp" type="image/webp">
+    <img src="img/banner/${b.src}-d.jpg" alt="${b.alt}" ${k ? 'loading="lazy"' : 'fetchpriority="high"'}></picture></${b.href ? 'a' : 'div'}>`).join(''));
+  const S = [...hb.querySelectorAll('.s')], bars = $('#bars'), pp = $('#pp'), DUR = 7000;
+  const PAUSE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>', PLAY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>';
+  if (S.length < 2) {bars.remove(); pp.remove(); hb.querySelectorAll('.ar').forEach(a => a.remove()); return;}
+  bars.innerHTML = S.map((_, k) => `<button aria-label="الصورة ${k + 1}"><i><b></b></i></button>`).join('');
+  const B = [...bars.querySelectorAll('b')];
+  let i = 0, el = 0, last = performance.now(), paused = matchMedia('(prefers-reduced-motion: reduce)').matches, hover = false, vis = true, user = paused;
+  const go = k => {S[i].classList.remove('on'); B[i].style.width = '0'; i = (k + S.length) % S.length; S[i].classList.add('on'); el = 0;};
+  [...bars.children].forEach((b, k) => b.onclick = () => go(k));
+  hb.querySelector('.next').onclick = () => go(i + 1); hb.querySelector('.prev').onclick = () => go(i - 1);
+  pp.innerHTML = user ? PLAY : PAUSE; pp.onclick = () => {user = !user; pp.innerHTML = user ? PLAY : PAUSE; pp.setAttribute('aria-label', user ? 'تشغيل' : 'إيقاف');};
+  hb.onmouseenter = () => hover = true; hb.onmouseleave = () => hover = false;
+  new IntersectionObserver(e => vis = e[0].isIntersecting).observe(hb);
+  let sx = null; hb.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
+  hb.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(i + (dx < 0 ? -1 : 1)); sx = null;});
+  const tick = t => {requestAnimationFrame(tick); const dt = t - last; last = t; if (user || hover || !vis || document.hidden) return; el += dt; B[i].style.width = Math.min(100, el / DUR * 100) + '%'; if (el >= DUR) go(i + 1);};
   requestAnimationFrame(tick);
 })();
 
+const DIA = {'أخبار الاسرة': '#322781', 'دعوات الأسرة': '#C08537', 'مناسبات الاسرة': '#9B4F6B'};
+const DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله وبركاته\s*/, '');
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
   buildChrome(site);
-  // آخر الأخبار في مربعات
-  const cats = ['', 'أخبار الاسرة', 'مناسبات الاسرة', 'دعوات الأسرة'];
-  let cur = '';
+  // ===== سجل الأسرة =====
+  const cats = [['', 'الكل'], ['أخبار الاسرة', 'أخبار'], ['دعوات الأسرة', 'دعوات'], ['مناسبات الاسرة', 'مناسبات']];
+  const seg = $('#seg');
+  seg.insertAdjacentHTML('beforeend', cats.map(([c, t]) => `<button data-c="${c}">${t}<small>${ar(posts.filter(p => !c || p.c === c).length)}</small></button>`).join(''));
+  const mobile = () => matchMedia('(max-width:1023px)').matches;
+  let cur = '', L = [];
+  const ph = $('#ph');
+  const show = k => {const p = L[k]; if (!p) return; $('#idx').querySelectorAll('.row').forEach((r, j) => r.classList.toggle('on', j === k));
+    const d = new Date(p.d + 'T12:00:00'), [y, m, dd] = p.d.split('-').map(Number);
+    ph.querySelectorAll('img').forEach(im => {im.style.opacity = 0; setTimeout(() => im.remove(), 300);});
+    ph.insertAdjacentHTML('beforeend', `<img src="${esc(p.i)}" alt="" style="opacity:0;transform:scale(1.02)">`);
+    const im = ph.lastElementChild; requestAnimationFrame(() => requestAnimationFrame(() => {im.style.opacity = 1; im.style.transform = 'none';}));
+    let dt = ph.querySelector('.date'); if (!dt) {ph.insertAdjacentHTML('beforeend', '<span class="date"></span>'); dt = ph.querySelector('.date');}
+    dt.textContent = `${DAYS[d.getDay()]} ${ar(dd)} ${MONTHS[m - 1]}`;
+    $('#pvx').textContent = clean(p.x);};
   const draw = () => {
-    $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cur ? 'on' : ''}">${c ? catName(c).replace('الأسرة', '').trim() : 'الكل'}</button>`).join('');
-    $('#squares').innerHTML = posts.filter(p => !cur || p.c === cur).slice(0, 6).map(p => `<a class="sq" href="post.html?id=${p.id}" style="background-image:url('${esc(p.i)}')">
-      <span class="cat">${esc(catName(p.c))}</span><span class="t"><time>${fmtDate(p.d)}</time><b>${esc(p.t)}</b></span></a>`).join('');
-    $('#allNews').href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : '');
+    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.c === cur));
+    const on = seg.querySelector('button.on'), puck = $('#puck');
+    puck.style.width = on.offsetWidth + 'px'; puck.style.left = on.offsetLeft + 'px';
+    L = posts.filter(p => !cur || p.c === cur).slice(0, mobile() ? 5 : 6);
+    const idx = $('#idx'); idx.style.opacity = 0;
+    setTimeout(() => {
+      idx.innerHTML = L.map((p, k) => {const [y, m, d] = p.d.split('-').map(Number);
+        return `<a class="row" href="post.html?id=${p.id}" data-k="${k}"><span class="dt"><b>${ar(d)}</b><small>${MONTHS[m - 1]} ${ar(y)}</small></span>
+          <span class="tx"><em><i style="background:${DIA[p.c] || '#322781'}"></i>${esc(catName(p.c))}</em><b>${esc(p.t)}</b></span><span class="th" style="background-image:url('${esc(p.i)}')"></span></a>`;}).join('');
+      idx.style.opacity = 1; show(0);
+      idx.querySelectorAll('.row').forEach(r => {r.onmouseenter = r.onfocus = () => show(+r.dataset.k);});
+    }, 180);
+    $('#idx').closest('.log').querySelectorAll('.log-h a,.allm').forEach(a => a.href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : ''));
   };
-  $('#tabs').addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
-  draw();
-  $('#soc2').innerHTML = socials(site);
-  $('#treeDl').innerHTML = site.tree.downloads.map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener">${svg('dl', 14)} ${esc(d.t.replace('شجرة عائلة العجلان والعيد - ', 'الشجرة: '))}</a>`).join('');
-  // الرؤية والرسالة
-  $('#vis').textContent = site.vision; $('#mis').textContent = site.mission;
-  $('#goals').innerHTML = site.goals.map(g => `<li class="rv">${esc(g)}</li>`).join('');
-  // عن العائلة
-  $('#aboutIntro').textContent = site.about.intro; $('#mutarifa').textContent = site.about.mutarifa;
-  $('#fams').innerHTML = site.about.branches.map((b, i) => `<div class="fam rv ${i ? '' : 'main'}"><h4>${esc(b.name)}</h4><p>${esc(b.text)}</p></div>`).join('');
-  const md = site.tree.downloads.find(d => d.t.includes('مطارفة')); if (md) $('#mutarifaDl').href = md.u;
-  // هذيل
-  const H = site.hudhayl, quotes = H.filter(l => /^قال عن/.test(l)), facts = H.filter(l => /^أن(ها| منها| كلاً|هم| عثمان)/.test(l)), paras = H.filter(l => !quotes.includes(l) && !facts.includes(l));
-  $('#hud').innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join('') + (facts.length ? `<h3 class="sub">من مزايا قبيلة هذيل</h3><ul class="facts">${facts.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '') +
-    (quotes.length ? `<h3 class="sub" style="margin-top:22px">قالوا عن هذيل</h3><div class="quotes">${quotes.map(x => `<div>${esc(x)}</div>`).join('')}</div>` : '');
-  $('#hudMore').onclick = e => {const o = $('#hudFold').classList.toggle('open'); e.target.textContent = o ? 'إخفاء' : 'اقرأ المزيد';};
-  // المجلات
-  $('#shelf').innerHTML = site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b>${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)}</span><br><em>${svg('dl', 15)} تحميل</em></div></a>`).join('');
-  // الفيلم
-  const yt = $('#yt'); yt.style.backgroundImage = `url(https://i.ytimg.com/vi/${site.film.youtube}/hqdefault.jpg)`; $('#ytCap').textContent = site.film.title;
-  yt.onclick = () => {yt.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${site.film.youtube}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="${esc(site.film.title)}"></iframe>`; yt.style.cursor = 'default';};
-  // الصندوق
-  $('#bank').textContent = site.fund.bank; $('#holder').textContent = site.fund.holder;
-  $('#ibans').innerHTML = site.fund.accounts.map(a => `<div style="margin-top:8px"><b style="font-size:15px">${esc(a.name)}</b><div class="iban"><span>${esc(a.iban)}</span><button data-copy="${esc(a.iban)}">نسخ</button></div></div>`).join('');
-  document.addEventListener('click', e => {const b = e.target.closest('[data-copy]'); if (b) navigator.clipboard.writeText(b.dataset.copy).then(() => {b.textContent = 'تم ✓'; setTimeout(() => b.textContent = 'نسخ', 1600);});});
-  $('#awardLink').href = site.award.url;
-  // الجوال
-  $('#smsIntro').textContent = site.sms.lines[0]; $('#smsPhone').textContent = site.sms.phone;
-  $('#smsBtn').href = `sms:${site.sms.phone}`;
-  $('#smsFull').innerHTML = site.sms.lines.slice(1).map(l => `<div>${esc(l)}</div>`).join('');
-  $('#smsMore').onclick = () => {const x = $('#smsFull'); x.hidden = !x.hidden;};
-  // التواصل
-  const c = site.contact;
-  $('#kv').innerHTML = [[IC.pin, esc(c.city)], [IC.phone, `<a href="tel:${c.phone}" dir="ltr">${c.phone}</a>`], [IC.mail, `<a href="mailto:${c.email}">${c.email}</a>`], [IC.box, `${esc(c.pobox)} · ${esc(c.zip)}`]]
-    .map(([i, t]) => `<div><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${i}</svg></i><span>${t}</span></div>`).join('');
-  $('#cform').onsubmit = e => {e.preventDefault(); const F = e.target; location.href = `mailto:${c.email}?subject=${encodeURIComponent(F.t.value + ' - ' + F.n.value)}&body=${encodeURIComponent(F.m.value + '\n\n' + F.n.value)}`;};
-  reveal();
+  seg.addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
+  draw(); addEventListener('resize', () => {const on = seg.querySelector('button.on'); if (on) {$('#puck').style.width = on.offsetWidth + 'px'; $('#puck').style.left = on.offsetLeft + 'px';}});
+  // تحميل صور الستة مسبقاً
+  addEventListener('load', () => posts.slice(0, 6).forEach(p => {const i = new Image(); i.src = p.i;}));
+  const years = [...new Set(posts.map(p => p.d.slice(0, 4)))].sort().reverse();
+  $('#years').innerHTML = '<span>الأرشيف</span>' + years.map(y => `<a href="news.html?y=${y}">${ar(+y)}</a>`).join('');
+  // ===== وصول سريع =====
+  const Q = [['tree', 'الشجرة التفاعلية', 'ابحث عن اسمك وفرعك', TREE_URL], ['vision', 'الرؤية والرسالة', 'ما نسعى إليه', 'page.html?p=vision'], ['mag', 'المجلات', 'أعداد مجلة الأسرة', 'page.html?p=magazines'],
+    ['film', 'الفيلم الوثائقي', 'قصة الأسرة مصوّرة', 'page.html?p=film'], ['fund', 'صندوق العائلة', 'الحسابات والمساهمة', 'page.html?p=fund'], ['sms', 'جوال العائلة', 'اشترك برسائل الأسرة', 'page.html?p=sms']];
+  $('#quick').innerHTML = Q.map(([k, t, d, h]) => `<a class="qa" href="${h}"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></i><b>${t}</b><small>${d}</small></a>`).join('');
 })();
 
-// ===== الأسماء تنطلق مثل الصواريخ إلى الهذلي =====
+// ===== الأسماء (الذكور) تنطلق مثل الصواريخ إلى الهذلي =====
 (async () => {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cv = $('#rockets'), g = cv.getContext('2d'), img = $('#treeImg');
+  const cv = $('#rockets'), g = cv.getContext('2d'), img = $('#treeImg'), live = $('#live'), gbar = $('#gbar');
   let D; try {D = await loadJSON('names.json');} catch (e) {return;}
-  const N = D.n, [bx, by] = D.base, tx = D.trunkX;
+  const N = D.n.filter(q => !q[3]), [bx, by] = D.base, tx = D.trunkX;
   let W = 0, H = 0, dpr = 1, R = {x: 0, y: 0, w: 0, h: 0}, onScreen = true;
-  function size() {dpr = Math.min(2, devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr;
-    const ir = img.getBoundingClientRect(); R = {x: ir.left - r.left, y: ir.top - r.top, w: ir.width, h: ir.height};}
+  const size = () => {dpr = Math.min(2, devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr;
+    const ir = img.getBoundingClientRect(); R = {x: ir.left - r.left, y: ir.top - r.top, w: ir.width, h: ir.height};};
   size(); addEventListener('resize', size); img.addEventListener('load', size);
   new IntersectionObserver(e => onScreen = e[0].isIntersecting).observe(cv);
   const P = (nx, ny) => [R.x + nx * R.w, R.y + ny * R.h];
-  const live = []; let last = 0, flash = 0;
-  const rate = 3.2;
-  function spawn(t) {const q = N[(Math.random() * N.length) | 0]; const [sx, sy] = P(q[0], q[1]); if (sy > R.y + R.h * .8) return;
-    live.push({sx, sy, name: q[2], f: q[3], t0: t, dur: 1600 + Math.random() * 900, trail: []});}
-  const bez = (a, b, c, t) => {const u = 1 - t; return u * u * a + 2 * u * t * b + t * t * c;};
+  const mob = innerWidth < 640;
+  let rate = mob ? 1.2 : 2, maxN = mob ? 7 : 12;
+  const rk = []; let last = 0, flash = 0, lastFlash = 0, lastLive = 0, arrived = 0, slow = 0, prevT = 0;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const bez = (a, b, c, d, t) => {const u = 1 - t; return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;};
+  function spawn(t) {const q = N[(Math.random() * N.length) | 0]; const [sx, sy] = P(q[0], q[1]); if (sy > R.y + R.h * .78) return;
+    rk.push({sx, sy, up: 30 + Math.random() * 30, name: q[2], t0: t, dur: 2400 + Math.random() * 800, trail: []});}
+  function arrive(t, name) {arrived++;
+    flash = Math.min(.8, flash + (t - lastFlash < 600 ? .15 : .55)); lastFlash = t;
+    if (t - lastLive > 1200) {lastLive = t; live.style.opacity = 0; setTimeout(() => {live.textContent = `وصل الآن: ${name}`; live.style.opacity = 1;}, 200);}
+    img.classList.add('pulse'); setTimeout(() => img.classList.remove('pulse'), 500);
+    if (arrived % 10 === 0) {gbar.style.opacity = 1; gbar.style.boxShadow = '0 0 12px #E3B66B'; setTimeout(() => {gbar.style.opacity = .35; gbar.style.boxShadow = 'none';}, 900);}}
+  if (RM) {   // بلا حركة: عشرة أسماء ساكنة
+    setTimeout(() => {size(); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.font = '700 13px Cairo'; g.textAlign = 'center';
+      for (let k = 0; k < 10; k++) {const q = N[(Math.random() * N.length) | 0], [x, y] = P(q[0], q[1]); g.lineWidth = 3; g.strokeStyle = 'rgba(27,24,51,.85)'; g.strokeText(q[2], x, y); g.fillStyle = '#FBFAF7'; g.fillText(q[2], x, y);}}, 600);
+    return;}
   function frame(t) {
     requestAnimationFrame(frame);
-    if (document.hidden || !onScreen) return;
-    if (!RM && t - last > 1000 / rate && live.length < 22) {spawn(t); last = t;}
+    if (document.hidden || !onScreen) {prevT = t; return;}
+    // الأداء: إذا بطؤت الإطارات نخفف المعدل للنصف
+    if (prevT && t - prevT > 40) {if (++slow > 30) {rate = Math.max(.6, rate / 2); maxN = Math.max(4, maxN >> 1); slow = 0;}} else slow = Math.max(0, slow - 1);
+    prevT = t;
+    if (t - last > 1000 / rate && rk.length < maxN) {spawn(t); last = t;}
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     const [ex, ey] = P(bx, by), [tX] = P(tx, 0);
-    g.globalCompositeOperation = 'lighter';
-    for (let i = live.length - 1; i >= 0; i--) {const r = live[i]; const p = (t - r.t0) / r.dur; if (p >= 1) {live.splice(i, 1); flash = Math.min(1, flash + .35); continue;}
-      const e = p < .15 ? p / .15 * .15 * .6 : .09 + (p - .15) / .85 * .91, ease = e * e * (1.6 - .6 * e);
-      const cx = tX + (r.sx - tX) * .25, cy = r.sy + (ey - r.sy) * .55;
-      const x = bez(r.sx, cx, ex, ease), y = bez(r.sy, cy, ey, ease);
-      r.trail.push([x, y]); if (r.trail.length > 16) r.trail.shift();
-      for (let k = 1; k < r.trail.length; k++) {const a = k / r.trail.length; g.strokeStyle = `rgba(255,${200 + 30 * a | 0},${90 + 60 * a | 0},${a * .6})`; g.lineWidth = 1 + a * 2.8; g.beginPath(); g.moveTo(r.trail[k - 1][0], r.trail[k - 1][1]); g.lineTo(r.trail[k][0], r.trail[k][1]); g.stroke();}
-      const gl = g.createRadialGradient(x, y, 0, x, y, 10); gl.addColorStop(0, 'rgba(255,248,220,.95)'); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y, 10, 0, 7); g.fill();
-      const o = p < .12 ? p / .12 : p > .85 ? (1 - p) / .15 : 1;
-      g.globalCompositeOperation = 'source-over';
-      g.font = '700 12px Cairo'; g.textAlign = 'center'; g.direction = 'rtl';
-      g.lineWidth = 3; g.strokeStyle = `rgba(20,14,40,${.8 * o})`; g.strokeText(r.name, x, y - 11);
-      g.fillStyle = r.f ? `rgba(255,214,232,${o})` : `rgba(225,255,215,${o})`; g.fillText(r.name, x, y - 11);
+    for (let i = rk.length - 1; i >= 0; i--) {const r = rk[i]; const p = (t - r.t0) / r.dur; if (p >= 1) {rk.splice(i, 1); arrive(t, r.name); continue;}
+      const e = ease(p);
+      // يصعد قليلاً من الغصن، ينحني إلى الجذع، ثم ينزل معه إلى القاعدة
+      const x = bez(r.sx, r.sx + (tX - r.sx) * .1, tX, ex, e), y = bez(r.sy, r.sy - r.up * 2.2, r.sy + (ey - r.sy) * .45, ey, e);
+      r.trail.push([x, y]); if (r.trail.length > 14) r.trail.shift();
       g.globalCompositeOperation = 'lighter';
+      for (let k = 1; k < r.trail.length; k++) {const a = k / r.trail.length; g.strokeStyle = `rgba(227,182,107,${a * .8})`; g.lineWidth = 1 + a * 1.5; g.beginPath(); g.moveTo(r.trail[k - 1][0], r.trail[k - 1][1]); g.lineTo(r.trail[k][0], r.trail[k][1]); g.stroke();}
+      g.fillStyle = 'rgba(227,182,107,.35)'; g.beginPath(); g.arc(x, y, 9, 0, 7); g.fill();
+      g.fillStyle = '#FFE7B8'; g.beginPath(); g.arc(x, y, 3, 0, 7); g.fill();
+      g.globalCompositeOperation = 'source-over';
+      const o = p < .1 ? p / .1 : p > .88 ? (1 - p) / .12 : 1;
+      g.font = '700 13px Cairo'; g.textAlign = 'center'; g.direction = 'rtl';
+      g.lineWidth = 3; g.strokeStyle = `rgba(27,24,51,${.85 * o})`; g.strokeText(r.name, x, y - 11);
+      g.fillStyle = `rgba(251,250,247,${o})`; g.fillText(r.name, x, y - 11);
     }
-    flash *= .94;
-    if (flash > .02) {const rr = 40 + 70 * flash; const gl = g.createRadialGradient(ex, ey, 0, ex, ey, rr); gl.addColorStop(0, `rgba(255,240,200,${.55 * flash})`); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(ex, ey, rr, 0, 7); g.fill();}
-    g.globalCompositeOperation = 'source-over';
+    // توهج الهذلي عند الوصول (700ms)
+    flash *= .955;
+    if (flash > .02) {const rr = 90 * (1 - flash * .4); g.globalCompositeOperation = 'lighter';
+      const gl = g.createRadialGradient(ex, ey, 0, ex, ey, rr); gl.addColorStop(0, `rgba(227,182,107,${flash})`); gl.addColorStop(1, 'rgba(227,182,107,0)');
+      g.fillStyle = gl; g.beginPath(); g.arc(ex, ey, rr, 0, 7); g.fill(); g.globalCompositeOperation = 'source-over';}
   }
   requestAnimationFrame(frame);
 })();
