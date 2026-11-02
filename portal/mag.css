@@ -65,3 +65,18 @@
 }
 @media (prefers-reduced-motion:reduce){.lib .track,.suntree .sun,.suntree .rays{animation:none}}
 @media (hover:none){.lib .hint{display:none}}
+
+/* ===== الحلزون ===== */
+.helix-stage{position:relative;height:720px;margin-top:24px;perspective:1300px;perspective-origin:50% 40%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.helix{position:absolute;left:50%;top:0;width:0;height:100%;transform-style:preserve-3d}
+.helix .book{position:absolute;left:-65px;top:0;width:130px;will-change:transform,opacity}
+.helix-stage .axis{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:linear-gradient(180deg,transparent,rgba(255,231,163,.8) 20%,rgba(255,231,163,.8) 80%,transparent);box-shadow:0 0 18px rgba(227,182,107,.8),0 0 60px rgba(227,182,107,.35)}
+.helix-stage .axis::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:240px;margin-left:-120px;background:radial-gradient(ellipse at 50% 50%,rgba(227,182,107,.18),transparent 65%)}
+.helix-stage .hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:13px;font-weight:700;color:#F6E2B6;text-shadow:0 1px 6px rgba(0,0,0,.7);white-space:nowrap}
+.helix .book .b3{transform:none}
+.helix .book:hover .b3{transform:translateZ(40px) scale(1.06)}
+@media (max-width:639px){.helix-stage{height:600px}.helix .book{width:104px;left:-52px}}
+@media (hover:none){.helix-stage .hint{display:none}}
+.helix .book{width:156px;left:-78px}
+@media (max-width:639px){.helix .book{width:112px;left:-56px}}

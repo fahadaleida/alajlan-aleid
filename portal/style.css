@@ -305,3 +305,12 @@ footer .socials a:hover{background:#E3B66B;color:#1B1833;transform:none}
 footer .socials svg{width:17px;height:17px}
 .fcopy{margin-top:34px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;color:#B9B3D6;text-align:center}
 @media (max-width:860px){.fgrid{grid-template-columns:1fr;text-align:center;gap:28px}.fname,.fcon{justify-content:center;align-items:center}.flinks{text-align:center}footer{padding:40px 0 24px}}
+
+/* الشعار: المربع + الاسم بسطرين داخل ارتفاع المربع بالضبط */
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:48px;width:auto;border-radius:9px}
+.brand .bname{display:flex;flex-direction:column;justify-content:space-between;height:48px;line-height:1;padding:2px 0}
+.brand .bname b{display:block;font-family:Cairo,sans-serif;font-weight:800;font-size:21px;line-height:22px;letter-spacing:0}
+.brand .bname b:first-child{color:#C08537}
+.brand .bname b:last-child{color:#322781}
+@media (max-width:1023px){.brand img{height:38px;border-radius:7px}.brand .bname{height:38px}.brand .bname b{font-size:17px;line-height:18px}}

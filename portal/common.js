@@ -67,7 +67,7 @@ function buildChrome(site) {
   const cur = h => (here === h || (h === 'index.html' && (here === '' || here === 'index.html'))) ? ' aria-current="page"' : '';
   document.body.insertAdjacentHTML('afterbegin', `
   <header class="nav" id="nav"><div class="wrap">
-    <a class="brand" href="index.html"><img src="img/logo-full.png" alt="أسرة العجلان والعيد"></a>
+    <a class="brand" href="index.html" aria-label="أسرة العجلان والعيد"><img src="img/logo-mark.png" alt=""><span class="bname"><b>العجلان</b><b>والعيد</b></span></a>
     <nav class="menu" aria-label="الأقسام">
       <a href="index.html"${cur('index.html')}>الرئيسية</a><a href="news.html"${cur('news.html')}>الأخبار</a>
       ${dd('الأسرة', ['vision', 'people', 'tribe', 'film'])}
