@@ -1,0 +1,98 @@
+/* الأخبار والمناسبات كصفحات مجلة: ورق عاجي، صورة مطبوعة داخل الورقة، والكلام دائماً بجانب الصورة أو تحتها (لا شيء فوق الوجوه) */
+.newsmag{--paper:#FBF8F1;--ink:#1B1640;--gold:#C08537;--gold2:#E3B66B;--gold-d:#9A6A26;--navy:#322781}
+
+/* الترويسة */
+.newsmag .page-top{background:none;border:0;padding-bottom:10px}
+.nm-mast{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:6px}
+.nm-mast .nm-kick{font-size:13.5px;font-weight:800;letter-spacing:.14em;color:var(--gold2);text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.newsmag .page-top h1{margin-top:4px;color:#fff;font-weight:800;line-height:1.4;text-shadow:0 4px 22px rgba(0,0,0,.55)}
+.nm-rule{display:flex;align-items:center;gap:10px;margin:8px 0 10px}
+.nm-rule i{width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold2))}
+.nm-rule i:last-child{transform:scaleX(-1)}
+.nm-rule b{width:8px;height:8px;transform:rotate(45deg);background:var(--gold2)}
+.newsmag .page-top #sum{font-family:Amiri,serif;font-size:19px;font-weight:700;line-height:1.7}
+
+/* الشبكة */
+.nm-grid{display:flex;flex-direction:column;gap:26px;margin-top:16px}
+.nm-row{display:grid;gap:26px}
+.nm-rt{grid-template-columns:repeat(3,minmax(0,1fr))}
+.nm-rw{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nm-rq{grid-template-columns:repeat(4,minmax(0,1fr))}
+.nm-rw1{grid-template-columns:minmax(0,1fr)}
+
+/* البطاقة: ورقة عاجية، والصورة مطبوعة داخلها بهامش */
+.nm-c{position:relative;display:flex;flex-direction:column;padding:12px;border-radius:4px;color:var(--ink);text-decoration:none;
+  background:linear-gradient(180deg,#FDFBF6,var(--paper));box-shadow:0 0 0 1px rgba(192,133,55,.22),0 20px 40px -22px rgba(20,8,0,.7);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.nm-c:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(192,133,55,.45),0 28px 50px -22px rgba(20,8,0,.75)}
+.nm-ph{position:relative;margin:0;aspect-ratio:4/3;overflow:hidden;background:#ECE4D4;flex:none}
+.nm-ph img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%;opacity:0;transition:opacity .5s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.nm-ph img.in{opacity:1}
+.nm-c:hover .nm-ph img{transform:scale(1.025)}
+.nm-ph::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 .5px rgba(40,24,6,.2)}
+/* ملصق أو صورة طولية/عريضة جداً: تظهر كاملة على ورقة بإطار */
+.nm-ph.fit{background:#fff}
+.nm-ph.fit img{object-fit:contain;object-position:50% 50%}
+.nm-noimg{position:absolute;inset:0;background:url(img/logo-mark.png) center/22% no-repeat,linear-gradient(180deg,#F0E9DB,#E7DECB);opacity:.8}
+
+.nm-tx{display:flex;flex-direction:column;gap:8px;padding:14px 6px 4px;flex:1;min-width:0}
+.nm-kick{display:flex;align-items:center;gap:10px}
+.nm-kick span{font-size:12.5px;font-weight:800;letter-spacing:.08em;color:var(--gold-d);white-space:nowrap}
+.nm-kick i{flex:1;height:1px;background:linear-gradient(90deg,rgba(192,133,55,.1),rgba(192,133,55,.6))}
+.nm-c h3{font-size:19px;font-weight:800;line-height:1.6;color:var(--navy);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:.08em;text-wrap:pretty}
+.nm-c p{font-size:14.5px;line-height:1.85;color:rgba(27,22,64,.72);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:.08em}
+.nm-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(192,133,55,.25)}
+.nm-meta time{font-family:Amiri,serif;font-size:16px;font-weight:700;color:#7A5A2C;line-height:1.6}
+.nm-meta time b{font-size:1.25em;color:var(--gold)}
+.nm-mag{display:inline-flex;align-items:center;gap:6px;padding:3px 11px 4px;border-radius:99px;font-size:12.5px;font-weight:800;line-height:1.7;color:var(--navy);border:1px solid rgba(192,133,55,.7);background:#fff;cursor:pointer;transition:background .2s,color .2s}
+.nm-mag svg{color:var(--gold)}
+.nm-mag:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.nm-mag:hover svg{color:var(--gold2)}
+
+/* الخبر الرئيسي: صورة كبيرة وبجانبها النص */
+.nm-lead{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:34px;padding:16px}
+.nm-lead .nm-ph{aspect-ratio:4/3;align-self:center}
+.nm-lead .nm-tx{justify-content:center;padding:10px 0 6px 16px;gap:12px}
+.nm-lead .nm-kick span{font-size:14px}
+.nm-lead .nm-kick::before{content:"الخبر الأبرز";font-size:14px;font-weight:800;color:#fff;background:var(--navy);padding:2px 12px 4px;border-radius:3px;line-height:1.7}
+.nm-lead h3{font-size:clamp(26px,2.4vw,38px);line-height:1.45;-webkit-line-clamp:4}
+.nm-lead p{font-size:17px;-webkit-line-clamp:5;font-family:inherit}
+.nm-lead .nm-meta time{font-size:19px}
+.nm-more{margin-inline-start:auto;font-size:14.5px;font-weight:800;color:#fff;background:var(--navy);padding:6px 18px 8px;border-radius:99px;line-height:1.6}
+
+/* بطاقة عريضة: الصورة بجانب النص */
+.nm-w,.nm-w1{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch}
+.nm-w .nm-tx,.nm-w1 .nm-tx{padding:6px 0 4px 8px}
+.nm-w .nm-ph,.nm-w1 .nm-ph{align-self:start;width:100%}
+.nm-w1{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+/* بطاقات صغيرة */
+.nm-q h3{font-size:16.5px}
+.nm-q .nm-meta time{font-size:15px}
+
+@media (max-width:1180px){.nm-rq{grid-template-columns:repeat(2,minmax(0,1fr))}.nm-c h3{font-size:18px}}
+@media (max-width:900px){
+  .nm-rt{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nm-rt .nm-c:nth-child(3):last-child{grid-column:1/-1}
+  .nm-rw{grid-template-columns:minmax(0,1fr)}
+  .nm-lead{grid-template-columns:minmax(0,1fr);gap:6px}
+  .nm-lead .nm-tx{padding:12px 4px 4px}
+}
+/* الجوال: الخبر الرئيسي كامل، والبقية صفوف مجلة مدمجة (صورة بجانب العنوان) */
+@media (max-width:640px){
+  .nm-grid,.nm-row{gap:14px}
+  .nm-rt,.nm-rq{grid-template-columns:minmax(0,1fr)}
+  .nm-c{padding:10px}
+  .nm-t,.nm-q,.nm-w,.nm-w1{display:grid;grid-template-columns:38% minmax(0,1fr);gap:12px;align-items:start}
+  .nm-t .nm-ph,.nm-q .nm-ph,.nm-w .nm-ph,.nm-w1 .nm-ph{aspect-ratio:1/1;align-self:start;width:100%}
+  .nm-t .nm-tx,.nm-q .nm-tx,.nm-w .nm-tx,.nm-w1 .nm-tx{padding:2px 0 0;gap:6px;align-self:stretch}
+  .nm-t p,.nm-w p,.nm-w1 p{-webkit-line-clamp:2;font-size:13px;line-height:1.75}
+  .nm-c h3{font-size:15.5px;line-height:1.6}
+  .nm-kick span{font-size:11.5px}
+  .nm-meta{padding-top:6px;gap:6px 10px}
+  .nm-meta time{font-size:14px}
+  .nm-mag{font-size:11.5px;padding:2px 9px 3px}
+  .nm-lead{padding:10px}
+  .nm-lead h3{font-size:23px}
+  .nm-lead p{font-size:15px;-webkit-line-clamp:4}
+  .newsmag .page-top #sum{font-size:16px}
+}

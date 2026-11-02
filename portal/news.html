@@ -10,22 +10,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611021830">
-<style>
-.ncard .im{position:relative}
-.magchip{position:absolute;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;font-size:12px;font-weight:800;color:#322781;
-  background:rgba(255,253,248,.94);border:1px solid rgba(227,182,107,.9);box-shadow:0 6px 16px rgba(0,0,0,.28);cursor:pointer;transition:transform .2s,background .2s}
-.magchip svg{color:#C08537}.magchip:hover{transform:translateY(-2px);background:#fff}
-.magslink{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:9px 18px;border-radius:99px;font-weight:800;font-size:14.5px;color:#fff;background:#322781;box-shadow:0 8px 20px rgba(50,39,129,.3)}
-.magslink svg{color:#E3B66B}.magslink[hidden]{display:none}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="news.css?v=202611031600">
 </head>
-<body class="scened">
+<body class="scened newsmag">
 <div id="scene" aria-hidden="true"></div>
 <div class="page-top">
   <div class="wrap">
     <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ الأخبار والمناسبات</div>
-    <h1>الأخبار والمناسبات</h1>
-    <p id="sum">كل أخبار الأسرة ودعواتها ومناسباتها</p>
+    <div class="nm-mast"><span class="nm-kick">أرشيف أسرة العجلان والعيد</span>
+      <h1>الأخبار والمناسبات</h1>
+      <div class="nm-rule"><i></i><b></b><i></i></div>
+      <p id="sum">كل أخبار الأسرة ودعواتها ومناسباتها</p></div>
   </div>
 </div>
 <section style="padding-top:40px">
@@ -36,11 +32,11 @@
     </div>
     <div class="count" id="count"></div>
     <a class="magslink" id="magsLink" href="coverages.html" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>تصفّح التغطيات كمجلات مصوّرة</a>
-    <div class="news-grid" id="grid" style="margin-top:14px"></div>
+    <div class="nm-grid" id="grid"></div>
     <div class="pager" id="pager"></div>
   </div>
 </section>
-<script src="common.js?v=202611021830"></script>
+<script src="common.js?v=202611031600"></script>
 <script src="rockets.js?v=202611021830"></script>
 <script>
 (async () => {
@@ -57,6 +53,32 @@
   $('#q').value = q;
   $('#sum').textContent = `${ar(posts.length)} خبراً ودعوة ومناسبة من أخبار الأسرة`;
   const norm = s => s.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[ً-ْ]/g, '');
+  // ===== تخطيط المجلة: خبر رئيسي ثم صفوف متنوّعة تمتلئ دائماً =====
+  const BOOK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>';
+  const card = (p, kind) => {
+    const A = albums[p.id], poster = p.c === 'دعوات الأسرة' || /phonto/i.test(p.i || '');
+    const [y, m, d] = p.d.split('-').map(Number);
+    return `<a class="nm-c nm-${kind} rv" href="post.html?id=${p.id}">
+      <figure class="nm-ph"${poster ? ' data-poster="1"' : ''}>${p.i ? `<img src="${esc(p.i)}" alt="" loading="${kind === 'lead' ? 'eager' : 'lazy'}" decoding="async">` : '<i class="nm-noimg"></i>'}</figure>
+      <div class="nm-tx">
+        <div class="nm-kick"><span>${esc(catName(p.c))}</span><i></i></div>
+        <h3>${esc(p.t)}</h3>
+        ${kind === 'q' ? '' : `<p>${esc((p.x || '').replace(/^\s*السلام عليكم ورحمة الله وبركاته\s*/, ''))}</p>`}
+        <div class="nm-meta"><time><b>${ar(d)}</b> ${MONTHS[m - 1]} ${ar(y)}</time>${A ? `<span class="nm-mag" data-album="${p.id}" role="link" title="تصفّح الصور كمجلة">${BOOK}مجلة · ${ar(A[2])} صورة</span>` : ''}${kind === 'lead' ? '<span class="nm-more">اقرأ الخبر ‹</span>' : ''}</div>
+      </div></a>`;
+  };
+  const ROWS = [['t', 3], ['w', 2], ['q', 4]];
+  function magLayout(items) {
+    if (!items.length) return '';
+    let h = card(items[0], 'lead'), i = 1, r = 0;
+    while (i < items.length) {
+      const left = items.length - i;
+      let [k, n] = ROWS[r++ % ROWS.length];
+      if (n > left) [k, n] = left >= 3 ? ['t', 3] : left === 2 ? ['w', 2] : ['w1', 1];
+      h += `<div class="nm-row nm-r${k}">${items.slice(i, i + n).map(p => card(p, k)).join('')}</div>`; i += n;
+    }
+    return h;
+  }
   function render(push) {
     $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cat ? 'on' : ''}">${c ? catName(c) : 'الكل'} <small style="opacity:.7">${ar(counts(c))}</small></button>`).join('');
     const nq = norm(q.trim());
@@ -64,10 +86,11 @@
     const pages = Math.max(1, Math.ceil(L.length / PER));
     page = Math.min(Math.max(1, page), pages);
     $('#count').innerHTML = (yr ? `أخبار عام ${ar(+yr)} · <a href="news.html" style="color:var(--gold-d);font-weight:700">كل السنوات</a> · ` : '') + (L.length ? `${ar(L.length)} نتيجة · صفحة ${ar(page)} من ${ar(pages)}` : 'لا توجد نتائج');
-    $('#grid').innerHTML = L.slice((page - 1) * PER, page * PER).map(newsCard).join('');
-    // مجلة التغطية: شارة صغيرة على بطاقات المناسبات التي فيها ألبوم
-    $('#grid').querySelectorAll('.ncard').forEach(a => {const id = +(a.getAttribute('href').match(/id=(\d+)/) || [])[1];
-      if (albums[id]) a.querySelector('.im').insertAdjacentHTML('beforeend', `<span class="magchip" data-album="${id}" role="link" title="تصفّح الصور كمجلة"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>مجلة · ${ar(albums[id][2])} صورة</span>`);});
+    $('#grid').innerHTML = magLayout(L.slice((page - 1) * PER, page * PER));
+    // الصور: قص آمن للوجوه (من الأعلى)، والملصقات والصور الطولية كاملة على ورقة
+    $('#grid').querySelectorAll('.nm-ph img').forEach(im => {const fit = () => {const a = im.naturalWidth / im.naturalHeight, f = im.closest('.nm-ph');
+      if (f.dataset.poster || a < .9 || a > 1.65) f.classList.add('fit'); im.classList.add('in');};
+      im.complete && im.naturalWidth ? fit() : im.addEventListener('load', fit, {once: true});});
     $('#magsLink').hidden = cat !== 'مناسبات الاسرة';
     const btn = (n, t = ar(n), dis = false) => `<button data-p="${n}" class="${n === page ? 'on' : ''}" ${dis ? 'disabled' : ''}>${t}</button>`;
     let pg = btn(page - 1, '‹ السابق', page === 1);
