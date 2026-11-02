@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
-<link rel="stylesheet" href="home.css?v=202611021830">
+<link rel="stylesheet" href="home.css?v=202611022200">
 </head>
-<body class="home">
+<body class="home stree">
 <div id="scene" aria-hidden="true"></div>
 
 
@@ -30,15 +30,9 @@
       <a class="allm" href="news.html">كل الأخبار والمناسبات</a>
     </section>
 
-    <!-- الشجرة مغروسة في الساحة -->
+    <!-- الشجرة نفسها جزء من الخلفية (scenetree.js)؛ هنا رابط البحث فقط عند قاعدتها -->
     <aside class="htree" aria-label="شجرة العائلة">
-      <div class="halo"></div>
-      <div class="st" id="st">
-        <div class="ground"></div><div class="gbar" id="gbar"></div>
-        <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
-        <img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas>
-      </div>
-      <span class="live" id="live" hidden></span><a class="tlink" href="../v7/index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك</a>
+      <a class="tlink" href="../v7/index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك</a>
     </aside>
   </div>
 
@@ -49,7 +43,7 @@
 </main>
 
 <script src="common.js?v=202611021830"></script>
-<script src="rockets.js?v=202611021830"></script>
+<script src="scenetree.js?v=202611022200"></script>
 <script>
 // ===== البانر (مع الموسمية) =====
 const BANNER = [
@@ -133,7 +127,6 @@ const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله و
   $('#quick').innerHTML = Q.map(([k, t, d, h]) => `<a class="qa" href="${h}"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></i><b>${t}</b><small>${d}</small></a>`).join('');
 })();
 
-startRockets();
 </script>
 </body>
 </html>

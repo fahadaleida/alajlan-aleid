@@ -270,3 +270,31 @@ body.home:not(.mags) .hgrid{grid-template-areas:"news tree";grid-template-column
   body.home:not(.mags) .hgrid>.htree{right:auto;left:max(0px,calc((100vw - 1280px)/2 - 20px));width:480px;--sh:min(720px,calc(100vh - var(--nav) - 50px))}
 }
 @media (max-width:1023px){body.home:not(.mags) .hgrid{grid-template-areas:"news" "tree";grid-template-columns:1fr;padding-top:calc(var(--nav) + 16px)}}
+
+/* ===== شجرة السدر الواقعية داخل مشهد الخلفية (scenetree.js) — الرئيسية فقط ===== */
+.stree-l{position:absolute;inset:0;pointer-events:none}
+.stree-l img,.stree-l canvas{position:absolute;max-width:none;user-select:none}
+.stree-l .st-sh{mix-blend-mode:multiply;opacity:.9}
+.stree-l .st-tr{transform-origin:50% 93.68%;will-change:transform}
+.stree-l .st-nm{z-index:1}
+@media (max-width:639px){body.stree #scene{background-image:url(img/bg-home-portrait.jpg?v=202611022200);background-position:50% 35%}}
+body.home.stree:not(.mags) .hgrid>.htree{position:fixed;z-index:0;left:var(--tree-bx,25vw);right:auto;top:min(calc(var(--tree-by,90vh) + 8px),calc(100vh - 40px));bottom:auto;width:auto;transform:translateX(-50%)}
+body.home.stree .htree .tlink{position:static;transform:none;margin:0;display:inline-flex;box-shadow:0 4px 14px rgba(20,8,0,.35)}
+@media (max-width:1023px){body.home.stree:not(.mags) .hgrid{pointer-events:none}body.home.stree .hgrid>*{pointer-events:auto}}
+/* الجوال: المشهد كاملاً أعلى الشاشة (الجبل، الشجرة، البرج)، والسجل بطاقة زجاجية مختصرة تبدأ تحت قاعدة الشجرة */
+@media (max-width:639px){
+  body.home.stree:not(.mags) .hgrid{padding-top:calc(var(--tree-by0,58vh) + 52px);gap:0}
+  body.home.stree:not(.mags) .hgrid>.htree{z-index:0}
+  body.home.stree .log{position:relative;z-index:1;padding:18px 16px 16px;border-radius:24px}
+  body.home.stree .log-h h2{font-size:22px}
+  body.home.stree .log-h small{font-size:12px}
+  body.home.stree .seg{margin-top:12px}
+  body.home.stree .seg button{height:30px;padding:0 12px;font-size:13px}
+  body.home.stree .log-b{margin-top:10px}
+  body.home.stree .row{min-height:74px;grid-template-columns:46px 1fr 58px}
+  body.home.stree .row .dt b{font-size:20px}
+  body.home.stree .row .th{width:58px;height:58px;border-radius:10px}
+  body.home.stree .row .tx b{font-size:14px;line-height:1.5}
+  body.home.stree .row:nth-child(n+5){display:none}
+  body.home.stree .log .allm{height:44px;margin-top:10px}
+}
