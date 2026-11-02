@@ -258,3 +258,8 @@ body.home:not(.mags) #scene{filter:none;transform:none}
   background:rgba(20,16,48,.55);backdrop-filter:blur(6px);color:#F6E2B6;font-size:12px;font-weight:700;white-space:nowrap;opacity:.85;transition:opacity .2s,background .2s}
 .tlink:hover{opacity:1;background:rgba(192,133,55,.9);color:#1B1833}
 @media (max-width:1023px){.htree{position:relative}.tlink{position:relative;left:auto;bottom:auto;transform:none;display:flex;width:max-content;margin:6px auto 0}}
+/* شجرة أصغر ومتناسقة: تبدأ تحت البانر وما تغطي البرج كله */
+@media (min-width:1024px){
+  .hgrid>.htree,.hgrid.inner>.htree{--sh:min(500px,calc(100vh - var(--nav) - 360px));width:360px;right:max(10px,calc((100vw - 1280px)/2))}
+}
+@media (min-width:1024px) and (max-height:820px){.hgrid>.htree,.hgrid.inner>.htree{--sh:max(340px,calc(100vh - var(--nav) - 330px))}}
