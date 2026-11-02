@@ -112,3 +112,28 @@ body.home footer{margin-top:0}
 @media (prefers-reduced-motion:reduce){.hb .s img{transition:none;transform:none}}
 .hgrid>*,.log-b>*,.log>*{min-width:0}
 .seg{max-width:100%}
+
+/* ===== تعديل: البانر أصغر ويطفو فوق المشهد، والمشهد يبان من حوله ومن خلاله ===== */
+.hb{width:min(1180px,100% - 32px);height:300px;margin:calc(var(--nav) + 28px) auto 0;border-radius:24px;border:1px solid rgba(255,255,255,.35);
+  background:rgba(26,20,72,.18);box-shadow:0 30px 60px -20px rgba(20,16,48,.55),0 0 0 6px rgba(251,250,247,.12);backdrop-filter:blur(2px)}
+.hb .s img{opacity:.9;-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%)}
+.hb::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 60px rgba(20,16,48,.35);background:linear-gradient(180deg,rgba(227,182,107,.08),transparent 40%)}
+.hb::after{border-radius:0 0 24px 24px}
+@media (max-width:1023px){.hb{height:clamp(200px,28vw,280px)}}
+@media (max-width:639px){.hb{height:auto;aspect-ratio:16/9;border-radius:18px;margin-top:calc(var(--nav) + 14px)}.hb .s img{-webkit-mask-image:none;mask-image:none}}
+.hgrid{padding-top:40px}
+
+/* يوميات الأسرة: لوح أشف يبان من وراه الغروب */
+.log.glass-panel,.tinfo.glass-panel{background:rgba(251,250,247,.72);backdrop-filter:blur(14px) saturate(1.25);-webkit-backdrop-filter:blur(14px) saturate(1.25);border:1px solid rgba(255,255,255,.5)}
+.row{transition:background .2s}
+.row.on,.row:hover{background:rgba(255,255,255,.82)}
+.seg{background:rgba(241,237,228,.75)}
+.qa{background:rgba(251,250,247,.72)}
+
+/* الشريط العلوي زجاج شفاف ينعكس فيه المشهد */
+body.home .nav{background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(251,250,247,.34));backdrop-filter:blur(20px) saturate(1.7) brightness(1.08);-webkit-backdrop-filter:blur(20px) saturate(1.7) brightness(1.08);
+  border-bottom:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 30px rgba(20,16,48,.12)}
+body.home .nav::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.28) 45%,transparent 60%);opacity:.7}
+body.home .nav.solid{background:rgba(251,250,247,.86);border-bottom-color:rgba(192,133,55,.35)}
+body.home .menu>a,body.home .dd-b{color:#141030;text-shadow:0 1px 0 rgba(255,255,255,.55)}
+body.home .tree-btn{background:rgba(50,39,129,.88);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px rgba(20,16,48,.25)}

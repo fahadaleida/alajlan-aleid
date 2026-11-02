@@ -138,7 +138,7 @@ const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله و
   const years = [...new Set(posts.map(p => p.d.slice(0, 4)))].sort().reverse();
   $('#years').innerHTML = '<span>الأرشيف</span>' + years.map(y => `<a href="news.html?y=${y}">${ar(+y)}</a>`).join('');
   // ===== وصول سريع =====
-  const Q = [['tree', 'الشجرة التفاعلية', 'ابحث عن اسمك وفرعك', TREE_URL], ['vision', 'الرؤية والرسالة', 'ما نسعى إليه', 'page.html?p=vision'], ['mag', 'المجلات', 'أعداد مجلة الأسرة', 'page.html?p=magazines'],
+  const Q = [['tribe', 'قبيلة هذيل', 'الأصل والنسب', 'page.html?p=hudhayl'], ['vision', 'الرؤية والرسالة', 'ما نسعى إليه', 'page.html?p=vision'], ['mag', 'المجلات', 'أعداد مجلة الأسرة', 'page.html?p=magazines'],
     ['film', 'الفيلم الوثائقي', 'قصة الأسرة مصوّرة', 'page.html?p=film'], ['fund', 'صندوق العائلة', 'الحسابات والمساهمة', 'page.html?p=fund'], ['sms', 'جوال العائلة', 'اشترك برسائل الأسرة', 'page.html?p=sms']];
   $('#quick').innerHTML = Q.map(([k, t, d, h]) => `<a class="qa" href="${h}"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></i><b>${t}</b><small>${d}</small></a>`).join('');
 })();

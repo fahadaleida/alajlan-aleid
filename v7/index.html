@@ -470,6 +470,15 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
   .pdots{display:flex;justify-content:center;align-items:center;gap:6px;min-height:22px;padding:6px 0 calc(var(--sab) + 8px)}
   .pdots i{width:6px;height:6px;border-radius:3px;background:rgba(243,210,122,.3);transition:width .35s cubic-bezier(.2,.9,.25,1),background .3s}.pdots i.on{width:20px;background:#f3d27a}
 }
+.portalnav{position:fixed;top:14px;right:16px;z-index:30;display:flex;align-items:center;gap:2px;padding:5px 8px 5px 14px;border-radius:999px;background:rgba(251,250,247,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(192,133,55,.4);box-shadow:0 8px 24px rgba(20,16,48,.25);font-family:Cairo,Tajawal,sans-serif}
+.portalnav a{padding:6px 12px;border-radius:999px;font-weight:700;font-size:14px;color:#1B1833;text-decoration:none;white-space:nowrap}
+.portalnav a:hover{background:#EEECF8;color:#322781}
+.portalnav .pn-logo{padding:0 4px 0 8px;margin-inline-end:4px;border-inline-end:1px solid #E8E3D8;border-radius:0}
+.portalnav .pn-logo:hover{background:none}
+.portalnav img{height:34px;display:block}
+@media (max-width:1180px){.portalnav a:not(.pn-logo):not(:nth-child(2)){display:none}}
+@media (max-width:760px){.portalnav{display:none}}
+body.famv .portalnav{display:none}
 </style>
 </head>
 <body>
@@ -478,6 +487,7 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
 <canvas id="cv"></canvas>
 <div class="vign"></div><div class="dock" id="dock"></div><div class="side" id="sideR"></div><div class="side" id="sideL"></div><div class="brow" id="brow"></div><div class="tip" id="tip"></div><div class="pview" id="pview"><div class="pbar"><button class="pnext" title="السابق">→</button><h3></h3><span class="pn"></span><button class="pprev" title="التالي">←</button><button class="porig" title="عرض الأصل كما في الطبعة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg><b>الأصل من الطبعة</b></button><button class="px" title="إغلاق">✕</button></div><div class="pstage"></div><div class="pimg"></div></div><div class="crumbs" id="crumbs"></div><div class="miniw"><canvas id="mini" width="140" height="200"></canvas></div><div class="fampanel" id="fampanel"><div class="fh"><b>العوائل</b><button class="fx" title="إغلاق">×</button></div><div class="fs"><select class="fbr"><option value="0">كل الفروع</option><option value="8">فرع إبراهيم · العيد</option><option value="9">فرع حمد · العجلان</option><option value="10">فرع سليمان · الطويل</option></select><input class="fq" placeholder="ابحث داخل الفرع…"></div><div class="fres"></div><div class="ftree"></div></div>
 <button class="pull" id="pull">🌳 شوف مكانه في الشجرة</button>
+<nav class="portalnav" aria-label="بوابة الأسرة"><a class="pn-logo" href="../portal/index.html" title="بوابة أسرة العجلان والعيد"><img src="../portal/img/logo-full.png" alt="أسرة العجلان والعيد"></a><a href="../portal/index.html">الرئيسية</a><a href="../portal/news.html">الأخبار</a><a href="../portal/page.html?p=magazines">المجلات</a><a href="../portal/page.html?p=contact">تواصل معنا</a></nav>
 <nav class="navback" id="navback"><button id="nbBack" title="رجوع (Esc)">→ رجوع</button><button id="nbHome" title="الشجرة كاملة">🌳 الشجرة كاملة</button></nav>
 
 <div class="top">
@@ -2340,7 +2350,7 @@ const IC={tree:'<path d="M12 21.5v-7"/><path d="M12 14.5c-4.6 0-7.2-2.5-7.2-5.5a
 // شاشة البداية: تختفي لما تجهز صورة الطبعة وأول رسم (أو بعد ٦ ثواني كحد أقصى)
 let RDY=0;function appReady(){if(++RDY<2)return;const s=$('#splash');if(!s||s.classList.contains('out')||QS.includes('holdsplash'))return;s.classList.add('out');setTimeout(()=>s.remove(),700);}
 setTimeout(()=>{RDY=Math.max(RDY,1);appReady();},6000);
-document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة عائلة العجلان والعيد</b></div><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
+document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"><button class="abtn ab-back" id="abBack" aria-label="رجوع">${SV(IC.back)}</button><div class="ab-t"><img src="bg/logo.png" alt=""><b id="abTitle">شجرة عائلة العجلان والعيد</b></div><a class="abtn" href="../portal/index.html" aria-label="بوابة الأسرة" style="display:grid;place-items:center;color:inherit"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg></a><button class="abtn" id="abSearch" aria-label="بحث">${SV(IC.search)}</button></header>
 <nav class="tabbar" id="tabbar">${[['tree','الشجرة'],['search','بحث'],['branch','الفروع'],['user','عائلتي'],['more','المزيد']].map(([k,t])=>`<button class="tab${k==='tree'?' on':''}" data-tab="${k}"><i>${SV(IC[k])}</i><span>${t}</span></button>`).join('')}</nav>
 <div id="cscrim"></div><div class="litpill" id="litpill"><i></i><b></b><button aria-label="إلغاء الإضاءة">${SV(IC.x,16)}</button></div>
 <section class="sh fulls" id="shSearch"><div class="shp"><div class="shh shs"><label class="sfield">${SV(IC.search,20)}<input id="sq" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="اكتب اسمك واسم أبوك…"></label><button class="scan" data-close>إلغاء</button></div><div class="shb" id="sres"></div></div></section>
@@ -2392,7 +2402,7 @@ $('#litpill button').onclick=()=>{hap();lightBranch(null);};
 // ---- المزيد ----
 let MBADGE=null;let DIP=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();DIP=e;});addEventListener('appinstalled',()=>{DIP=null;toast('تم تثبيت التطبيق ✓');});
 function buildMore(){if(!MBADGE)MBADGE=[0,1].map(i=>medBadge(i,180));const SN=['«تعلّموا من أنسابكم ما تصلون به أرحامكم»','﴿وجعلناكم شعوبًا وقبائل لتعارفوا﴾'],m=meId(),row=(k,ic,t,s,cl='')=>`<button class="mrow ${cl}" data-m="${k}"><i>${SV(IC[ic],20)}</i><span>${t}<small>${s}</small></span>${SV(IC.chev,18)}</button>`;
-  $('#moreB').innerHTML=`<div class="mmeds">${[0,1].map(i=>`<button class="mmed" data-mi="${i}"><span class="mb" style="background-image:url(${MBADGE[i]})"></span><b>${MEDS[i].cap}</b><small>${SN[i]}</small></button>`).join('')}</div>
+  $('#moreB').innerHTML=`<div class="mlab">بوابة الأسرة</div><div class="mgrid">${[['الرئيسية','index.html'],['الأخبار والمناسبات','news.html'],['المجلات','page.html?p=magazines'],['الرؤية والرسالة','page.html?p=vision'],['صندوق العائلة','page.html?p=fund'],['تواصل معنا','page.html?p=contact']].map(([t,h])=>`<a class="mpg" href="../portal/${h}" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:center;text-align:center;min-height:56px;font-weight:700">${t}</a>`).join('')}</div><div class="mmeds">${[0,1].map(i=>`<button class="mmed" data-mi="${i}"><span class="mb" style="background-image:url(${MBADGE[i]})"></span><b>${MEDS[i].cap}</b><small>${SN[i]}</small></button>`).join('')}</div>
   <div class="mlab">صفحات الشجرة</div><div class="mgrid">${PANELS.map((p,i)=>`<button class="mpg" data-pi="${i}"><span class="th pt">${pThumb(i)}</span><b>${p.t}</b></button>`).join('')}</div>
   <div class="mlab">التطبيق</div><div class="mlist">${row('install','install',DIP?'ثبّت التطبيق الآن':'ثبّت التطبيق','على شاشتك الرئيسية مثل أي تطبيق','inst')}<div class="ihelp" id="ihelp"></div>
   ${row('share','share','مشاركة الموقع','أرسل الشجرة لأهلك وأقاربك')}${row('me','swap','من أنت؟',m?'أنت: '+fullNasab(m,3)+' — اضغط للتغيير':'اختر اسمك لتفتح عائلتك بضغطة')}${row('fam','people','العوائل','تصفّح الأسر حسب الفروع')}${row('tools','gear','الإعدادات','نسخة احتياطية واستيراد')}</div>
