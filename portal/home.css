@@ -297,7 +297,7 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
 .towerfg{display:none}
 @media (min-width:1024px){
   body.far{--S:max(calc(100vw / 2560),calc(100vh / 1441));--fth:calc(660 * var(--S));--ftw:calc(var(--fth) * 1790 / 2342);
-    --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 2070 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
+    --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 1985 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
     --fhl:calc((100vw - min(1280px, 100vw - 32px)) / 2)}
   /* المرقب مقصوص فوق الشجرة بنفس حساب الخلفية بالضبط */
   body.far .towerfg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;background:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
@@ -321,3 +321,4 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
   body.home.far:not(.mags) .log-b{grid-template-columns:1fr 330px}
   body.home.far:not(.mags) .quick{width:min(940px,calc(var(--ftl) - var(--fhl) - 36px));margin-left:0;margin-right:auto;grid-template-columns:repeat(3,1fr)}
 }
+body.home.far:not(.mags) .hgrid>.htree .tlink{display:none}
