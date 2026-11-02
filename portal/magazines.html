@@ -9,9 +9,9 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021310">
-<link rel="stylesheet" href="home.css?v=202611021310">
-<link rel="stylesheet" href="mag.css?v=202611021310">
+<link rel="stylesheet" href="style.css?v=202611021340">
+<link rel="stylesheet" href="home.css?v=202611021340">
+<link rel="stylesheet" href="mag.css?v=202611021340">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
@@ -22,7 +22,7 @@
     <div class="oinfo">
       <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div>
       <h1>مكتبة مجلة الأسرة</h1>
-      <p class="lead">أعداد مجلة أسرة العجلان والعيد تدور حول شمس الديرة. اضغط على أي عدد لتحميله.</p>
+      <p class="lead">أعداد مجلة أسرة العجلان والعيد تدور حول شجرة العائلة. اضغط على أي عدد لتحميله.</p>
       <div class="sel glass-panel" id="sel">
         <small>العدد الحالي</small>
         <div class="sn"><b id="selN"></b><div><span id="selD"></span><em id="selS"></em></div></div>
@@ -31,21 +31,21 @@
       <a class="more-link" href="news.html?q=مجلة">أخبار المجلة والمشاركات ←</a>
     </div>
     <div class="orbit" id="orbit" aria-label="أعداد المجلة">
-      <div class="sun"><span class="core"></span><span class="glow"></span><span class="ring r1"></span><span class="ring r2"></span><img src="img/logo-mark.png" alt=""></div>
+      <div class="otree" id="st"><span class="oglow"></span><img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="420px" alt="شجرة عائلة العجلان والعيد" id="treeImg"><canvas id="rockets"></canvas></div><div class="oring"></div>
       <div class="books" id="books"></div>
     </div>
   </section>
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021310"></script>
-<script src="rockets.js?v=202611021310"></script>
+<script src="common.js?v=202611021340"></script>
+<script src="rockets.js?v=202611021340"></script>
 <script>
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
 (async () => {
   const site = await loadJSON('data/site.json');
   buildChrome(site);
-  withTree(document.querySelector('.orbit-wrap'));
+  startRockets();
   const M = [...site.magazines].sort((a, b) => b.n - a.n);
   $('#books').innerHTML = M.map((m, i) => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" data-i="${i}" aria-label="تحميل العدد ${m.n}">
     <span class="b3"><span class="cover"><img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time></span></span></a>`).join('');
@@ -62,7 +62,7 @@ const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ?
     requestAnimationFrame(frame);
     const dt = Math.min(64, t - last); last = t;
     if (!paused && !RM && !document.hidden) phase += dt * 0.000105;   // لفة كاملة كل دقيقة تقريباً (هادئة)
-    const w = orbit.clientWidth, R = w * .39, cx = w / 2, cy = orbit.clientHeight / 2;
+    const w = orbit.clientWidth, R = w * .41, cx = w / 2, cy = orbit.clientHeight / 2;
     let best = 0, bd = 9;
     B.forEach((b, i) => {
       const a = i / N * Math.PI * 2 + phase;           // تدور مع عقارب الساعة

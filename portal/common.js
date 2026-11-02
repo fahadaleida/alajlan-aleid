@@ -101,7 +101,7 @@ function buildChrome(site) {
     <div class="fid"><div class="fname"><img src="img/logo-mark.png" alt=""><b><span>العجلان</span> والعيد</b></div><q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q></div>
     <div class="flinks"><div>${col(['news', 'vision', 'people', 'tribe', 'film'])}</div><div>${col(['mag', 'fund', 'award', 'sms', 'mail'])}</div></div>
     <div class="fcon"><a href="tel:${site.contact.phone}" dir="ltr">${site.contact.phone}</a><a href="mailto:${site.contact.email}" dir="ltr">${site.contact.email}</a><div class="socials">${socials(site)}</div></div>
-  </div><div class="wrap fcopy">© ${ar(new Date().getFullYear())}، ${esc(site.copyright)}</div></footer>`);
+  </div><div class="wrap fcopy">© ${ar(new Date().getFullYear())}، موقع أسرة العجلان والعيد</div></footer>`);
 }
 function socials(site) {
   return Object.entries(site.social || {}).map(([k, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener" title="${SOC_NAME[k] || k}" aria-label="${SOC_NAME[k] || k}">
