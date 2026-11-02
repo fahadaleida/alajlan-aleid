@@ -7,84 +7,317 @@
 <meta name="theme-color" content="#1A1448">
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://alajlanandaleid.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021730">
-<link rel="stylesheet" href="home.css?v=202611021730">
+<link rel="stylesheet" href="style.css?v=202611021800">
+<link rel="stylesheet" href="home.css?v=202611021800">
+<link rel="stylesheet" href="post.css?v=202611021800">
 </head>
-<body class="scened">
+<body class="scened ps">
 <div id="scene" aria-hidden="true"></div>
-<div class="page-top">
-  <div class="wrap">
-    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ <a href="news.html">الأخبار والمناسبات</a> ‹ <span id="crumbCat"></span></div>
-    <h1 id="title" style="font-size:clamp(30px,4vw,52px)">…</h1>
-    <p id="meta"></p>
+<div class="ps-prog" id="prog" aria-hidden="true"></div>
+<header class="ps-hero" id="hero">
+  <div class="ps-amb" id="amb"></div>
+  <div class="wrap ps-hin">
+    <div class="ps-head">
+      <div class="ps-crumbs"><a href="index.html">الرئيسية</a> ‹ <a href="news.html">الأخبار والمناسبات</a></div>
+      <div class="ps-meta" id="meta"></div>
+      <h1 class="ps-title" id="title">…</h1>
+      <span class="ps-rule"></span>
+      <div id="teas"></div>
+      <div class="ps-acts" id="acts"></div>
+    </div>
+    <figure class="ps-cover" id="cover"></figure>
   </div>
-</div>
-<section style="padding-top:40px">
-  <div class="wrap">
-    <article class="article" id="art"></article>
-    <div class="article"><div class="nav-posts" id="np"></div></div>
-  </div>
-</section>
-<script src="common.js?v=202611021730"></script>
-<script src="rockets.js?v=202611021730"></script>
+</header>
+<main class="wrap ps-main">
+  <article class="ps-read" id="art"></article>
+  <section class="ps-gal" id="gallery" hidden></section>
+  <nav class="ps-np" id="np" aria-label="التنقل بين الأخبار"></nav>
+  <section class="ps-rel" id="rel" hidden><h2>أخبار ذات صلة</h2><div class="news-grid" id="relG"></div></section>
+</main>
+<script src="common.js?v=202611021800"></script>
 <script>
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
   buildChrome(site);
   const id = +new URLSearchParams(location.search).get('id');
   const i = posts.findIndex(p => p.id === id);
-  if (i < 0) {$('#title').textContent = 'الخبر غير موجود'; $('#art').innerHTML = '<div class="more"><a class="btn primary" href="news.html">كل الأخبار</a></div>'; return;}
+  const I = (d, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICO = {
+    cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    day: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    pin: '<path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+    cam: '<path d="M4 8h3l2-3h6l2 3h3a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"/><circle cx="12" cy="13.5" r="3.8"/>',
+    grid: '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>',
+    play: '<path d="M7 4l13 8-13 8z"/>',
+    share: '<circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 10.7l7.2-4.2M8.4 13.3l7.2 4.2"/>',
+    link: '<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
+    wa: '<path d="M4 20l1.5-4A8 8 0 1112 20a8 8 0 01-4-1z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/>',
+    dl: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    full: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+    zoom: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>',
+    r: '<path d="M9 6l6 6-6 6"/>', l: '<path d="M15 6l-6 6 6 6"/>',
+    down: '<path d="M6 9l6 6 6-6"/>',
+  };
+  if (i < 0) {
+    $('#title').textContent = 'الخبر غير موجود'; $('#hero').classList.add('nocov'); $('#cover').remove(); $('#teas').remove();
+    $('#acts').innerHTML = `<a class="ps-btn gold" href="news.html">كل الأخبار</a>`; $('#art').remove(); return;
+  }
   const p = posts[i];
-  const chunk = await loadJSON(`data/posts/${Math.floor(i / 50)}.json`);
-  const f = chunk[id];
+  const f = (await loadJSON(`data/posts/${Math.floor(i / 50)}.json`))[id] || {h: '', i: p.i};
   document.title = `${p.t} | أسرة العجلان والعيد`;
-  $('#title').textContent = p.t;
-  $('#crumbCat').textContent = catName(p.c);
-  $('#meta').innerHTML = `<span class="cat" style="background:var(--gold-soft)">${esc(catName(p.c))}</span> &nbsp; ${fmtDate(p.d)}`;
-  // ===== التغطية: صورة رئيسية، نص في بطاقة، وكل صور المناسبة في معرض مرتب مع عارض كامل الشاشة =====
-  const shareUrl = location.href, wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
-  const box = document.createElement('div'); box.innerHTML = f.h;
-  const base = u => (u || '').split('?')[0].replace(/-\d+x\d+(?=\.\w+$)/, '').replace(/-scaled(?=\.\w+$)/, '').split('/').pop();
+
+  // ===== الصور: أكبر نسخة متاحة للعارض، ونسخة خفيفة واضحة للألبوم =====
+  const ext = u => (u.match(/\.\w+$/) || [''])[0];
+  const key = u => (u || '').split('?')[0].split('/').pop().replace(/\.\w+$/, '').replace(/-(\d+x\d+|large|medium|thumbnail)$/, '').replace(/-scaled$/, '');
+  const sizes = raw => {
+    const u = raw.split('?')[0], e = ext(u);
+    let m;
+    // ‎-scaled = نسخة ٢٥٦٠ (الأصل ضخم جداً)، وللألبوم نسخة ١٠٢٤ المتولدة من ووردبريس
+    if ((m = u.match(/^(.*)-scaled(\.\w+)$/))) return {full: [u], th: [m[1] + '-1024x683' + e, m[1] + '-683x1024' + e, u]};
+    // ‎-large/-medium: الأصل بدون اللاحقة متوفر (أقل من ٢٥٦٠)
+    if ((m = u.match(/^(.*)-(?:large|medium)(\.\w+)$/))) return {full: [m[1] + m[2], u], th: [m[1] + '-large' + m[2], m[1] + m[2]]};
+    if ((m = u.match(/^(.*)-\d+x\d+(\.\w+)$/))) return {full: [m[1] + '-scaled' + m[2], m[1] + m[2], u], th: [u]};
+    return {full: [u], th: [u]};
+  };
+  const loadFirst = (list, ms = 20000) => new Promise(res => {
+    let k = 0;
+    const next = () => {
+      if (k >= list.length) return res(null);
+      const s = list[k++], im = new Image();
+      const t = setTimeout(() => {im.onload = im.onerror = null; k < list.length ? next() : res(null);}, ms);
+      im.onload = () => {clearTimeout(t); res({src: s, w: im.naturalWidth, h: im.naturalHeight});};
+      im.onerror = () => {clearTimeout(t); next();};
+      im.src = s;
+    };
+    next();
+  });
+
+  // ===== تفكيك المحتوى: الصور تطلع للألبوم، والنص يتنظم =====
+  const box = document.createElement('div'); box.innerHTML = f.h || '';
   const pics = [], seen = new Set();
   box.querySelectorAll('img').forEach(im => {
-    const a = im.closest('a'), big = a && /\.(jpe?g|png|webp)$/i.test(a.href) ? a.href : im.getAttribute('src');
-    const k = base(big); if (!seen.has(k)) {seen.add(k); pics.push(big);}
+    const a = im.closest('a'), big = a && /\.(jpe?g|png|webp)(\?|$)/i.test(a.getAttribute('href') || '') ? a.getAttribute('href') : im.getAttribute('src');
+    const k = key(big); if (big && !seen.has(k)) {seen.add(k); pics.push(big);}
     (a || im).remove();
   });
-  // ننظف الفقرات اللي صارت فاضية بعد نقل الصور
-  box.querySelectorAll('p').forEach(el => {if (/^\s*صور من المناسبة\s*:?\s*$/.test(el.textContent)) el.remove();});
-  box.querySelectorAll('p,figure,div').forEach(el => {if (!el.textContent.trim() && !el.querySelector('iframe,video')) el.remove();});
-  let hero = f.i; if (!hero || !seen.has(base(hero))) {if (hero) pics.unshift(hero);} hero = hero || pics[0];
-  const gal = pics.filter(u => base(u) !== base(hero));
-  const [y, m, d] = p.d.split('-').map(Number);
+  box.querySelectorAll('p').forEach(el => {if (/^\s*صور من (المناسبة|الحفل)\s*:?\s*$/.test(el.textContent)) el.remove();});
+  box.querySelectorAll('p,figure,div,span').forEach(el => {if (!el.textContent.replace(/[\s ⁨⁩]/g, '') && !el.querySelector('iframe,video')) el.remove();});
+  // الغلاف: في الخبر القصير الصورة نفسها (دعوة/صورة) هي الغلاف كاملة، وفي التغطية الصورة المميزة
+  let cover = null, gal = pics;
+  const fi = f.i || p.i;
+  if (pics.length && pics.length <= 4) {cover = pics[0]; gal = pics.slice(1);}
+  else if (fi) {cover = fi; gal = pics.filter(u => key(u) !== key(fi));}
+  else if (pics.length) {cover = pics[0]; gal = pics.slice(1);}
+  const all = cover ? [cover, ...gal] : gal;   // ترتيب العارض
+  const S = all.map(sizes);
+  const off = cover ? 1 : 0;
+  const thumbs = [], full = [];
+  const getThumb = k => thumbs[k] || (thumbs[k] = loadFirst(S[k].th, 15000));
+  const getFull = k => full[k] || (full[k] = loadFirst(S[k].full, 30000).then(r => r || getThumb(k)));
+
+  // ===== الغلاف =====
+  const [y, mo, d] = p.d.split('-').map(Number);
+  const words = (box.textContent.match(/\S+/g) || []).length, mins = Math.max(1, Math.round(words / 180));
+  $('#meta').innerHTML = `<a class="ps-chip" href="news.html">${esc(catName(p.c))}</a><span>${ar(d)} ${MONTHS[mo - 1]} ${ar(y)}</span>
+    <span class="dot"></span><span>قراءة ${ar(mins)} ${mins > 2 && mins < 11 ? 'دقائق' : 'دقيقة'}</span>${gal.length ? `<span class="dot"></span><span>${ar(gal.length)} صورة</span>` : ''}`;
+  $('#title').textContent = p.t;
+  const shareUrl = location.origin + location.pathname + '?id=' + id;
+  const wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
+  $('#acts').innerHTML = `${gal.length ? `<a class="ps-btn gold" href="#gallery">${I(ICO.grid, 18)}شاهد الصور (${ar(gal.length)})</a><button class="ps-btn" id="slides">${I(ICO.play, 16)}عرض الشرائح</button>` : ''}
+    <button class="ps-btn" data-share>${I(ICO.share, 18)}مشاركة</button>`;
+  if (cover) {
+    $('#cover').innerHTML = `<button data-k="0" aria-label="عرض الصورة بالحجم الكامل"><img alt="${esc(p.t)}" fetchpriority="high"><span class="zoom">${I(ICO.zoom, 20)}</span></button>`;
+    const img = $('#cover img');
+    // الغلاف بأكبر نسخة متاحة
+    getFull(0).then(r => {
+      if (!r) {$('#hero').classList.add('nocov'); $('#cover').remove(); return;}
+      img.src = r.src; img.width = r.w; img.height = r.h;
+      (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(() => img.classList.add('in'));
+      const amb = $('#amb'); amb.style.backgroundImage = `url("${r.src}")`; amb.classList.add('on');
+    });
+  } else {$('#hero').classList.add('nocov'); $('#cover').remove();}
+
+  // ===== النص: تحية، مقدمة بارزة، بطاقات المعلومات، وخاتمة كاقتباس =====
+  let sal = '', quote = '', mourn = false;
+  const first = [...box.children].find(el => el.textContent.trim());
+  if (first && /^السلام عليكم/.test(first.textContent.trim()) && first.textContent.trim().length < 60) {sal = first.textContent.trim(); first.remove();}
+  const BLESS = /^(بارك الله|إن+ّ?ا لله|إنا لله|ألف مبروك|نسأل الله|اللهم|رحمه الله|رحمها الله|غفر الله|جعله الله|مبروك|هنيئ)/;
+  const rest = [...box.children].filter(el => el.textContent.trim());
+  const qEl = rest.slice(-2).reverse().find(el => el.tagName === 'P' && BLESS.test(el.textContent.trim()) && el.textContent.trim().length < 140);
+  if (qEl) {quote = qEl.textContent.trim(); mourn = /لله|رحم|غفر/.test(quote) && !/بارك/.test(quote); qEl.remove();}
+  const firstP = [...box.querySelectorAll('p')].find(el => el.textContent.trim().length > 40);
+  if (firstP) firstP.classList.add('lede');
+  // استخراج المعلومات من النص
+  const txt = box.textContent.replace(/\s+/g, ' ');
+  const HM = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+  const facts = [];
+  const hj = txt.match(/(1[34]\d\d)\s*\/\s*(\d{1,2})\s*\/\s*(\d{1,2})\s*(?:هـ|ﮪ|ه)/), gr = txt.match(/(20\d\d)\s*\/\s*(\d{1,2})\s*\/\s*(\d{1,2})\s*م/);
+  const dayM = txt.match(/(مساء|صباح|ظهر|عصر|ليلة)?\s*(?:يوم|غد[اً]*)\s*(السبت|الأحد|الاحد|الإثنين|الاثنين|الثلاثاء|الأربعاء|الاربعاء|الخميس|الجمعة)/);
+  if (dayM) facts.push({ic: 'day', k: 'اليوم', v: (dayM[1] ? dayM[1] + ' ' : '') + dayM[2]});
+  if (hj && +hj[2] >= 1 && +hj[2] <= 12) facts.push({ic: 'cal', k: 'التاريخ', v: `${ar(+hj[3])} ${HM[+hj[2] - 1]} ${ar(+hj[1])}هـ`, s: gr && +gr[2] <= 12 ? `${ar(+gr[3])} ${MONTHS[+gr[2] - 1]} ${ar(+gr[1])}م` : ''});
+  else if (gr && +gr[2] <= 12) facts.push({ic: 'cal', k: 'التاريخ', v: `${ar(+gr[3])} ${MONTHS[+gr[2] - 1]} ${ar(+gr[1])}م`});
+  const ven = txt.match(/(?:في|ب)\s*((?:فندق|قاعة|قاعات|قصر|قصور|نادي|استراحة|منزل|منزله|جامع|مسجد|مركز|دار|مزرعة|منتجع|مقر)\s[^،.؛\n]{2,70}?)(?=\s*(?:[،.؛]|وسط|والدعوة|وذلك|بحضور|وسيوارى|$))/);
+  if (ven) facts.push({ic: 'pin', k: 'المكان', v: ven[1].trim()});
+  const maps = [...box.querySelectorAll('a[href]')].filter(a => /maps\.(app\.)?goo|google\.[a-z.]+\/maps|goo\.gl\/maps/.test(a.href));
+  if (maps.length) {
+    facts.push({ic: 'pin', k: 'الموقع', v: 'افتح الخريطة', href: maps[0].href});
+    maps.forEach(a => {const pp = a.closest('p'); if (pp && pp.textContent.trim() === a.textContent.trim()) {const prev = pp.previousElementSibling; if (prev && /^الموقع\s*:?$/.test(prev.textContent.trim())) prev.remove(); pp.remove();}});
+  }
+  box.querySelectorAll('p').forEach(el => {el.removeAttribute('style'); el.removeAttribute('dir');});
+  box.querySelectorAll('a[href^="http"]').forEach(a => {a.target = '_blank'; a.rel = 'noopener';});
+  box.querySelectorAll('iframe').forEach(fr => {fr.removeAttribute('width'); fr.removeAttribute('height'); fr.loading = 'lazy';});
+  const fact = x => `<${x.href ? `a href="${esc(x.href)}"${/^http/.test(x.href) ? ' target="_blank" rel="noopener"' : ''}` : 'div'} class="ps-fact"><i>${I(ICO[x.ic])}</i><span><small>${x.k}</small><b>${esc(x.v)}${x.s ? ` <em>${x.s}</em>` : ''}</b></span></${x.href ? 'a' : 'div'}>`;
   $('#art').innerHTML = `
-    ${hero ? `<figure class="cv-hero" data-g="-1"><img src="${esc(hero)}" alt=""><figcaption><span class="cat">${esc(catName(p.c))}</span><time>${ar(d)} ${MONTHS[m - 1]} ${ar(y)}</time></figcaption></figure>` : ''}
-    <div class="content cv-text">${box.innerHTML}</div>
-    ${gal.length ? `<section class="cv-gal"><div class="cv-gh"><h2>صور من المناسبة</h2><span>${ar(gal.length)} صورة</span></div>
-      <div class="cv-grid">${gal.map((u, k) => `<button class="cv-ph${k >= 18 ? ' more' : ''}" data-g="${k}" aria-label="عرض الصورة ${k + 1}"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>
-      ${gal.length > 18 ? `<div class="more"><button class="btn navy" id="allPh">عرض كل الصور (${ar(gal.length)})</button></div>` : ''}</section>` : ''}
-    <div class="share"><a class="btn ghost" href="${wa}" target="_blank" rel="noopener">مشاركة في واتساب</a><button class="btn ghost" id="copy">نسخ الرابط</button></div>`;
-  $('#art').querySelectorAll('.cv-text img').forEach(im => {im.loading = 'lazy'; im.removeAttribute('width'); im.removeAttribute('height');});
-  $('#art').querySelectorAll('a[href^="http"]').forEach(a => {a.target = '_blank'; a.rel = 'noopener';});
-  const ap = $('#allPh'); if (ap) ap.onclick = () => {$('.cv-grid').classList.add('all'); ap.remove();};
-  $('#copy').onclick = e => {navigator.clipboard.writeText(shareUrl).then(() => e.target.textContent = 'تم النسخ ✓');};
-  // العارض
-  const all = hero ? [hero, ...gal] : gal;
-  document.body.insertAdjacentHTML('beforeend', `<div class="lb" id="lb" hidden><button class="lb-x" aria-label="إغلاق">✕</button><button class="lb-p" aria-label="السابق">›</button><img id="lbI" alt=""><button class="lb-n" aria-label="التالي">‹</button><span class="lb-c" id="lbC"></span></div>`);
-  let li = 0; const lb = $('#lb');
-  const show = k => {li = (k + all.length) % all.length; $('#lbI').src = all[li]; $('#lbC').textContent = `${ar(li + 1)} / ${ar(all.length)}`;};
-  const open = k => {show(k); lb.hidden = false; document.body.style.overflow = 'hidden';};
-  const close = () => {lb.hidden = true; document.body.style.overflow = '';};
-  $('#art').addEventListener('click', e => {const g = e.target.closest('[data-g]'); if (g) open(+g.dataset.g + (hero ? 1 : 0));});
-  lb.querySelector('.lb-x').onclick = close; lb.querySelector('.lb-n').onclick = () => show(li + 1); lb.querySelector('.lb-p').onclick = () => show(li - 1);
-  lb.addEventListener('click', e => {if (e.target === lb) close();});
-  addEventListener('keydown', e => {if (lb.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') show(li + 1); if (e.key === 'ArrowRight') show(li - 1);});
-  let sx = null; lb.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
-  lb.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) show(li + (dx < 0 ? -1 : 1)); sx = null;});
-  const nx = posts[i - 1], pv = posts[i + 1];
-  $('#np').innerHTML = `${pv ? `<a href="post.html?id=${pv.id}"><small>› الخبر السابق</small><div>${esc(pv.t)}</div></a>` : '<span></span>'}
-    ${nx ? `<a href="post.html?id=${nx.id}" style="text-align:left"><small>الخبر التالي ‹</small><div>${esc(nx.t)}</div></a>` : ''}`;
+    ${facts.length ? `<div class="ps-facts">${facts.map(fact).join('')}</div>` : ''}
+    ${sal ? `<div class="ps-sal">${esc(sal)}</div>` : ''}
+    <div class="ps-body">${box.innerHTML}</div>
+    ${quote ? `<blockquote class="ps-quote${mourn ? ' mourn' : ''}">${esc(quote)}</blockquote>` : ''}
+    <div class="ps-share"><span>شارك الخبر مع العائلة</span>
+      <a class="ps-sbtn wa" href="${wa}" target="_blank" rel="noopener">${I(ICO.wa, 18)}واتساب</a>
+      <button class="ps-sbtn" data-copy>${I(ICO.link, 18)}<span>نسخ الرابط</span></button></div>`;
+  // لمحة من الألبوم تحت العنوان
+  if (gal.length >= 3) {
+    const tz = [0, 1, 2, 3].filter(j => j < gal.length).map(j => off + j);
+    $('#teas').outerHTML = `<button class="ps-teas" data-k="${tz[0]}" aria-label="افتح الألبوم">${tz.map(() => '<img alt="">').join('')}<b>ألبوم من ${ar(gal.length)} صورة<small>اضغط لتصفّح الصور بالحجم الكامل</small></b></button>`;
+    const ims = document.querySelectorAll('.ps-teas img');
+    tz.forEach((k, j) => getThumb(k).then(r => {if (r) ims[j].src = r.src;}));
+  } else $('#teas').remove();
+
+  // ===== الألبوم: صفوف متناسقة تحافظ على أبعاد كل صورة (بدون قص) =====
+  const BATCH = 24;
+  let shown = 0;
+  if (gal.length) {
+    const G = $('#gallery'); G.hidden = false;
+    G.innerHTML = `<div class="ps-ghead"><div><small>ألبوم المناسبة</small><h2>صور من المناسبة<em>${ar(gal.length)} صورة</em></h2></div>
+      <button class="ps-btn" id="slides2">${I(ICO.play, 16)}عرض الشرائح</button></div>
+      <div class="ps-jg${gal.length <= 3 ? ' few' : ''}" id="jg"></div><div class="ps-gmore" id="gmore"></div>`;
+    const jg = $('#jg'), gm = $('#gmore');
+    let busy = false;
+    const more = async n => {
+      if (busy || shown >= gal.length) return; busy = true;
+      const from = shown, to = Math.min(gal.length, shown + n);
+      gm.innerHTML = '';
+      jg.insertAdjacentHTML('beforeend', Array.from({length: Math.min(6, to - from)}, () => '<div class="ps-sk"></div>').join(''));
+      const res = await Promise.all(Array.from({length: to - from}, (_, j) => getThumb(off + from + j)));
+      jg.querySelectorAll('.ps-sk').forEach(s => s.remove());
+      jg.insertAdjacentHTML('beforeend', res.map((r, j) => {
+        const k = off + from + j, src = r ? r.src : S[k].th.at(-1), rr = r && r.w ? (r.w / r.h).toFixed(4) : 1.5;
+        return `<button class="ps-ph" data-k="${k}" style="--r:${rr};--i:${j % BATCH}" aria-label="عرض الصورة ${ar(from + j + 1)}"><img src="${esc(src)}" alt="" decoding="async"${r ? ` width="${r.w}" height="${r.h}"` : ''}></button>`;
+      }).join(''));
+      shown = to; busy = false;
+      const left = gal.length - shown;
+      gm.innerHTML = left > 0 ? `<div class="bar"><i style="width:${(shown / gal.length * 100).toFixed(1)}%"></i></div><p>عرضنا ${ar(shown)} من ${ar(gal.length)} صورة</p>
+        <div class="btns"><button class="ps-btn gold" id="gm1">${I(ICO.down, 18)}عرض ${ar(Math.min(BATCH, left))} صورة أخرى</button>${left > BATCH ? `<button class="ps-btn" id="gmA">عرض الكل</button>` : ''}</div>` : '';
+      if (left > 0) {$('#gm1').onclick = () => more(BATCH); const a = $('#gmA'); if (a) a.onclick = () => more(left);}
+    };
+    // الدفعة الأولى تتحمل لما يقترب الزائر من الألبوم
+    const io = new IntersectionObserver(es => {if (es.some(e => e.isIntersecting)) {io.disconnect(); more(BATCH);}}, {rootMargin: '900px 0px'});
+    io.observe(G);
+  }
+
+  // ===== العارض الكامل =====
+  if (all.length) {
+    document.body.insertAdjacentHTML('beforeend', `<div class="pv" id="pv" role="dialog" aria-modal="true" aria-label="عارض الصور" aria-hidden="true">
+      <div class="pv-amb" id="pvAmb"></div>
+      <div class="pv-top"><span class="pv-c" id="pvC"></span><span class="pv-t">${esc(p.t)}</span>
+        <button class="pv-ib" id="pvSh" aria-label="مشاركة الصورة">${I(ICO.share)}</button>
+        <a class="pv-ib" id="pvDl" target="_blank" rel="noopener" download aria-label="فتح الصورة بالحجم الكامل">${I(ICO.dl)}</a>
+        <button class="pv-ib" id="pvFs" aria-label="ملء الشاشة">${I(ICO.full)}</button>
+        <button class="pv-ib" id="pvX" aria-label="إغلاق">${I(ICO.x, 22)}</button></div>
+      <div class="pv-stage" id="pvSt"><img class="pv-img" id="pvI" alt=""><span class="pv-spin"></span>
+        ${all.length > 1 ? `<button class="pv-arr pv-prev" id="pvP" aria-label="السابقة">${I(ICO.r, 26)}</button><button class="pv-arr pv-next" id="pvN" aria-label="التالية">${I(ICO.l, 26)}</button>` : ''}</div>
+      ${all.length > 1 ? `<div class="pv-strip" id="pvS">${all.map((_, k) => `<button data-t="${k}" aria-label="الصورة ${ar(k + 1)}"><img alt="" data-n="${k}"></button>`).join('')}</div>` : '<div></div>'}
+      <div class="pv-toast" id="pvT"></div></div>`);
+    const pv = $('#pv'), pi = $('#pvI'), strip = $('#pvS');
+    let cur = 0, tok = 0;
+    const toast = t => {const e = $('#pvT'); e.textContent = t; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 1600);};
+    const sio = strip && new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; const im = e.target; sio.unobserve(im);
+      getThumb(+im.dataset.n).then(r => {im.src = r ? r.src : S[+im.dataset.n].th.at(-1);});
+    }), {root: strip, rootMargin: '0px 400px'});
+    if (strip) strip.querySelectorAll('img').forEach(im => sio.observe(im));
+    // الصورة تملأ المسرح مع الحفاظ على أبعادها (تكبير معتدل للصور الصغيرة حتى ٢×)
+    const fit = () => {const w = +pi.dataset.w, h = +pi.dataset.h, st = $('#pvSt'); if (!w || !h) return;
+      const cs = getComputedStyle(st), W = st.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), H = st.clientHeight - 8;
+      const sc = Math.min(W / w, H / h, 2); pi.style.width = Math.round(w * sc) + 'px'; pi.style.height = Math.round(h * sc) + 'px';};
+    addEventListener('resize', fit);
+    const show = (k, dir = 0) => {
+      cur = (k + all.length) % all.length; const my = ++tok;
+      $('#pvC').textContent = `${ar(cur + 1)} / ${ar(all.length)}`;
+      pi.classList.remove('zoomed');
+      if (dir) pi.classList.add(dir > 0 ? 'out-n' : 'out-p');
+      pv.classList.add('loading');
+      const put = r => {if (my !== tok || !r) return; pi.src = r.src; pi.dataset.w = r.w; pi.dataset.h = r.h; fit(); $('#pvAmb').style.backgroundImage = `url("${r.src}")`; $('#pvDl').href = r.src;};
+      const reveal = () => requestAnimationFrame(() => pi.classList.remove('out-n', 'out-p'));
+      getFull(cur).then(r => {if (my !== tok) return; put(r); pv.classList.remove('loading'); reveal();});
+      // إذا تأخرت الكبيرة نعرض الخفيفة مؤقتاً
+      setTimeout(() => {if (my === tok && pv.classList.contains('loading')) getThumb(cur).then(r => {if (my === tok && pv.classList.contains('loading')) {put(r); reveal();}});}, 260);
+      [1, -1, 2].forEach(o => getFull((cur + o + all.length) % all.length));
+      if (strip) {strip.querySelectorAll('button.on').forEach(b => b.classList.remove('on')); const b = strip.children[cur]; b.classList.add('on');
+        strip.scrollTo({left: b.offsetLeft - strip.clientWidth / 2 + b.offsetWidth / 2});}
+      history.replaceState(null, '', `#photo-${cur + 1}`);
+    };
+    const open = k => {pv.classList.add('open'); pv.setAttribute('aria-hidden', 'false'); document.documentElement.style.overflow = 'hidden'; show(k); $('#pvX').focus({preventScroll: true});};
+    const close = () => {pv.classList.remove('open'); pv.setAttribute('aria-hidden', 'true'); document.documentElement.style.overflow = ''; if (document.fullscreenElement) document.exitFullscreen(); history.replaceState(null, '', location.pathname + location.search);};
+    document.addEventListener('click', e => {const t = e.target.closest('[data-k]'); if (t && !pv.contains(t)) {e.preventDefault(); open(+t.dataset.k);}});
+    [$('#slides'), $('#slides2')].forEach(b => b && (b.onclick = () => open(0)));
+    $('#pvX').onclick = close;
+    if ($('#pvN')) {$('#pvN').onclick = () => show(cur + 1, 1); $('#pvP').onclick = () => show(cur - 1, -1);}
+    if (strip) strip.addEventListener('click', e => {const b = e.target.closest('[data-t]'); if (b) show(+b.dataset.t, +b.dataset.t > cur ? 1 : -1);});
+    $('#pvSt').addEventListener('click', e => {if (e.target.id === 'pvSt') close();});
+    pi.addEventListener('click', e => {
+      if (pi.classList.contains('zoomed')) return pi.classList.remove('zoomed');
+      const r = pi.getBoundingClientRect(); pi.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; pi.classList.add('zoomed');
+    });
+    pi.addEventListener('mousemove', e => {if (!pi.classList.contains('zoomed')) return; const r = pi.getBoundingClientRect();
+      pi.style.transformOrigin = `${Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100))}% ${Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100))}%`;});
+    $('#pvFs').onclick = () => document.fullscreenElement ? document.exitFullscreen() : (pv.requestFullscreen && pv.requestFullscreen().catch(() => {}));
+    $('#pvSh').onclick = async () => {
+      const u = `${shareUrl}#photo-${cur + 1}`;
+      if (navigator.share) {try {await navigator.share({title: p.t, url: u});} catch (_) {} return;}
+      navigator.clipboard && navigator.clipboard.writeText(u).then(() => toast('تم نسخ رابط الصورة'));
+    };
+    addEventListener('keydown', e => {
+      if (!pv.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(cur + 1, 1);
+      else if (e.key === 'ArrowRight') show(cur - 1, -1);
+      else if (e.key === 'Home') show(0, -1); else if (e.key === 'End') show(all.length - 1, 1);
+    });
+    let sx = null, sy = 0;
+    $('#pvSt').addEventListener('touchstart', e => {if (e.touches.length === 1) {sx = e.touches[0].clientX; sy = e.touches[0].clientY;}}, {passive: true});
+    $('#pvSt').addEventListener('touchend', e => {if (sx == null || pi.classList.contains('zoomed')) {sx = null; return;}
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) show(cur + (dx > 0 ? 1 : -1), dx > 0 ? 1 : -1);
+      else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) close();});
+    const hm = location.hash.match(/^#photo-(\d+)$/); if (hm && +hm[1] >= 1 && +hm[1] <= all.length) open(+hm[1] - 1);
+  }
+
+  // مشاركة ونسخ
+  document.addEventListener('click', async e => {
+    if (e.target.closest('[data-share]')) {
+      if (navigator.share) {try {await navigator.share({title: p.t, url: shareUrl});} catch (_) {} return;}
+      window.open(wa, '_blank', 'noopener');
+    }
+    const c = e.target.closest('[data-copy]');
+    if (c) navigator.clipboard.writeText(shareUrl).then(() => {const s = c.querySelector('span'); s.textContent = 'تم النسخ ✓'; setTimeout(() => s.textContent = 'نسخ الرابط', 1800);});
+  });
+
+  // ===== السابق والتالي، وأخبار ذات صلة =====
+  const nx = posts[i - 1], pvp = posts[i + 1];
+  $('#np').innerHTML = `${pvp ? `<a href="post.html?id=${pvp.id}"><small>› الخبر السابق</small><div>${esc(pvp.t)}</div></a>` : '<span></span>'}
+    ${nx ? `<a class="nx" href="post.html?id=${nx.id}"><small>الخبر التالي ‹</small><div>${esc(nx.t)}</div></a>` : ''}`;
+  const rel = posts.map((q, k) => ({q, k})).filter(o => o.q.c === p.c && o.k !== i && o.k !== i - 1 && o.k !== i + 1)
+    .sort((a, b) => Math.abs(a.k - i) - Math.abs(b.k - i)).slice(0, 4).map(o => o.q);
+  if (rel.length) {$('#rel').hidden = false; $('#relG').innerHTML = rel.map(newsCard).join(''); reveal($('#rel'));}
+
+  // شريط تقدم القراءة
+  const prog = $('#prog');
+  const onS = () => {const h = document.documentElement.scrollHeight - innerHeight; prog.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`;};
+  addEventListener('scroll', onS, {passive: true}); onS();
 })();
 </script>
 </body>
