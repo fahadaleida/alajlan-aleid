@@ -112,7 +112,7 @@ function reveal(root = document) {
   const io = new IntersectionObserver(es => es.forEach(e => {if (e.isIntersecting) {e.target.classList.add('in'); io.unobserve(e.target);}}), {threshold: .08});
   root.querySelectorAll('.rv:not(.in)').forEach(el => io.observe(el));
 }
-const loadJSON = u => fetch(u).then(r => r.json());
+const loadJSON = u => fetch(u, {cache: 'no-cache'}).then(r => r.json());   // يتأكد من الموقع كل مرة، فالأخبار الجديدة تطلع على طول
 const newsCard = p => `<a class="ncard rv" href="post.html?id=${p.id}">
   <div class="im" style="background-image:url('${esc(p.i)}')"><span class="cat">${esc(catName(p.c))}</span></div>
   <div class="bd"><time>${fmtDate(p.d)}</time><h3>${esc(p.t)}</h3><p>${esc(p.x)}</p></div></a>`;
