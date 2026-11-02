@@ -1,0 +1,188 @@
+/* مكتبة المجلة: صفوف كتب فوق مشهد الغروب (بلا خشب) تصعد ببطء بلا توقف، وشجرة أمام قرص الشمس */
+.mhead{text-align:center;color:#fff;padding:8px 0 4px}
+.mhead .crumbs{color:rgba(255,255,255,.85)}.mhead .crumbs a{color:#E3B66B}
+.mhead h1{font-size:clamp(32px,4.4vw,52px);font-weight:800;text-shadow:0 4px 18px rgba(0,0,0,.5)}
+.mhead p{opacity:.92;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.mgrid-lib{padding-top:26px;align-items:center}
+
+/* ===== المكتبة الصاعدة ===== */
+.lib{grid-area:news;position:relative;height:640px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 86%,transparent 100%)}
+.lib .track{display:flex;flex-direction:column;gap:46px;padding:26px 0;animation:rise var(--dur,40s) linear infinite}
+.lib:hover .track{animation-play-state:paused}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 23px))}}
+.lib .row{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,2.4vw,30px);padding-bottom:16px}
+/* رف من نور: خط ذهبي رفيع وتوهج تحته بدل الخشب */
+.lib .row::after{content:"";position:absolute;left:6%;right:6%;bottom:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#E3B66B 18%,#FFE7B8 50%,#E3B66B 82%,transparent);box-shadow:0 0 14px rgba(227,182,107,.75),0 0 40px rgba(227,182,107,.35)}
+.lib .row::before{content:"";position:absolute;left:10%;right:10%;bottom:-26px;height:30px;background:radial-gradient(ellipse at 50% 0,rgba(227,182,107,.28),transparent 70%);pointer-events:none}
+
+/* الكتاب: غلاف ثلاثي الأبعاد */
+.book{position:relative;display:block;width:clamp(100px,10.5vw,140px);aspect-ratio:3/4.2;perspective:900px;filter:drop-shadow(0 16px 18px rgba(10,8,24,.55))}
+.b3{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(-16deg);transition:transform .45s cubic-bezier(.2,.9,.25,1)}
+.book:hover .b3,.book:focus-visible .b3{transform:rotateY(-3deg) translateZ(34px) translateY(-12px)}
+.cover{position:absolute;inset:0;border-radius:3px 8px 8px 3px;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:10% 8% 9%;text-align:center;
+  background:radial-gradient(ellipse at 30% 10%,#4636a6 0%,#322781 45%,#1e1757 100%);color:#fff;
+  box-shadow:inset 6px 0 10px rgba(0,0,0,.35),inset -1px 0 0 rgba(255,255,255,.12)}
+.cover::before{content:"";position:absolute;inset:7%;border:1px solid rgba(227,182,107,.6);border-radius:3px 6px 6px 3px}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.16) 48%,transparent 60%);transform:translateX(-60%);transition:transform .8s}
+.book:hover .cover::after{transform:translateX(60%)}
+.cover img{width:30%;margin-bottom:4%}
+.cover em{font-style:normal;font-weight:800;font-size:clamp(11px,1.05vw,14px);color:#E3B66B}
+.cover strong{font-weight:800;font-size:clamp(30px,3.4vw,46px);line-height:1.05;color:#fff;margin-top:2%}
+.cover small{font-size:clamp(10px,.9vw,12px);color:#CFC9E6;margin-top:-2%}
+.cover time{margin-top:auto;font-size:clamp(10px,.95vw,12px);font-weight:700;color:#F6E2B6;white-space:nowrap}
+.cover i{font-style:normal;font-size:clamp(8px,.75vw,10px);color:#B9B3D6;margin-top:3%}
+.spine{position:absolute;top:0;bottom:0;left:0;width:22px;transform-origin:left center;transform:rotateY(90deg);display:grid;place-items:center;background:linear-gradient(90deg,#140f3d,#251c6a 40%,#1a1450);border-radius:3px 0 0 3px}
+.spine b{writing-mode:vertical-rl;font-size:12px;font-weight:800;color:#E3B66B}
+.pages{position:absolute;top:2%;bottom:2%;right:0;width:20px;transform-origin:right center;transform:rotateY(-90deg);background:repeating-linear-gradient(0deg,#f4efe4 0 2px,#e2dccd 2px 3px)}
+.lib .hint{position:absolute;z-index:2;left:50%;bottom:10px;transform:translateX(-50%);font-size:13px;font-weight:700;color:#F6E2B6;text-shadow:0 1px 6px rgba(0,0,0,.7);pointer-events:none}
+
+/* ===== الشجرة أمام قرص الشمس ===== */
+.suntree{grid-area:tree;position:relative;height:640px}
+.suntree .sun{position:absolute;left:50%;top:44%;width:440px;height:440px;margin:-220px 0 0 -220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,236,190,.95) 0%,rgba(255,196,110,.75) 32%,rgba(240,140,70,.35) 55%,rgba(240,140,70,0) 70%);filter:blur(2px);animation:sunb 6s ease-in-out infinite}
+@keyframes sunb{50%{transform:scale(1.05);opacity:.9}}
+.suntree .rays{position:absolute;left:50%;top:44%;width:620px;height:620px;margin:-310px 0 0 -310px;border-radius:50%;opacity:.22;
+  background:repeating-conic-gradient(from 0deg,rgba(255,231,163,.9) 0deg 2deg,transparent 2deg 15deg);-webkit-mask-image:radial-gradient(circle,#000 20%,transparent 68%);mask-image:radial-gradient(circle,#000 20%,transparent 68%);animation:spin 80s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.suntree .st{position:absolute;inset:0;height:auto}
+.suntree .st img{position:absolute;left:50%;bottom:110px;height:470px;width:auto;max-width:none;transform:translateX(-50%);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.suntree .st img.pulse{filter:drop-shadow(0 10px 18px rgba(0,0,0,.35)) drop-shadow(0 4px 14px rgba(255,214,140,.9))}
+/* خط الأفق الذهبي وانعكاس الشجرة عليه */
+.suntree .horizon{position:absolute;left:4%;right:4%;bottom:108px;height:2px;background:linear-gradient(90deg,transparent,#E3B66B 20%,#FFE7B8 50%,#E3B66B 80%,transparent);box-shadow:0 0 16px rgba(227,182,107,.8)}
+.suntree .refl{position:absolute;left:50%;bottom:0;height:108px;width:auto;transform:translateX(-50%) scaleY(-1);transform-origin:center top;opacity:.28;filter:blur(1.5px);
+  -webkit-mask-image:linear-gradient(0deg,transparent 0%,#000 100%);mask-image:linear-gradient(0deg,transparent 0%,#000 100%);pointer-events:none;overflow:hidden}
+.suntree .refl img{position:absolute;left:50%;top:-362px;height:470px;width:auto;max-width:none;transform:translateX(-50%)}
+.suntree canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+@media (max-width:1023px){.lib{height:560px}.suntree{width:min(440px,100%);margin-inline:auto}}
+@media (max-width:639px){
+  .lib{height:520px}.lib .track{gap:34px}
+  .book{width:27vw;max-width:110px}
+  .suntree{height:520px}.suntree .st img{height:380px;bottom:90px}.suntree .horizon{bottom:88px}
+  .suntree .sun{width:340px;height:340px;margin:-170px 0 0 -170px}.suntree .rays{width:480px;height:480px;margin:-240px 0 0 -240px}
+  .suntree .refl{height:88px}.suntree .refl img{height:380px;top:-292px}
+}
+@media (prefers-reduced-motion:reduce){.lib .track,.suntree .sun,.suntree .rays{animation:none}}
+@media (hover:none){.lib .hint{display:none}}
+
+/* ===== الحلزون ===== */
+.helix-stage{position:relative;height:720px;margin-top:24px;perspective:1300px;perspective-origin:50% 40%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.helix{position:absolute;left:50%;top:0;width:0;height:100%;transform-style:preserve-3d}
+.helix .book{position:absolute;left:-65px;top:0;width:130px;will-change:transform,opacity}
+.helix-stage .axis{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:linear-gradient(180deg,transparent,rgba(255,231,163,.8) 20%,rgba(255,231,163,.8) 80%,transparent);box-shadow:0 0 18px rgba(227,182,107,.8),0 0 60px rgba(227,182,107,.35)}
+.helix-stage .axis::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:240px;margin-left:-120px;background:radial-gradient(ellipse at 50% 50%,rgba(227,182,107,.18),transparent 65%)}
+.helix-stage .hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:13px;font-weight:700;color:#F6E2B6;text-shadow:0 1px 6px rgba(0,0,0,.7);white-space:nowrap}
+.helix .book .b3{transform:none}
+.helix .book:hover .b3{transform:translateZ(40px) scale(1.06)}
+@media (max-width:639px){.helix-stage{height:600px}.helix .book{width:104px;left:-52px}}
+@media (hover:none){.helix-stage .hint{display:none}}
+.helix .book{width:156px;left:-78px}
+@media (max-width:639px){.helix .book{width:112px;left:-56px}}
+
+/* ===== دائرة الأعداد حول شمس الغروب ===== */
+.orbit-wrap{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:40px;align-items:center;min-height:calc(100vh - var(--nav) - 60px)}
+.oinfo{color:#fff}
+.oinfo .crumbs{color:rgba(255,255,255,.85)}.oinfo .crumbs a{color:#E3B66B}
+.oinfo h1{font-size:clamp(34px,4vw,50px);font-weight:800;line-height:1.25;text-shadow:0 4px 18px rgba(0,0,0,.5)}
+.oinfo .lead{margin-top:8px;opacity:.92;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.sel{margin-top:24px;border-radius:22px;padding:22px;color:#1B1833}
+.sel small{font-size:13px;font-weight:700;color:#8A5A1C}
+.sel .sn{display:flex;align-items:center;gap:16px;margin:6px 0 16px}
+.sel .sn b{font-size:64px;font-weight:800;line-height:1;color:var(--navy)}
+.sel .sn span{display:block;font-size:18px;font-weight:800}
+.sel .sn em{font-style:normal;font-size:13px;color:#5B5670}
+.sel .cta{height:48px;border-radius:14px;background:#C08537;color:#1B1833;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.sel .cta:hover{background:#B4772C}
+.sel.flip .sn{animation:selin .45s ease}
+@keyframes selin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.more-link{display:inline-block;margin-top:16px;font-weight:700;color:#E3B66B;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+
+.orbit{position:relative;width:min(640px,100%);aspect-ratio:1/1;margin-inline:auto}
+.orbit .sun{position:absolute;left:50%;top:50%;width:34%;aspect-ratio:1/1;transform:translate(-50%,-50%)}
+.orbit .sun .core{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 45%,#FFF6DA 0%,#FFD98A 38%,#F29A4A 72%,#D9673A 100%);box-shadow:0 0 60px 20px rgba(255,180,90,.55),0 0 140px 60px rgba(240,130,60,.3)}
+.orbit .sun .glow{position:absolute;inset:-60%;border-radius:50%;background:radial-gradient(circle,rgba(255,214,140,.35),transparent 62%);animation:sunb 6s ease-in-out infinite}
+.orbit .sun .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,231,163,.45)}
+.orbit .sun .r1{inset:-150%;border-style:dashed;opacity:.5}
+.orbit .sun .r2{inset:-55%;opacity:.35}
+.orbit .sun img{position:absolute;left:50%;top:50%;width:40%;transform:translate(-50%,-50%);opacity:.85;mix-blend-mode:multiply;border-radius:10px}
+.orbit .books{position:absolute;inset:0}
+.orbit .book{position:absolute;left:0;top:0;width:clamp(78px,10.5%,104px);aspect-ratio:3/4.2;will-change:transform;filter:drop-shadow(0 12px 14px rgba(10,8,24,.55));transition:filter .3s}
+.orbit .book .b3{transform:none}
+.orbit .book .cover{padding:9% 7% 8%}
+.orbit .book .cover strong{font-size:clamp(24px,2.6vw,34px)}
+.orbit .book .cover em{font-size:clamp(9px,.85vw,11px)}
+.orbit .book .cover time{font-size:clamp(8px,.8vw,10px)}
+.orbit .book.on{filter:drop-shadow(0 12px 14px rgba(10,8,24,.55)) drop-shadow(0 0 14px rgba(255,214,140,.85))}
+.orbit .book:hover .b3{transform:translateY(-6px)}
+@media (max-width:900px){.orbit-wrap{grid-template-columns:1fr;gap:10px;min-height:0}.oinfo{text-align:center}.orbit{width:min(420px,100%)}}
+@media (max-width:639px){.sel .sn{justify-content:center}.orbit .book{width:19%}}
+@media (prefers-reduced-motion:reduce){.orbit .sun .glow{animation:none}}
+
+/* الدائرة أكبر: الكتب متصفّة حول شجرة العائلة، وعليها التاريخ */
+.orbit-wrap{grid-template-columns:minmax(300px,380px) 1fr}
+.orbit{width:min(860px,100%)}
+.orbit .otree{position:absolute;left:50%;top:50%;height:50%;aspect-ratio:1790/2342;transform:translate(-50%,-50%)}
+.orbit .otree img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 12px 18px rgba(0,0,0,.45));transition:filter .5s}
+.orbit .otree img.pulse{filter:drop-shadow(0 12px 18px rgba(0,0,0,.45)) drop-shadow(0 4px 14px rgba(255,214,140,.9))}
+.orbit .otree canvas{position:absolute;inset:-20%;width:140%;height:140%;pointer-events:none}
+.orbit .oglow{position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(circle,rgba(255,226,160,.55) 0%,rgba(255,180,90,.25) 40%,transparent 68%);animation:sunb 6s ease-in-out infinite}
+.orbit .oring{position:absolute;inset:9%;border-radius:50%;border:1px dashed rgba(255,231,163,.4);pointer-events:none}
+.orbit .book{width:clamp(96px,15.5%,136px)}
+.orbit .book .cover{padding:8% 6% 7%}
+.orbit .book .cover img{width:26%;margin-bottom:2%}
+.orbit .book .cover em{font-size:clamp(10px,1vw,13px)}
+.orbit .book .cover strong{font-size:clamp(28px,3.2vw,42px)}
+.orbit .book .cover small{font-size:clamp(9px,.85vw,11px)}
+.orbit .book .cover time{display:block;margin-top:auto;font-size:clamp(10px,1vw,13px);font-weight:800;color:#FFE7B8;background:rgba(0,0,0,.25);border-radius:6px;padding:2px 6px}
+@media (max-width:900px){.orbit{width:min(560px,100%)}}
+@media (max-width:639px){.orbit .book{width:21%}.orbit .book .cover em{display:none}}
+@media (max-width:900px){.orbit-wrap{grid-template-columns:1fr}}
+/* تفتح والدائرة كاملة داخل الشاشة فوق الجبل والغروب (مثل لقطة فهد) */
+@media (min-width:901px){
+  body.mags main.hwrap{padding-top:calc(var(--nav) + 8px)!important}
+  .orbit-wrap{min-height:0;align-items:center}
+  .orbit{width:min(860px,100%,calc(100vh - var(--nav) - 24px))}
+  .oinfo h1{font-size:clamp(30px,3.2vw,44px)}
+}
+@media (min-width:901px){.orbit{width:min(860px,100%,calc(100vh - var(--nav) - 170px));margin-block:70px 60px}}
+
+/* الصفوف تنزل من فوق لتحت وترجع من فوق بلا توقف */
+.maglib .mhead{text-align:start;padding:0 0 10px}
+.lib.down{height:calc(100vh - var(--nav) - 230px);min-height:460px}
+.lib.down .track{animation-direction:reverse}
+.lib.down .row{padding-bottom:16px}
+.lib.down .book .cover time{display:block;margin-top:auto;font-weight:800;color:#FFE7B8;background:rgba(0,0,0,.25);border-radius:6px;padding:2px 6px}
+.lib.down .mrow{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,2.2vw,28px);padding-bottom:16px}
+.lib.down .mrow::after{content:"";position:absolute;left:6%;right:6%;bottom:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#E3B66B 18%,#FFE7B8 50%,#E3B66B 82%,transparent);box-shadow:0 0 14px rgba(227,182,107,.75),0 0 40px rgba(227,182,107,.35)}
+.lib.down .book{width:clamp(104px,10vw,140px)}
+.lib.down .track{gap:40px}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 20px))}}
+@media (max-width:639px){.lib.down .book{width:27vw}}
+.hgrid.inner>.maglib{width:100%;justify-self:stretch}
+.lib.down .book{flex:none}
+
+/* الغلاف الحقيقي للعدد فوق التصميم المرسوم (لو ما تحمّل الصورة يظهر المرسوم) */
+.cover img.real{position:absolute;inset:0;width:100%;height:100%;margin:0;object-fit:cover;object-position:50% 0;z-index:1;border-radius:inherit}
+.cover:has(img.real)::before{z-index:2;inset:0;border:0;border-radius:inherit;box-shadow:inset 5px 0 9px rgba(0,0,0,.35),inset 0 0 0 1px rgba(227,182,107,.35)}
+.cover::after{z-index:3}
+.cover .rtag{display:none}
+.cover:has(img.real) .rtag{display:block;position:absolute;z-index:2;left:0;right:0;bottom:0;padding:16px 4px 5px;text-align:center;font-size:clamp(9px,.85vw,11.5px);font-weight:800;color:#FFE7B8;white-space:nowrap;
+  background:linear-gradient(180deg,transparent,rgba(14,11,38,.88) 55%)}
+.lib.down .book .cover:has(img.real) time{visibility:hidden}
+/* أخبار المجلة داخل صفحة المكتبة */
+.mnews{position:relative;z-index:2;margin:40px auto 0;max-width:1100px;padding:28px;border-radius:24px;background:rgba(250,247,240,.9);backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(20,16,48,.25)}
+.mn-h small{color:#A0702C;font-weight:700;font-size:13px}.mn-h h2{margin:2px 0 18px;color:#322781;font-size:26px;line-height:1.6}
+.mn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.mn-c{display:flex;flex-direction:column;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 4px 14px rgba(20,16,48,.08);transition:transform .2s}
+.mn-c:hover{transform:translateY(-3px)}
+.mn-ph{display:block;aspect-ratio:4/3;background:#EFEAE0}.mn-ph img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}
+.mn-tx{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px}.mn-tx time{font-size:12px;color:#A0702C;font-weight:700}
+.mn-tx b{font-size:14.5px;color:#1B1833;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mn-more{display:block;margin:18px auto 0;height:44px;padding:0 28px;border-radius:999px;border:1.5px solid #322781;background:none;color:#322781;font:700 15px Cairo,sans-serif;cursor:pointer}
+@media (max-width:1023px){.mn-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:639px){.mnews{padding:18px 14px;margin-top:28px}.mn-h h2{font-size:21px}.mn-grid{gap:10px}.mn-tx b{font-size:13.5px}}
+.mn-ph{position:relative;height:0;padding-top:75%;aspect-ratio:auto;background:#fff;border-bottom:1px solid #EFEAE0}
+.mn-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.mn-ph{overflow:hidden}

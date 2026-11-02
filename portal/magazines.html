@@ -11,7 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021930">
 <link rel="stylesheet" href="home.css?v=202611021930">
-<link rel="stylesheet" href="mag.css?v=202611032100">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mag.css?v=202611040100">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
@@ -20,7 +21,7 @@
     <div class="maglib">
       <div class="mhead"><div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div><h1>مكتبة مجلة الأسرة</h1><p>أعداد مجلة أسرة العجلان والعيد، اضغط على العدد لتقرأه بتقليب صفحاته</p></div>
       <section class="lib down" id="lib" aria-label="أعداد المجلة"><div class="track" id="track"></div></section>
-      <section class="mnews" aria-labelledby="mnT"><div class="mn-h"><small>من سجل الأسرة</small><h2 id="mnT">أخبار المجلة والمشاركات</h2></div><div class="mn-grid" id="mnews"></div><button class="mn-more" id="mnMore" hidden>عرض المزيد</button></section>
+      <section class="mnews" aria-labelledby="mnT"><div class="mn-h"><small>من سجل الأسرة</small><h2 id="mnT">أخبار المجلة والمشاركات</h2><div class="mn-rule"><i></i><b></b><i></i></div></div><div id="mnFeat"></div><h3 class="mn-tlh">مسيرة المجلة عدداً بعد عدد</h3><ol class="mn-tl" id="mnTl"></ol></section>
     </div>
   <div class="breath"></div>
 </main>
@@ -49,14 +50,66 @@ const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ?
     $('#track').style.setProperty('--dur', rows.length * 8 + 's');
   };
   draw();
-  // أخبار المجلة داخل الصفحة نفسها
-  const P = (await loadJSON('data/posts.json')).filter(p => /مجل[ةه]/.test(p.t + ' ' + p.x));
-  let shown = 0;
+  // ===== أخبار المجلة: آخر دعوة للمشاركة بارزة، ثم مسيرة المجلة عدداً بعد عدد =====
+  const all = await loadJSON('data/posts.json');
+  const P = all.filter(p => /مجل[ةه]/.test(p.t + ' ' + p.x));
   const MON = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  const card = p => {const [y, m, d] = p.d.split('-').map(Number);
-    return `<a class="mn-c" href="post.html?id=${p.id}"><span class="mn-ph">${p.i ? `<img src="${esc(p.i)}" alt="" loading="lazy" onload="fillFrame(this,${p.id})">` : ''}</span><span class="mn-tx"><time>${ar(d)} ${MON[m - 1]} ${ar(y)}</time><b>${esc(p.t)}</b></span></a>`;};
-  const more = () => {$('#mnews').insertAdjacentHTML('beforeend', P.slice(shown, shown + 8).map(card).join('')); shown += 8; $('#mnMore').hidden = shown >= P.length;};
-  $('#mnMore').onclick = more; more();
+  const dt = s => {const [y, m, d] = s.split('-').map(Number); return `${ar(d)} ${MON[m - 1]} ${ar(y)}`;};
+  const ORD = [['الرابع عشر', 14], ['الثالث عشر', 13], ['الثاني عشر', 12], ['الحادي عشر', 11], ['العاشر', 10], ['التاسع', 9], ['الثامن', 8], ['السابع', 7], ['السادس', 6], ['الخامس', 5]];
+  const ORDN = Object.fromEntries(ORD.map(([w, n]) => [n, w]));
+  const issueOf = t => {for (const [w, n] of ORD) if (t.includes(w)) return n; return 0;};
+  const isCall = t => /استقبال|مشارك/.test(t);
+  const poster = p => p.i ? `<img src="${esc(p.i)}" alt="" loading="lazy">` : '<i class="mn-noimg"></i>';
+  const call = P.find(p => isCall(p.t));
+  if (call) {
+    const k = all.findIndex(p => p.id === call.id);
+    const h = ((await loadJSON(`data/posts/${Math.floor(k / 50)}.json`))[call.id] || {}).h || '';
+    const tx = (() => {const d = document.createElement('div'); d.innerHTML = h; return d.textContent.replace(/\s+/g, ' ');})();
+    const email = (tx.match(/[\w.+-]+@[\w-]+\.[\w.]+/) || [])[0];
+    const wa = (tx.match(/(?:الواتساب|واتساب|الجوال)\s*:?\s*(05\d{8}|9665\d{8})/) || [])[1];
+    const g = [...tx.matchAll(/(20\d\d)\/(\d{1,2})\/(\d{1,2})\s*م/g)].map(m => new Date(+m[1], +m[2] - 1, +m[3]));
+    const hj = [...tx.matchAll(/(14\d\d)\/(\d{1,2})\/(\d{1,2})\s*(?:هـ|ﮪ|ه)/g)];
+    const HM = ['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+    const end = g[g.length - 1], open = end && end >= new Date(new Date().toDateString());
+    const endTxt = end ? `${ar(end.getDate())} ${MON[end.getMonth()]} ${ar(end.getFullYear())}م` : '';
+    const endH = hj.length > 1 ? `${ar(+hj[hj.length - 1][3])} ${HM[+hj[hj.length - 1][2] - 1]} ${ar(+hj[hj.length - 1][1])}هـ` : '';
+    const left = end ? Math.ceil((end - new Date()) / 864e5) : 0;
+    const n = issueOf(call.t);
+    const waIntl = wa ? wa.replace(/^0/, '966') : '';
+    $('#mnFeat').innerHTML = `<article class="mn-feat${open ? ' open' : ''}">
+      <a class="mn-mat" href="post.html?id=${call.id}" aria-label="${esc(call.t)}">${poster(call)}</a>
+      <div class="mn-ftx">
+        <span class="mn-badge">${open ? '<i></i>المشاركات مفتوحة الآن' : 'آخر دعوة للمشاركة'}</span>
+        <h3>${n ? `العدد <b>${ORDN[n]}</b> من مجلة الأسرة` : esc(call.t)}</h3>
+        <p>يسر موقع الأسرة استقبال مشاركاتكم: المقالات والقصائد والخواطر والمبادرات وصور الآباء والأجداد والمواهب في الرسم والتصوير والتصميم.</p>
+        ${end ? `<div class="mn-dl"><div><small>آخر موعد</small><b>${endTxt}</b>${endH ? `<em>${endH}</em>` : ''}</div>${open && left > 0 ? `<div class="mn-left"><b>${ar(left)}</b><small>يوماً متبقياً</small></div>` : ''}</div>` : ''}
+        <div class="mn-cta">
+          ${waIntl ? `<a class="mn-btn wa" href="https://wa.me/${waIntl}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.5-4A8 8 0 1112 20a8 8 0 01-4-1z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></svg>أرسل عبر واتساب<span dir="ltr">${wa}</span></a>` : ''}
+          ${email ? `<a class="mn-btn" href="mailto:${email}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span dir="ltr">${email}</span></a>` : ''}
+          <a class="mn-link" href="post.html?id=${call.id}">تفاصيل الإعلان ‹</a>
+        </div>
+        <time>نُشر ${dt(call.d)}</time>
+      </div></article>`;
+  }
+  // الملصق كاملاً بلا الإطار الأبيض الزائد (من data/crops.json)، بلا أي قص لمحتواه
+  const trim = async im => {const C = await loadCrops(), c = C[im.dataset.id]; if (!c || !im.naturalWidth) return;
+    const w = (c[2] - c[0]) * im.naturalWidth, h = (c[3] - c[1]) * im.naturalHeight, box = document.createElement('span');
+    box.className = 'mn-trim'; box.style.aspectRatio = `${w} / ${h}`; im.replaceWith(box); box.appendChild(im);
+    Object.assign(im.style, {position: 'absolute', width: 100 / (c[2] - c[0]) + '%', height: 100 / (c[3] - c[1]) + '%', left: -c[0] / (c[2] - c[0]) * 100 + '%', top: -c[1] / (c[3] - c[1]) * 100 + '%', maxHeight: 'none', objectFit: 'fill'});};
+  document.querySelectorAll('.mn-mat img').forEach(im => {im.dataset.id = call.id; im.complete ? trim(im) : im.addEventListener('load', () => trim(im), {once: true});});
+  // المسيرة: كل عدد مع خبر الدعوة وخبر الصدور
+  const G = {};
+  P.forEach(p => {const n = issueOf(p.t); if (!n) return; (G[n] = G[n] || []).push(p);});
+  const extra = P.filter(p => !issueOf(p.t));
+  const nums = [...new Set([...Object.keys(G).map(Number)])].sort((a, b) => b - a);
+  $('#mnTl').innerHTML = nums.map(n => {
+    const m = M.find(x => x.n === n), ev = G[n].slice().sort((a, b) => a.d < b.d ? 1 : -1);
+    return `<li class="mn-is">
+      <a class="mn-cov" ${m ? `href="reader.html?n=${n}"` : `href="post.html?id=${ev[0].id}"`} aria-label="العدد ${ar(n)}">
+        ${m ? `<img src="mags/${n}/cover.webp" alt="غلاف العدد ${ar(n)}" loading="lazy">` : `<span class="mn-soon"><img src="img/logo-mark.png" alt=""><b>${ar(n)}</b><small>قيد الإعداد</small></span>`}</a>
+      <div class="mn-ib"><div class="mn-in"><b>العدد ${ORDN[n]}</b>${m ? `<a href="reader.html?n=${n}">اقرأ العدد ‹</a>` : '<em>يُجمع الآن</em>'}</div>
+        ${ev.map(p => `<a class="mn-ev ${isCall(p.t) ? 'c' : 'r'}" href="post.html?id=${p.id}"><span class="mn-tag">${isCall(p.t) ? 'دعوة للمشاركة' : 'صدور العدد'}</span><span class="mn-et">${esc(p.t)}</span><time>${dt(p.d)}</time></a>`).join('')}
+      </div></li>`;}).join('') + extra.map(p => `<li class="mn-is x"><a class="mn-cov" href="post.html?id=${p.id}">${poster(p)}</a><div class="mn-ib"><a class="mn-ev r" href="post.html?id=${p.id}"><span class="mn-tag">من أخبار المجلة</span><span class="mn-et">${esc(p.t)}</span><time>${dt(p.d)}</time></a></div></li>`).join('');
   let w = innerWidth; addEventListener('resize', () => {if (Math.abs(innerWidth - w) > 60) {w = innerWidth; draw();}});
 })();
 </script>
