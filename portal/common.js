@@ -135,17 +135,29 @@ function withTree(el) {
   if (typeof startRockets === 'function') startRockets();
 }
 
-// صورة الخبر تعبّي إطارها بالضبط: لو الصورة الأصلية داخل إطار أبيض (data/crops.json) نكبّر الجزء الحقيقي منها ليغطي الإطار
+// صورة الخبر تعبّي إطارها بدون تقريب مزعج: لو الصورة الأصلية داخل إطار أبيض (data/crops.json) نعرض الجزء الحقيقي كاملاً،
+// ولو القص بيأكل كثير من الصورة نعرضها كاملة، والفراغ حولها نعبّيه بنسخة مغبّشة من نفس الصورة
 let CROPS = null;
 const loadCrops = () => CROPS || (CROPS = fetch('data/crops.json?v=1').then(r => r.json()).catch(() => ({})));
-function fillFrame(im, id, bias = .22) {
+function fillFrame(im, id) {
   const f = im.parentElement, W = f.clientWidth, H = f.clientHeight, nw = im.naturalWidth, nh = im.naturalHeight;
   if (!W || !H || !nw) {im.dataset.fill = id || ''; return;}
   delete im.dataset.fill;
-  loadCrops().then(C => {const c = C[id] || [0, 0, 1, 1], cw = (c[2] - c[0]) * nw, ch = (c[3] - c[1]) * nh;
-    const s = Math.max(W / cw, H / ch), dw = nw * s, dh = nh * s;
-    let l = W / 2 - (c[0] + c[2]) / 2 * dw, t = -c[1] * dh - (ch * s - H) * bias;
-    l = Math.min(-c[0] * dw, Math.max(W - c[2] * dw, l)); t = Math.min(-c[1] * dh, Math.max(H - c[3] * dh, t));
-    Object.assign(im.style, {position: 'absolute', inset: 'auto', objectFit: 'fill', transform: 'none', maxWidth: 'none',
-      width: dw / W * 100 + '%', height: dh / H * 100 + '%', left: l / W * 100 + '%', top: t / H * 100 + '%'});});
+  loadCrops().then(C => {
+    const c = C[id] || [0, 0, 1, 1], cw = (c[2] - c[0]) * nw, ch = (c[3] - c[1]) * nh;
+    const cover = Math.max(W / cw, H / ch), fit = Math.min(W / cw, H / ch), kept = (fit / cover) ** 2;   // نسبة ما يبقى من الصورة لو عبّينا بالقص
+    const s = kept > .72 ? cover : fit, dw = nw * s, dh = nh * s;
+    let l = W / 2 - (c[0] + c[2]) / 2 * dw, t = H / 2 - (c[1] + c[3]) / 2 * dh;
+    if (s === cover) {t = -c[1] * dh - (ch * s - H) * .2;
+      l = Math.min(-c[0] * dw, Math.max(W - c[2] * dw, l)); t = Math.min(-c[1] * dh, Math.max(H - c[3] * dh, t));}
+    Object.assign(im.style, {position: 'absolute', inset: 'auto', objectFit: 'fill', transform: 'none', maxWidth: 'none', zIndex: 1,
+      clipPath: `inset(${c[1] * 100}% ${(1 - c[2]) * 100}% ${(1 - c[3]) * 100}% ${c[0] * 100}%)`,
+      width: dw / W * 100 + '%', height: dh / H * 100 + '%', left: l / W * 100 + '%', top: t / H * 100 + '%'});
+    let bg = f.querySelector(':scope > .ff-bg');
+    if (s !== cover) {
+      if (!bg) {bg = document.createElement('i'); bg.className = 'ff-bg'; f.prepend(bg);}
+      Object.assign(bg.style, {position: 'absolute', inset: '-12%', zIndex: 0, background: `url("${im.currentSrc || im.src}") ${(c[0] + c[2]) * 50}% ${(c[1] + c[3]) * 50}% / ${100 / (c[2] - c[0])}% auto no-repeat`,
+        filter: 'blur(16px) saturate(1.1) brightness(.92)', pointerEvents: 'none'});
+    } else if (bg) bg.remove();
+  });
 }
