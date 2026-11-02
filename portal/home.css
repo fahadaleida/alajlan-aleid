@@ -307,4 +307,4 @@ body.stree #scene::after{background:linear-gradient(180deg,rgba(20,16,48,.08) 0%
 @media (min-width:640px){body.home.stree:not(.mags) .hgrid>.htree{left:calc(var(--tree-bx,25vw) + 64px);transform:none;top:min(calc(var(--tree-by,90vh) - 14px),calc(100vh - 40px))}}
 /* الوصول السريع تحت السجل فقط، فيبقى عمود الشجرة وجذعها ظاهراً */
 @media (min-width:1024px){body.home.stree:not(.mags) .quick{width:calc(100% - 472px);grid-template-columns:repeat(3,1fr)}}
-.stree-l .st-tr{filter:saturate(1.12) contrast(1.06);image-rendering:auto}
+.stree-l .st-tr{image-rendering:auto}

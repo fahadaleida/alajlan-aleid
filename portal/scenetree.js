@@ -3,7 +3,7 @@
 (() => {
   const scene = document.getElementById('scene'); if (!scene) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const V = '202611031645';
+  const V = '202611031800';
   const TK = .72;                               // تصغير الشجرة ليبان الجبل وراها
   // صورة الشجرة بإحداثيات المصدر: العرض، الارتفاع، ارتفاع الملصق الأصلي (لـ names.json)، قاعدة الجذع وخط الأرض
   const SRC = {w: 1790, h: 2400, h0: 2342, bx: 896.6, by: 2318};
@@ -35,7 +35,7 @@
     const f = ts / KL;
     Object.assign(sh.style, {left: X + SHD[0] * f + 'px', top: Y + SHD[2] * f + 'px', width: (SHD[1] - SHD[0]) * f + 'px', height: (SHD[3] - SHD[2]) * f + 'px'});
     dpr = Math.min(2, devicePixelRatio || 1);
-    const big = iw * dpr > 620, want = `img/scenetree-orig${big ? '' : '-sm'}.webp?v=${V}`;
+    const big = iw * dpr > 620, want = `img/scenetree${big ? '' : '-sm'}.family.webp?v=${V}`;
     if (!tr.src.endsWith(want) && !(tr.dataset.big && !big)) {tr.src = want; if (big) tr.dataset.big = 1;}
     // لوحة الأسماء: صندوق الشجرة + فسحة فوقه للسقوط
     const top = 0, cl = 0, cr = vw;
