@@ -931,7 +931,7 @@ function renderGL(now,R){
   bindTex(P,'uMask',1,G.mask);bindTex(P,'uField',2,G.field);
   gl.bindVertexArray(G.quad);
   // الخلفية الممتدة (سماء + بحيرة وعشب) خلف الطبعة — ملفات قابلة للاستبدال في v7/bg
-  if(G.scene){const S=G.sceneP;gl.useProgram(S.p);bindTex(S,'uT',0,G.scene);gl.uniform1f(S.u.uSA,G.sceneA);gl.uniform1f(S.u.uVA,VW/VH);if(PORT())gl.uniform2f(S.u.uOff,0,0)/*الجوال: المشهد ثابت*/;else gl.uniform2f(S.u.uOff,(cam.x/PW-.5)*-.02,(cam.y/PH-.5)*.015);{const a=w2s(3700,10520),b=w2s(4700,10520);const rx=Math.abs(b.x-a.x)/VW;gl.uniform4f(S.u.uSh,a.x/VW,1-a.y/VH,rx,rx*VW/VH*.16);}gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  if(G.scene){const S=G.sceneP;gl.useProgram(S.p);bindTex(S,'uT',0,G.scene);gl.uniform1f(S.u.uSA,G.sceneA);gl.uniform1f(S.u.uVA,VW/VH);if(PORT()){fitView();const va=VW/VH;gl.uniform2f(S.u.uOff,0,-SCN_DY/VH*(va>G.sceneA?G.sceneA/va:1));}/*الجوال: المشهد ثابت، ويرتفع بس إذا شريط التبويب غطى الأرض*/else gl.uniform2f(S.u.uOff,(cam.x/PW-.5)*-.02,(cam.y/PH-.5)*.015);{const a=w2s(3700,10520),b=w2s(4700,10520);const rx=Math.abs(b.x-a.x)/VW;gl.uniform4f(S.u.uSh,a.x/VW,1-a.y/VH,rx,rx*VW/VH*.16);}gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     gl.useProgram(P.p);}
   const CUT=!!(G.crown&&G.scene&&G.node);gl.uniform1f(P.u.uCut,CUT?1:0);if(CUT){bindTex(P,'uCrown',3,G.crown);bindTex(P,'uNode',4,G.node);const fs=fitView().s;gl.uniform1f(P.u.uGlow,.12+.18*clamp01((cam.s-fs*1.5)/(fs*2.5)));gl.uniform1f(P.u.uVeil,RUN?0:.3+.15*clamp01((cam.s-fs*1.5)/(fs*3)));
     const L=RUN?null:litState(performance.now());if(L&&!L.D.tex){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,L.D.dim);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);L.D.tex=t;}
@@ -1308,7 +1308,7 @@ function renderStage(now,dt){
   // مواقع عقد الشجرة الصغيرة على الشاشة (للضغط)
   if(BL&&BL.geo&&BL.nodes){const{base,r,u,K}=BL.geo,W=BL.cv.width,H=BL.cv.height;
     BL.snodes=BL.nodes.map(o=>{const dx=(o.x-W/2)*K,dy=(H-o.y)*K,p=w2s(base[0]+r[0]*dx+u[0]*dy,base[2]+r[2]*dx+u[2]*dy,base[1]+r[1]*dx+u[1]*dy),e=w2s(base[0]+r[0]*(dx+o.r*K)+u[0]*dy,base[2]+r[2]*(dx+o.r*K)+u[2]*dy,base[1]+r[1]*(dx+o.r*K)+u[1]*dy);
-      return{id:o.id,photo:o.photo,age:o.age,x:p.x,y:p.y,r:Math.max(o.photo||o.age?10:14,Math.hypot(e.x-p.x,e.y-p.y))};});}
+      return{id:o.id,photo:o.photo,age:o.age,gm:o.gm,x:p.x,y:p.y,r:Math.max(o.photo||o.age?10:14,Math.hypot(e.x-p.x,e.y-p.y))};});}
 }
 function drawBloomCanvas(now,dt){const g=BL.g;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,BL.cv.width,BL.cv.height);drawBloom(g,now,dt);}
 // بطاقات أسماء واضحة: أيقونة الطبعة + الاسم بحجم ثابت على الشاشة، تواجه الكاميرا دائماً
@@ -1508,7 +1508,7 @@ function ftNode(g,o,badges){const p=o.p,Lb=o.L;
   else{const hk=kidsOf(p.id).length,has=portrait(g,p,o.x,o.y,o.r,hk?'#123d1e':'#5cb85c',hk?Math.max(2.5,o.r*.1):Math.max(2,o.r*.07));
     if(!has||PHOTO_MODE){const bx=o.x+o.r*.74,by=o.y-o.r*.74;photoBadge(g,bx,by,o.br,PHOTO_MODE);badges.push({id:p.id,x:bx,y:by,r:o.br+3,photo:true});}}
   if(o.gm){const t='+'+ar(o.gm),fs=Math.max(12,o.br*1.15);g.save();g.font=`${fs}px Lalezar`;const w=g.measureText(t).width+fs*.7,h=fs*1.3,bx=o.x-o.r*.74,by=o.y-o.r*.74;   // أحفاد منطويين
-    g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=5;g.fillStyle='#fff8e6';g.beginPath();g.roundRect(bx-w/2,by-h/2,w,h,h/2);g.fill();g.shadowColor='transparent';g.lineWidth=1.5;g.strokeStyle='#b8861c';g.stroke();
+    g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=5;g.fillStyle='#fff8e6';g.beginPath();g.roundRect(bx-w/2,by-h/2,w,h,h/2);g.fill();g.shadowColor='transparent';g.lineWidth=1.5;g.strokeStyle='#b8861c';g.stroke();badges.push({id:p.id,x:bx,y:by,r:Math.max(w,h)/2+4,gm:true});
     g.fillStyle='#7a5208';g.textAlign='center';g.textBaseline='middle';g.direction='ltr';g.fillText(t,bx,by+fs*.08);g.restore();}
   if(o.lx==null)return;let y=o.ly;
   if(Lb.rib){nameRibbon(g,p.name,o.lx,y+Lb.fs*.62,Lb.fs,p.gender==='f'?'#a3305f':kidsOf(p.id).length?'#123d1e':'#2e7d32',ageShort(p));y+=Lb.rh+3;}
@@ -1618,9 +1618,11 @@ function cardTreeHTML(id){const L=cardLayout(id);return`<canvas class="ftc" data
 let camTween=null,pulled=false;
 const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const DEG=Math.PI/180,wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a));
-function PORT(){return !POSTERBG&&VH>VW*1.15;}
+let SCN_DY=0;function PORT(){return !POSTERBG&&VH>VW*1.15;}
 function fitView(){if(PORT()){   // الجوال: الشجرة كبيرة مغروسة قرب أسفل الشاشة على أرض الصورة، الجبل خلفها والبرج يمينها (bg-tree-portrait: القاعدة ٤٩٢،٢٢٧٥ من ١٢٠٠×٢٦٠٠)
-    const SA=1200/2600,VA=VW/VH,k=VA<SA?VA/SA:SA/VA,gx=VA<SA?.5+(492/1200-.5)/k:492/1200,gy=VA<SA?2275/2600:.5+(2275/2600-.5)/k;
+    const SA=1200/2600,VA=VW/VH,k=VA<SA?VA/SA:SA/VA;let gx=VA<SA?.5+(492/1200-.5)/k:492/1200,gy=VA<SA?2275/2600:.5+(2275/2600-.5)/k;
+    // خط الغرس: أرض الصورة، إلا إذا كان شريط التبويب أعلى منها، فنرفع الشجرة والخلفية معاً حتى يبان الجذع كله («الهذلي») وشريط أرض رفيع
+    const g0=gy*VH,tt=CH.tt||(VH-(CH.b||0)),plant=Math.min(g0,tt-18);SCN_DY=Math.max(0,g0-plant);gy=plant/VH;
     const s=Math.min(VW*.88/PW,(gy*VH-(CH.t||56)-10)/8950);return{x:PW/2-(gx*VW-VW/2)/s,y:10520-(gy*VH-VH/2)/s,s,h:0,pitch:0,yaw:0,roll:0};}
   if(VW<=760&&CH.b){const y0=POSTERBG?0:1240,t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/(PH-y0))*.98;return{x:PW/2,y:(y0+PH)/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
 function tweenTo(t,ms=900){camTween={from:{...cam},to:{h:0,pitch:0,yaw:0,roll:0,...t},t0:performance.now(),ms};dirty=true;}
@@ -2383,7 +2385,8 @@ document.body.insertAdjacentHTML('beforeend',`<header class="appbar" id="appbar"
 <section class="sh" id="shBr"><div class="scr" data-close></div><div class="shp"><div class="shg"></div><div class="shh"><h2>فروع الشجرة</h2></div><p class="shsub">اضغط على الفرع ليضيء في مكانه من الشجرة</p><div class="shb" id="brList"></div></div></section>
 <section class="sh" id="shMore"><div class="scr" data-close></div><div class="shp"><div class="shg"></div><div class="shh"><h2>المزيد</h2></div><div class="shb" id="moreB"></div></div></section>`);
 // مقاسات الشريطين (تستخدمها fitView و ftBox بالجوال)
-let PFS=0;function measureChrome(){CH.t=isPh()?$('#appbar').offsetHeight:0;CH.b=isPh()?$('#tabbar').offsetHeight:0;}
+let PFS=0;function measureChrome(){CH.t=isPh()?$('#appbar').offsetHeight:0;CH.b=isPh()?$('#tabbar').offsetHeight:0;   // CH.tt: أعلى شريط التبويب الفعلي على الشاشة (مع الحافة السفلية وشريط المتصفح)
+  const tb=isPh()&&$('#tabbar').getBoundingClientRect();CH.tt=tb&&tb.height?Math.min(tb.top,innerHeight-tb.height):0;}
 // ---- الصفائح ----
 let SHO=null,WHO=false;
 function syncTabs(){const s=SHO&&SHO.id,t=s==='shSearch'?(WHO?'user':'search'):s==='shBr'?'branch':s==='shMore'?'more':(SEL&&SEL===meId()&&$('#card').classList.contains('show')?'user':'tree');
@@ -2503,7 +2506,7 @@ let RZT=0;function onResizeApp(){clearTimeout(RZT);RZT=setTimeout(()=>{const was
   if((isPh()||MOBILE)&&RUN&&RUN.done&&BL&&BL.cv){BL.ftl=ftLayout(BL);BL.st=null;BL.cv.width=BL.ftl.W;BL.cv.height=BL.ftl.H;RUN.end=gl?arrivalPose(RUN):bloomView(RUN.id);tweenTo(RUN.end,450);}
   else if(wasFit&&!RUN&&!SEL)tweenTo(fitView(),350);
   PFS=fitView().s;dirty=true;},140);}
-addEventListener('resize',onResizeApp);addEventListener('orientationchange',onResizeApp);
+addEventListener('resize',onResizeApp);addEventListener('orientationchange',onResizeApp);if(window.visualViewport)visualViewport.addEventListener('resize',onResizeApp);addEventListener('load',()=>{for(const t of[300,1200,2500])setTimeout(onResizeApp,t);});
 measureChrome();
 (async()=>{
   if(!initGL()){const n=glc.cloneNode();glc.replaceWith(n);glc=n;init2D();}
