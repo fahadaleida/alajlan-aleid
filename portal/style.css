@@ -314,3 +314,25 @@ footer .socials svg{width:17px;height:17px}
 .brand .bname b:first-child{color:#C08537}
 .brand .bname b:last-child{color:#322781}
 @media (max-width:1023px){.brand img{height:38px;border-radius:7px}.brand .bname{height:38px}.brand .bname b{font-size:17px;line-height:18px}}
+
+/* ===== الخلفية الكاملة (الجبل والبرج والغروب) في كل الصفحات ===== */
+body.scened{background:#2A2148}
+body.scened #scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg) center bottom/cover no-repeat}
+body.scened #scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.18) 0%,rgba(20,16,48,.22) 45%,rgba(20,16,48,.5) 80%,rgba(20,16,48,.7) 100%)}
+@media (max-width:639px){body.scened #scene{background-image:url(img/bg-scene-portrait.jpg);background-position:50% 100%}}
+body.scened .sub-hero,body.scened .page-top{background:none;border:0}
+body.scened .sub-hero::before{display:none}
+body.scened .page-top h1,body.scened .sub-hero h1{color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.55)}
+body.scened .page-top p,body.scened .sub-hero p,body.scened .count{color:#fff;opacity:.92;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+body.scened .crumbs{color:rgba(255,255,255,.85)}body.scened .crumbs a{color:#E3B66B}
+body.scened .sec-head h2,body.scened h3.sub{color:#fff;text-shadow:0 3px 14px rgba(0,0,0,.55)}
+body.scened .card,body.scened .fam,body.scened .goals li,body.scened .ncard,body.scened .article .content,body.scened .nav-posts a{background:rgba(251,250,247,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+body.scened .facts li{background:rgba(251,250,247,.9)}
+body.scened .quotes div{background:rgba(246,234,214,.92)}
+body.scened .chain span{background:rgba(255,255,255,.92)}
+body.scened .tabs button,body.scened .search,body.scened .pager button{background:rgba(255,255,255,.92)}
+body.scened .tabs button.on,body.scened .pager button.on{background:var(--navy)}
+body.scened .shelf .mag{}
+body.scened .nav{background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(251,250,247,.34));backdrop-filter:blur(20px) saturate(1.7) brightness(1.08);-webkit-backdrop-filter:blur(20px) saturate(1.7) brightness(1.08);border-bottom:1px solid rgba(255,255,255,.45)}
+body.scened .nav.solid{background:rgba(251,250,247,.86)}
+body.scened .card h3.sub,body.scened .card h3{color:var(--navy);text-shadow:none}

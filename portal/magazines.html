@@ -9,69 +9,70 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021155">
-<link rel="stylesheet" href="home.css?v=202611021155">
-<link rel="stylesheet" href="mag.css?v=202611021155">
+<link rel="stylesheet" href="style.css?v=202611021220">
+<link rel="stylesheet" href="home.css?v=202611021220">
+<link rel="stylesheet" href="mag.css?v=202611021220">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
 
-<main class="hwrap" style="padding-top:calc(var(--nav) + 34px)">
-  <div class="mhead">
-    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div>
-    <h1>مكتبة مجلة الأسرة</h1>
-    <p>أعداد مجلة أسرة العجلان والعيد، اضغط على العدد لتحميله</p>
-  </div>
-
-  <!-- الكتب على شكل حلزوني: تدور حول محور وتنزل من فوق لتحت ثم تعود من فوق -->
-  <section class="helix-stage" id="stage" aria-label="أعداد المجلة">
-    <div class="axis"></div>
-    <div class="helix" id="helix"></div>
-    <div class="hint">مرّر على العدد ليتوقف · اضغط عليه للتحميل</div>
+<main class="hwrap" style="padding-top:calc(var(--nav) + 30px)">
+  <!-- الأعداد على دائرة حول شمس الغروب (يسار)، وتفاصيل العدد المختار (يمين) -->
+  <section class="orbit-wrap">
+    <div class="oinfo">
+      <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div>
+      <h1>مكتبة مجلة الأسرة</h1>
+      <p class="lead">أعداد مجلة أسرة العجلان والعيد تدور حول شمس الديرة. اضغط على أي عدد لتحميله.</p>
+      <div class="sel glass-panel" id="sel">
+        <small>العدد الحالي</small>
+        <div class="sn"><b id="selN"></b><div><span id="selD"></span><em id="selS"></em></div></div>
+        <a class="cta" id="selA" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>تحميل العدد</a>
+      </div>
+      <a class="more-link" href="news.html?q=مجلة">أخبار المجلة والمشاركات ←</a>
+    </div>
+    <div class="orbit" id="orbit" aria-label="أعداد المجلة">
+      <div class="sun"><span class="core"></span><span class="glow"></span><span class="ring r1"></span><span class="ring r2"></span><img src="img/logo-mark.png" alt=""></div>
+      <div class="books" id="books"></div>
+    </div>
   </section>
-  <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة والمشاركات</a></div>
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021155"></script>
+<script src="common.js?v=202611021220"></script>
 <script>
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
 (async () => {
   const site = await loadJSON('data/site.json');
   buildChrome(site);
   const M = [...site.magazines].sort((a, b) => b.n - a.n);
-  const book = m => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" aria-label="تحميل العدد ${m.n}">
-      <span class="b3"><span class="spine"><b>${ar(m.n)}</b></span><span class="cover">
-        <img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time><i>أسرة العجلان والعيد</i>
-      </span><span class="pages"></span></span></a>`;
-  // ===== الحلزون =====
-  const H = $('#helix'), stage = $('#stage');
-  const COPIES = innerWidth < 640 ? 1 : 2, L = [];   // نسختين عشان الحلزون يكون مليان وما ينقطع
-  for (let c = 0; c < COPIES; c++) M.forEach(m => L.push(m));
-  H.innerHTML = L.map((m, i) => book(m).replace('<a class="book"', `<a class="book"${i >= M.length ? ' tabindex="-1" aria-hidden="true"' : ''}`)).join('');
-  const B = [...H.children], N = B.length;
+  $('#books').innerHTML = M.map((m, i) => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" data-i="${i}" aria-label="تحميل العدد ${m.n}">
+    <span class="b3"><span class="cover"><img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time></span></span></a>`).join('');
+  const B = [...$('#books').children], N = B.length, orbit = $('#orbit');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let phase = 0, paused = false, last = performance.now();
-  stage.addEventListener('mouseenter', () => paused = true); stage.addEventListener('mouseleave', () => paused = false);
+  let phase = 0, last = performance.now(), paused = false, cur = -1;
+  orbit.addEventListener('mouseenter', () => paused = true); orbit.addEventListener('mouseleave', () => paused = false);
+  const setSel = i => {if (i === cur) return; cur = i; const m = M[i];
+    B.forEach((b, j) => b.classList.toggle('on', j === i));
+    const s = $('#sel'); s.classList.remove('flip'); void s.offsetWidth; s.classList.add('flip');
+    $('#selN').textContent = ar(m.n); $('#selD').textContent = issueDate(m.date); $('#selS').textContent = m.size; $('#selA').href = m.u;};
+  B.forEach((b, i) => b.addEventListener('mouseenter', () => setSel(i)));
   const frame = t => {
     requestAnimationFrame(frame);
     const dt = Math.min(64, t - last); last = t;
-    if (!paused && !RM && !document.hidden) phase += dt * 0.000045;   // لفة كاملة للحلزون كل ~٢٢ ثانية
-    const w = stage.clientWidth, h = stage.clientHeight, mob = w < 640;
-    const R = mob ? w * .32 : Math.min(320, w * .25), TURNS = mob ? 1.5 : 2, top = -h * .1, span = h * 1.16;
+    if (!paused && !RM && !document.hidden) phase += dt * 0.000105;   // لفة كاملة كل دقيقة تقريباً (هادئة)
+    const w = orbit.clientWidth, R = w * .39, cx = w / 2, cy = orbit.clientHeight / 2;
+    let best = 0, bd = 9;
     B.forEach((b, i) => {
-      // كل كتاب له موقع على الحلزون؛ الطور يحرّكه للأسفل ويدوّره، ولما يطلع من تحت يرجع من فوق
-      const u = ((i / N + phase) % 1 + 1) % 1;
-      const a = u * TURNS * Math.PI * 2;
-      const x = Math.sin(a) * R, z = Math.cos(a) * R, y = top + u * span;
-      const depth = (z / R + 1) / 2;          // ٠ ورا، ١ قدام
-      const fade = Math.min(1, u / .08, (1 - u) / .08);
-      b.style.transform = `translate3d(${x}px,${y}px,${z}px) rotateY(${Math.sin(a) * 28}deg) scale(${.62 + .38 * depth})`;
-      b.style.zIndex = Math.round(depth * 100);
-      b.style.opacity = (.35 + .65 * depth) * fade;
-      b.style.filter = `brightness(${.55 + .45 * depth})`;
-      b.style.pointerEvents = depth > .55 && fade > .5 ? 'auto' : 'none';
+      const a = i / N * Math.PI * 2 + phase;           // تدور مع عقارب الساعة
+      const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
+      // العدد الأقرب إلى جهة التفاصيل (يمين الدائرة) يكبر ويصير هو المختار
+      const d = Math.abs(Math.atan2(Math.sin(a), Math.cos(a)));
+      if (d < bd) {bd = d; best = i;}
+      const k = 1 - Math.min(1, d / 1.2);
+      b.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) scale(${.82 + .26 * k})`;
+      b.style.zIndex = 10 + Math.round(k * 10);
     });
+    if (!paused) setSel(best);
   };
   requestAnimationFrame(frame);
 })();

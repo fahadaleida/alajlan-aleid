@@ -168,3 +168,10 @@ body.home:not(.mags) #scene{filter:blur(16px) brightness(.72) saturate(1.15);tra
 .vista .vtree{left:56%;bottom:15%;height:62%}
 @media (max-width:639px){.vista .vbg{background-size:auto 100%;background-position:52% 0}.vista .vtree{left:50%;bottom:17%;height:50%}}
 @media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
+/* الخلفية كاملة وواضحة في الرئيسية بعد (بطلب فهد) */
+body.home:not(.mags) #scene{filter:none;transform:none}
+/* نافذة الديرة على الخلفية الجديدة (١٦:٩): الجبل والشمس يسار، والبرج يمين، والأرض عند ٨٣٪ */
+.vista{aspect-ratio:16/9}
+.vista .vbg{background-image:url(img/bg-scene.jpg);background-size:cover;background-position:center}
+.vista .vtree{left:64%;bottom:15%;height:60%}
+@media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}

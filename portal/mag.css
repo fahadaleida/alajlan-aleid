@@ -80,3 +80,42 @@
 @media (hover:none){.helix-stage .hint{display:none}}
 .helix .book{width:156px;left:-78px}
 @media (max-width:639px){.helix .book{width:112px;left:-56px}}
+
+/* ===== دائرة الأعداد حول شمس الغروب ===== */
+.orbit-wrap{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:40px;align-items:center;min-height:calc(100vh - var(--nav) - 60px)}
+.oinfo{color:#fff}
+.oinfo .crumbs{color:rgba(255,255,255,.85)}.oinfo .crumbs a{color:#E3B66B}
+.oinfo h1{font-size:clamp(34px,4vw,50px);font-weight:800;line-height:1.25;text-shadow:0 4px 18px rgba(0,0,0,.5)}
+.oinfo .lead{margin-top:8px;opacity:.92;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.sel{margin-top:24px;border-radius:22px;padding:22px;color:#1B1833}
+.sel small{font-size:13px;font-weight:700;color:#8A5A1C}
+.sel .sn{display:flex;align-items:center;gap:16px;margin:6px 0 16px}
+.sel .sn b{font-size:64px;font-weight:800;line-height:1;color:var(--navy)}
+.sel .sn span{display:block;font-size:18px;font-weight:800}
+.sel .sn em{font-style:normal;font-size:13px;color:#5B5670}
+.sel .cta{height:48px;border-radius:14px;background:#C08537;color:#1B1833;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.sel .cta:hover{background:#B4772C}
+.sel.flip .sn{animation:selin .45s ease}
+@keyframes selin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.more-link{display:inline-block;margin-top:16px;font-weight:700;color:#E3B66B;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+
+.orbit{position:relative;width:min(640px,100%);aspect-ratio:1/1;margin-inline:auto}
+.orbit .sun{position:absolute;left:50%;top:50%;width:34%;aspect-ratio:1/1;transform:translate(-50%,-50%)}
+.orbit .sun .core{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 45%,#FFF6DA 0%,#FFD98A 38%,#F29A4A 72%,#D9673A 100%);box-shadow:0 0 60px 20px rgba(255,180,90,.55),0 0 140px 60px rgba(240,130,60,.3)}
+.orbit .sun .glow{position:absolute;inset:-60%;border-radius:50%;background:radial-gradient(circle,rgba(255,214,140,.35),transparent 62%);animation:sunb 6s ease-in-out infinite}
+.orbit .sun .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,231,163,.45)}
+.orbit .sun .r1{inset:-150%;border-style:dashed;opacity:.5}
+.orbit .sun .r2{inset:-55%;opacity:.35}
+.orbit .sun img{position:absolute;left:50%;top:50%;width:40%;transform:translate(-50%,-50%);opacity:.85;mix-blend-mode:multiply;border-radius:10px}
+.orbit .books{position:absolute;inset:0}
+.orbit .book{position:absolute;left:0;top:0;width:clamp(78px,10.5%,104px);aspect-ratio:3/4.2;will-change:transform;filter:drop-shadow(0 12px 14px rgba(10,8,24,.55));transition:filter .3s}
+.orbit .book .b3{transform:none}
+.orbit .book .cover{padding:9% 7% 8%}
+.orbit .book .cover strong{font-size:clamp(24px,2.6vw,34px)}
+.orbit .book .cover em{font-size:clamp(9px,.85vw,11px)}
+.orbit .book .cover time{font-size:clamp(8px,.8vw,10px)}
+.orbit .book.on{filter:drop-shadow(0 12px 14px rgba(10,8,24,.55)) drop-shadow(0 0 14px rgba(255,214,140,.85))}
+.orbit .book:hover .b3{transform:translateY(-6px)}
+@media (max-width:900px){.orbit-wrap{grid-template-columns:1fr;gap:10px;min-height:0}.oinfo{text-align:center}.orbit{width:min(420px,100%)}}
+@media (max-width:639px){.sel .sn{justify-content:center}.orbit .book{width:19%}}
+@media (prefers-reduced-motion:reduce){.orbit .sun .glow{animation:none}}
