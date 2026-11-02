@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>خبر | أسرة العجلان والعيد</title>
-<meta name="theme-color" content="#140d05">
-<link rel="icon" href="img/logo.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="page-top">
   <div class="wrap">
     <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ <a href="news.html">الأخبار والمناسبات</a> ‹ <span id="crumbCat"></span></div>
-    <h1 class="gold" id="title" style="font-size:clamp(30px,4vw,52px)">…</h1>
+    <h1 id="title" style="font-size:clamp(30px,4vw,52px)">…</h1>
     <p id="meta"></p>
   </div>
 </div>
@@ -38,7 +38,7 @@
   document.title = `${p.t} | أسرة العجلان والعيد`;
   $('#title').textContent = p.t;
   $('#crumbCat').textContent = catName(p.c);
-  $('#meta').innerHTML = `<span class="cat">${esc(catName(p.c))}</span> &nbsp; ${fmtDate(p.d)}`;
+  $('#meta').innerHTML = `<span class="cat" style="background:var(--gold-soft)">${esc(catName(p.c))}</span> &nbsp; ${fmtDate(p.d)}`;
   // صورة الخبر إذا ما كانت أول صورة داخل النص
   const firstImg = (f.h.match(/<img[^>]+src="([^"]+)"/) || [])[1] || '';
   const same = firstImg && f.i && firstImg.replace(/-\d+x\d+(?=\.\w+$)/, '').split('/').pop().split('.')[0] === f.i.replace(/-\d+x\d+(?=\.\w+$)/, '').split('/').pop().split('.')[0];

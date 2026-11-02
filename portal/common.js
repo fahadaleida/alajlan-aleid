@@ -62,13 +62,13 @@ const href = m => m.page || IS_HOME ? m.h : 'index.html' + m.h;
 function buildChrome(site) {
   const top = MENU.filter(m => ['home', 'vision', 'people', 'tribe', 'news', 'mag', 'fund', 'mail'].includes(m.k));
   document.body.insertAdjacentHTML('afterbegin', `
-  <header class="nav ${IS_HOME ? '' : 'solid'}" id="nav"><div class="wrap">
-    <a class="brand" href="${IS_HOME ? '#top' : 'index.html'}"><img src="img/logo.png" alt="شعار الأسرة"><b class="gold">أسرة العجلان والعيد</b></a>
+  <header class="nav" id="nav"><div class="wrap">
+    <a class="brand" href="${IS_HOME ? '#top' : 'index.html'}"><img src="img/logo-full.png" alt="شعار أسرة العجلان والعيد"><b>أسرة العجلان والعيد</b></a>
     <nav class="menu" aria-label="الأقسام">${top.map(m => `<a href="${href(m)}">${m.t}</a>`).join('')}<a href="${TREE_URL}" class="tree">شجرة العائلة</a></nav>
     <button class="burger" id="burger" aria-label="القائمة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
   </div></header>
   <div class="drawer" id="drawer"><div class="scrim" data-close></div><div class="sheet">
-    <h4 class="gold">أقسام البوابة</h4>
+    <h4>أقسام البوابة</h4>
     <a href="${TREE_URL}" data-close><i>${svg('tree', 18)}</i>شجرة العائلة التفاعلية</a>
     ${MENU.map(m => `<a href="${href(m)}" data-close><i>${svg(m.k, 18)}</i>${m.t}</a>`).join('')}
   </div></div>`);
@@ -79,10 +79,10 @@ function buildChrome(site) {
   if (IS_HOME) addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 40), {passive: true});
   document.body.insertAdjacentHTML('beforeend', `
   <footer><div class="wrap">
-    <img src="img/logo.png" alt="" style="width:64px;margin:0 auto 12px">
-    <q class="gold">«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q>
+    <img src="img/logo-full.png" alt="أسرة العجلان والعيد" class="flogo">
+    <q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q>
     <div class="socials" style="margin:22px 0 6px">${socials(site)}</div>
-    <small>© ${ar(new Date().getFullYear())}، ${esc(site.copyright)} · <a href="${TREE_URL}" style="color:var(--gold)">شجرة العائلة</a></small>
+    <small>© ${ar(new Date().getFullYear())}، ${esc(site.copyright)} · <a href="${TREE_URL}" style="color:var(--gold-l)">شجرة العائلة</a></small>
   </div></footer>`);
 }
 function socials(site) {

@@ -4,89 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>أسرة العجلان والعيد</title>
-<meta name="description" content="بوابة أسرة العجلان والعيد: شجرة العائلة، الأخبار والمناسبات، المجلات، صندوق العائلة، جائزة التفوق العلمي، والتواصل.">
-<meta name="theme-color" content="#140d05">
-<link rel="icon" href="img/logo.png">
+<meta name="description" content="الموقع الرسمي لأسرة العجلان والعيد: الأخبار والمناسبات، شجرة العائلة، المجلات، صندوق العائلة، جائزة التفوق العلمي، والتواصل.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-home="1">
 
-<!-- ===== الواجهة: الجبل والبرج والشجرة، والأسماء تنطلق إلى الهذلي ===== -->
-<section class="hero" id="top" style="padding:0">
-  <div class="bg" id="heroBg"></div>
-  <div class="shade"></div>
-  <div class="stage" id="stage">
-    <img src="img/tree-cut.webp" alt="شجرة عائلة العجلان والعيد" id="treeImg" fetchpriority="high">
-    <canvas id="rockets"></canvas>
-  </div>
-  <div class="hero-text">
-    <div class="bism">بسم الله الرحمن الرحيم</div>
-    <h1 class="gold">أسرة العجلان والعيد</h1>
-    <p>من الهذلي إليك… أسرة واحدة، وأخبارها في مكان واحد</p>
-  </div>
-  <div class="hero-side s1">
-    <div class="glass stat"><b class="gold" data-count="3394">٠</b><span>فرداً في شجرة<br>الطبعة الثالثة</span></div>
-    <div class="glass stat"><b class="gold" data-count="403">٠</b><span>خبراً ودعوة ومناسبة</span></div>
-    <div class="glass stat"><b class="gold" data-count="13">٠</b><span>عدداً من مجلة الأسرة</span></div>
-  </div>
-  <div class="hero-side s2">
-    <div class="glass verse"><small>حديث شريف</small><q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q></div>
-    <div class="glass verse"><small>قال تعالى</small><q>﴿وجعلناكم شعوبًا وقبائل لتعارفوا﴾</q></div>
-  </div>
-  <div class="hero-cta">
-    <a class="btn primary" href="../v7/index.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك في الشجرة</a>
-    <a class="btn ghost" href="#news">آخر الأخبار والمناسبات</a>
-  </div>
-  <div class="scroll-hint" aria-hidden="true"></div>
-</section>
-
-<div class="ticker"><div class="wrap"><span class="tag">آخر الأخبار</span><div class="run"><div class="track" id="ticker"></div></div></div></div>
-
-<!-- ===== الأخبار ===== -->
-<section id="news">
+<!-- ===== البانر المتحرك ===== -->
+<div class="banner" id="top">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">الأخبار والمناسبات</span><h2 class="gold">جديد الأسرة</h2><p>الأفراح والدعوات والتهاني والتعازي وأخبار أبناء الأسرة.</p></div>
-    <div id="feature"></div>
-    <div class="forum">
-      <div>
-        <div class="tabs rv" id="tabs"></div>
-        <div class="news-grid" id="ngrid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
-        <div class="more"><a class="btn primary" href="news.html" id="allNews">كل الأخبار</a></div>
-      </div>
-      <aside>
-        <div class="card side-box rv"><h4 class="gold">دعوات الأسرة</h4><div class="mini-list" id="invites"></div><a class="btn ghost" href="news.html?c=دعوات الأسرة" style="width:100%;margin-top:12px">كل الدعوات</a></div>
-        <div class="card side-box rv"><h4 class="gold">تابعنا</h4><div class="socials" id="soc1"></div></div>
-      </aside>
+    <div class="slider" id="slider">
+      <a class="slide on" href="#about"><img src="img/banner/slide4.jpg" alt="الموقع الرسمي لعائلة العجلان والعيد"></a>
+      <a class="slide" href="#news"><img src="img/banner/slide2.jpg" alt="عائلة العجلان والعيد: ١٠ سنوات من الصلة" loading="lazy"></a>
+      <div class="slide"><img src="img/banner/slide1.jpg" alt="دام عزك يا وطن" loading="lazy"></div>
+      <div class="slide"><img src="img/banner/slide3.jpg" alt="رب اجعل هذا البلد آمناً" loading="lazy"></div>
+      <button class="arr prev" aria-label="السابق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="arr next" aria-label="التالي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="dots" id="dots"></div>
+      <div class="progress" id="prog"></div>
     </div>
   </div>
-</section>
+</div>
+
+<!-- ===== الأخبار يمين، والشجرة يسار ===== -->
+<div class="wrap lead" id="news">
+  <div class="box rv">
+    <div class="box-h"><h2>آخر الأخبار</h2><div class="tabs" id="tabs"></div></div>
+    <div class="squares" id="squares"></div>
+    <div style="display:flex;justify-content:center;padding:0 22px 22px"><a class="btn navy" href="news.html" id="allNews">كل الأخبار والمناسبات</a></div>
+  </div>
+  <div class="tree-card rv" id="treeCard">
+    <div class="bg"></div>
+    <div class="head"><h2>شجرة العائلة</h2><p>من الهذلي إلى أصغر الأحفاد</p></div>
+    <div class="stage" id="stage">
+      <img src="img/tree-cut.webp" alt="شجرة عائلة العجلان والعيد" id="treeImg">
+      <canvas id="rockets"></canvas>
+    </div>
+    <div class="foot">
+      <a class="btn primary" href="../v7/index.html">ابحث عن اسمك في الشجرة</a>
+      <div class="dl" id="treeDl"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ===== الرؤية والرسالة والأهداف ===== -->
 <section id="vision">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">من نحن</span><h2 class="gold">الرؤية والرسالة</h2><div class="orn">◆</div></div>
+    <div class="sec-head rv"><span class="k">من نحن</span><h2>الرؤية والرسالة</h2><div class="orn">◆</div></div>
     <div class="vm">
-      <div class="card rv"><h3 class="gold">الرؤية</h3><p id="vis"></p></div>
-      <div class="card rv"><h3 class="gold">الرسالة</h3><p id="mis"></p></div>
+      <div class="card rv"><h3>الرؤية</h3><p id="vis"></p></div>
+      <div class="card rv"><h3>الرسالة</h3><p id="mis"></p></div>
     </div>
-    <h3 class="gold ruqaa rv" style="font-size:36px;text-align:center;margin-top:44px">الأهداف</h3>
+    <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">الأهداف</h3>
     <ol class="goals" id="goals"></ol>
   </div>
 </section>
 
 <!-- ===== عن العائلة ===== -->
-<section id="about">
+<section id="about" class="alt">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">عن العائلة</span><h2 class="gold">أصل الأسرة</h2></div>
-    <div class="card rv" style="padding:30px"><div class="prose"><p id="aboutIntro"></p></div></div>
-    <div class="hudhayl" style="margin-top:22px">
-      <div class="card rv" style="padding:30px"><h3 class="gold ruqaa" style="font-size:34px">مطارفة الطير</h3><div class="prose"><p id="mutarifa"></p></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><a class="btn primary" href="../v7/index.html">الشجرة التفاعلية</a><a class="btn ghost" id="mutarifaDl" target="_blank" rel="noopener">تحميل شجرة مطارفة الطير</a></div></div>
-      <div class="chain rv" aria-label="جذع الشجرة"><span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span></div>
+    <div class="sec-head rv"><span class="k">عن العائلة</span><h2>أصل الأسرة</h2><div class="orn">◆</div></div>
+    <div class="two">
+      <div class="card rv" style="padding:28px"><div class="prose"><p id="aboutIntro"></p></div>
+        <h3 class="sub">مطارفة الطير</h3><div class="prose"><p id="mutarifa"></p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px"><a class="btn navy" href="../v7/index.html">الشجرة التفاعلية</a><a class="btn ghost" id="mutarifaDl" target="_blank" rel="noopener">تحميل شجرة مطارفة الطير</a></div></div>
+      <div class="card chain rv" aria-label="جذع الشجرة"><span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span></div>
     </div>
-    <h3 class="gold ruqaa rv" style="font-size:34px;text-align:center;margin-top:44px">ذرية مطارفة الطير في نجد</h3>
+    <h3 class="sub rv" style="text-align:center;margin-top:40px;font-size:28px">ذرية مطارفة الطير في نجد</h3>
     <div class="fams" id="fams"></div>
   </div>
 </section>
@@ -94,55 +81,40 @@
 <!-- ===== قبيلة هذيل ===== -->
 <section id="hudhayl">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">الأصل</span><h2 class="gold">قبيلة هذيل</h2><div class="orn">◆</div></div>
-    <div class="card rv" style="padding:30px"><div class="fold" id="hudFold"><div class="prose" id="hud"></div></div>
-      <div class="more" style="margin-top:14px"><button class="btn ghost" id="hudMore">اقرأ المزيد</button></div></div>
-  </div>
-</section>
-
-<!-- ===== شجرة العائلة ===== -->
-<section id="tree">
-  <div class="wrap">
-    <div class="tile big rv" style="min-height:340px;padding:34px">
-      <img class="mini-tree" src="img/tree-cut-sm.webp" alt="" loading="lazy">
-      <div class="txt">
-        <h3 class="gold" style="font-size:44px">شجرة عائلة العجلان والعيد</h3>
-        <p style="font-size:17px">الطبعة الثالثة ١٤٤٧هـ - ٢٠٢٦م: ٣٣٩٤ فرداً في شجرة تفاعلية. ابحث عن اسمك، وامشِ في رحلة نسبك إلى الهذلي، واطبع شجرتك.</p>
-        <div><a class="btn primary" href="../v7/index.html">افتح الشجرة التفاعلية</a></div>
-        <div id="treeDl" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div>
-      </div>
-    </div>
+    <div class="sec-head rv"><span class="k">الأصل</span><h2>قبيلة هذيل</h2><div class="orn">◆</div></div>
+    <div class="card rv" style="padding:28px"><div class="fold" id="hudFold"><div class="prose" id="hud"></div></div>
+      <div class="more" style="margin-top:12px"><button class="btn ghost" id="hudMore">اقرأ المزيد</button></div></div>
   </div>
 </section>
 
 <!-- ===== المجلات ===== -->
-<section id="magazines">
+<section id="magazines" class="alt">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">إصدارات الأسرة</span><h2 class="gold">مجلة أسرة العجلان والعيد</h2><p>أعداد المجلة للتحميل والقراءة.</p></div>
+    <div class="sec-head rv"><span class="k">إصدارات الأسرة</span><h2>مجلة أسرة العجلان والعيد</h2><p>أعداد المجلة للتحميل والقراءة.</p></div>
     <div class="shelf" id="shelf"></div>
   </div>
 </section>
 
 <!-- ===== الفيلم الوثائقي ===== -->
-<section id="film" style="padding-top:20px">
+<section id="film">
   <div class="wrap rv">
-    <div class="sec-head"><span class="k">بالصوت والصورة</span><h2 class="gold">الفيلم الوثائقي للعائلة</h2></div>
-    <div class="yt" id="yt"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="cap gold" id="ytCap"></div></div>
+    <div class="sec-head"><span class="k">بالصوت والصورة</span><h2>الفيلم الوثائقي للعائلة</h2></div>
+    <div class="yt" id="yt"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="cap" id="ytCap"></div></div>
   </div>
 </section>
 
 <!-- ===== الصندوق والجائزة والجوال ===== -->
-<section id="fund">
+<section id="fund" class="alt">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">مبادرات الأسرة</span><h2 class="gold">نتكاتف معاً</h2></div>
+    <div class="sec-head rv"><span class="k">مبادرات الأسرة</span><h2>نتكاتف معاً</h2></div>
     <div class="trio">
-      <div class="card rv"><h3 class="gold">صندوق العائلة</h3><p style="color:var(--muted)">أرقام حسابات الصندوق في <b id="bank"></b> باسم: <span id="holder"></span></p><div id="ibans"></div>
-        <a class="btn ghost" href="news.html?q=صندوق" style="margin-top:6px">أخبار الصندوق</a></div>
-      <div class="card rv" id="award"><h3 class="gold">جائزة التفوق العلمي</h3><p style="color:var(--muted)">جائزة تكرّم المتفوقين من أبناء وبنات الأسرة، ولها موقعها الخاص.</p>
-        <a class="btn primary" id="awardLink" target="_blank" rel="noopener" style="margin-top:auto">موقع الجائزة</a>
+      <div class="card rv"><h3>صندوق العائلة</h3><p style="color:var(--muted)">أرقام حسابات الصندوق في <b id="bank"></b> باسم: <span id="holder"></span></p><div id="ibans"></div>
+        <a class="btn ghost" href="news.html?q=صندوق" style="margin-top:auto">أخبار الصندوق</a></div>
+      <div class="card rv" id="award"><h3>جائزة التفوق العلمي</h3><p style="color:var(--muted)">جائزة تكرّم المتفوقين من أبناء وبنات الأسرة، ولها موقعها الخاص.</p>
+        <a class="btn navy" id="awardLink" target="_blank" rel="noopener" style="margin-top:auto">موقع الجائزة</a>
         <a class="btn ghost" href="news.html?q=التفوق">أخبار الجائزة</a></div>
-      <div class="card rv" id="sms"><h3 class="gold">الاشتراك بجوال العائلة</h3><p style="color:var(--muted)" id="smsIntro"></p>
-        <div class="iban" style="direction:rtl;font-family:Tajawal"><span>رقم جوال الأسرة: <b dir="ltr" id="smsPhone"></b></span><a class="btn primary" id="smsBtn" style="padding:8px 14px;font-size:14px">اشترك برسالة</a></div>
+      <div class="card rv" id="sms"><h3>الاشتراك بجوال العائلة</h3><p style="color:var(--muted)" id="smsIntro"></p>
+        <div class="iban" style="direction:rtl;font-family:Cairo"><span>رقم جوال الأسرة: <b dir="ltr" id="smsPhone"></b></span><a class="btn primary" id="smsBtn" style="padding:7px 12px;font-size:14px">اشترك برسالة</a></div>
         <button class="btn ghost" id="smsMore">طريقة الاشتراك والإلغاء</button>
         <div id="smsFull" hidden style="color:var(--muted);font-size:15px;line-height:1.9"></div></div>
     </div>
@@ -152,10 +124,10 @@
 <!-- ===== التواصل ===== -->
 <section id="contact">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">تواصل معنا</span><h2 class="gold">يسعدنا تواصلك</h2></div>
+    <div class="sec-head rv"><span class="k">تواصل معنا</span><h2>يسعدنا تواصلك</h2></div>
     <div class="contact">
-      <div class="card rv"><h3 class="gold ruqaa" style="font-size:32px;margin-bottom:12px">بيانات التواصل</h3><div class="kv" id="kv"></div>
-        <div class="socials" id="soc2" style="margin-top:18px;justify-content:flex-start"></div></div>
+      <div class="card rv"><h3 class="sub" style="margin-top:0">بيانات التواصل</h3><div class="kv" id="kv"></div>
+        <div class="socials" id="soc2" style="margin-top:16px;justify-content:flex-start"></div></div>
       <form class="card rv" id="cform">
         <div class="field"><label>الاسم</label><input name="n" required placeholder="اسمك واسم أبيك"></div>
         <div class="field"><label>نوع الرسالة</label><select name="t"><option>خبر أو مناسبة</option><option>تصحيح في الشجرة</option><option>اقتراح</option><option>استفسار</option></select></div>
@@ -169,50 +141,59 @@
 
 <script src="common.js"></script>
 <script>
+// ===== البانر =====
+(() => {
+  const S = [...document.querySelectorAll('.slide')], D = $('#dots'), prog = $('#prog'), DUR = 6000;
+  let i = 0, t0 = performance.now(), paused = false;
+  D.innerHTML = S.map((_, k) => `<button aria-label="الصورة ${k + 1}"></button>`).join('');
+  const B = [...D.children];
+  const go = k => {S[i].classList.remove('on'); B[i].classList.remove('on'); i = (k + S.length) % S.length; S[i].classList.add('on'); B[i].classList.add('on'); t0 = performance.now();};
+  go(0);
+  B.forEach((b, k) => b.onclick = () => go(k));
+  $('.slider .next').onclick = () => go(i + 1); $('.slider .prev').onclick = () => go(i - 1);
+  const sl = $('#slider'); sl.onmouseenter = () => paused = true; sl.onmouseleave = () => {paused = false; t0 = performance.now() - parseFloat(prog.style.width || 0) / 100 * DUR;};
+  let sx = null; sl.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
+  sl.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(i + (dx < 0 ? -1 : 1)); sx = null;});
+  const tick = t => {requestAnimationFrame(tick); if (paused || document.hidden) {t0 += 16; return;} const p = (t - t0) / DUR; prog.style.width = Math.min(100, p * 100) + '%'; if (p >= 1) go(i + 1);};
+  requestAnimationFrame(tick);
+})();
+
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
   buildChrome(site);
-  // شريط الأخبار
-  const T = posts.slice(0, 8).map(p => `<a href="post.html?id=${p.id}">${esc(p.t)}</a>`);
-  $('#ticker').innerHTML = [...T, ...T].map(t => `<span>${t}</span>`).join('');
-  // الخبر المميز + الشبكة بالتبويبات
-  const f = posts[0];
-  $('#feature').innerHTML = `<a class="feature rv" href="post.html?id=${f.id}"><div class="im" style="background-image:url('${esc(f.i)}')"></div>
-    <div class="bd"><span class="cat" style="align-self:flex-start">${esc(catName(f.c))}</span><time style="color:var(--gold);font-weight:700">${fmtDate(f.d)}</time><h3 class="gold">${esc(f.t)}</h3><p>${esc(f.x)}…</p><span class="btn ghost" style="align-self:flex-start">اقرأ الخبر</span></div></a>`;
+  // آخر الأخبار في مربعات
   const cats = ['', 'أخبار الاسرة', 'مناسبات الاسرة', 'دعوات الأسرة'];
   let cur = '';
   const draw = () => {
-    $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cur ? 'on' : ''}">${c ? catName(c) : 'الأحدث'}</button>`).join('');
-    $('#ngrid').innerHTML = posts.filter(p => p.id !== f.id && (!cur || p.c === cur)).slice(0, 6).map(newsCard).join('');
+    $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cur ? 'on' : ''}">${c ? catName(c).replace('الأسرة', '').trim() : 'الكل'}</button>`).join('');
+    $('#squares').innerHTML = posts.filter(p => !cur || p.c === cur).slice(0, 6).map(p => `<a class="sq" href="post.html?id=${p.id}" style="background-image:url('${esc(p.i)}')">
+      <span class="cat">${esc(catName(p.c))}</span><span class="t"><time>${fmtDate(p.d)}</time><b>${esc(p.t)}</b></span></a>`).join('');
     $('#allNews').href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : '');
-    reveal();
   };
   $('#tabs').addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
   draw();
-  $('#invites').innerHTML = posts.filter(p => p.c === 'دعوات الأسرة').slice(0, 5).map(p => `<a href="post.html?id=${p.id}"><span class="th" style="background-image:url('${esc(p.i)}')"></span><span><b>${esc(p.t)}</b><br><small>${fmtDate(p.d)}</small></span></a>`).join('');
-  $('#soc1').innerHTML = $('#soc2').innerHTML = socials(site);
+  $('#soc2').innerHTML = socials(site);
+  $('#treeDl').innerHTML = site.tree.downloads.map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener">${svg('dl', 14)} ${esc(d.t.replace('شجرة عائلة العجلان والعيد - ', 'الشجرة: '))}</a>`).join('');
   // الرؤية والرسالة
   $('#vis').textContent = site.vision; $('#mis').textContent = site.mission;
   $('#goals').innerHTML = site.goals.map(g => `<li class="rv">${esc(g)}</li>`).join('');
   // عن العائلة
   $('#aboutIntro').textContent = site.about.intro; $('#mutarifa').textContent = site.about.mutarifa;
-  $('#fams').innerHTML = site.about.branches.map((b, i) => `<div class="fam rv ${i ? '' : 'main'}"><h4 class="gold">${esc(b.name)}</h4><p>${esc(b.text)}</p></div>`).join('');
+  $('#fams').innerHTML = site.about.branches.map((b, i) => `<div class="fam rv ${i ? '' : 'main'}"><h4>${esc(b.name)}</h4><p>${esc(b.text)}</p></div>`).join('');
   const md = site.tree.downloads.find(d => d.t.includes('مطارفة')); if (md) $('#mutarifaDl').href = md.u;
-  // هذيل: الفقرات، ثم المزايا، ثم الأقوال
+  // هذيل
   const H = site.hudhayl, quotes = H.filter(l => /^قال عن/.test(l)), facts = H.filter(l => /^أن(ها| منها| كلاً|هم| عثمان)/.test(l)), paras = H.filter(l => !quotes.includes(l) && !facts.includes(l));
-  $('#hud').innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join('') + (facts.length ? `<h3 class="gold ruqaa" style="font-size:30px;margin-top:10px">من مزايا قبيلة هذيل</h3><ul class="facts">${facts.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '') +
-    (quotes.length ? `<h3 class="gold ruqaa" style="font-size:30px;margin-top:22px">قالوا عن هذيل</h3><div class="quotes">${quotes.map(x => `<div>${esc(x)}</div>`).join('')}</div>` : '');
+  $('#hud').innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join('') + (facts.length ? `<h3 class="sub">من مزايا قبيلة هذيل</h3><ul class="facts">${facts.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '') +
+    (quotes.length ? `<h3 class="sub" style="margin-top:22px">قالوا عن هذيل</h3><div class="quotes">${quotes.map(x => `<div>${esc(x)}</div>`).join('')}</div>` : '');
   $('#hudMore').onclick = e => {const o = $('#hudFold').classList.toggle('open'); e.target.textContent = o ? 'إخفاء' : 'اقرأ المزيد';};
-  // الشجرة: ملفات التحميل
-  $('#treeDl').innerHTML = site.tree.downloads.map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener" style="color:var(--gold-l);font-weight:700;display:flex;gap:8px;align-items:center">${svg('dl', 18)} ${esc(d.t)}</a>`).join('');
   // المجلات
-  $('#shelf').innerHTML = site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b class="gold">${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)}</span><br><em>${svg('dl', 15)} تحميل</em></div></a>`).join('');
-  // الفيلم: يتحمّل يوتيوب عند الضغط فقط
+  $('#shelf').innerHTML = site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b>${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)}</span><br><em>${svg('dl', 15)} تحميل</em></div></a>`).join('');
+  // الفيلم
   const yt = $('#yt'); yt.style.backgroundImage = `url(https://i.ytimg.com/vi/${site.film.youtube}/hqdefault.jpg)`; $('#ytCap').textContent = site.film.title;
   yt.onclick = () => {yt.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${site.film.youtube}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="${esc(site.film.title)}"></iframe>`; yt.style.cursor = 'default';};
   // الصندوق
   $('#bank').textContent = site.fund.bank; $('#holder').textContent = site.fund.holder;
-  $('#ibans').innerHTML = site.fund.accounts.map(a => `<div style="margin-top:10px"><b style="font-size:15px">${esc(a.name)}</b><div class="iban"><span>${esc(a.iban)}</span><button data-copy="${esc(a.iban)}">نسخ</button></div></div>`).join('');
+  $('#ibans').innerHTML = site.fund.accounts.map(a => `<div style="margin-top:8px"><b style="font-size:15px">${esc(a.name)}</b><div class="iban"><span>${esc(a.iban)}</span><button data-copy="${esc(a.iban)}">نسخ</button></div></div>`).join('');
   document.addEventListener('click', e => {const b = e.target.closest('[data-copy]'); if (b) navigator.clipboard.writeText(b.dataset.copy).then(() => {b.textContent = 'تم ✓'; setTimeout(() => b.textContent = 'نسخ', 1600);});});
   $('#awardLink').href = site.award.url;
   // الجوال
@@ -226,13 +207,7 @@
     .map(([i, t]) => `<div><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${i}</svg></i><span>${t}</span></div>`).join('');
   $('#cform').onsubmit = e => {e.preventDefault(); const F = e.target; location.href = `mailto:${c.email}?subject=${encodeURIComponent(F.t.value + ' - ' + F.n.value)}&body=${encodeURIComponent(F.m.value + '\n\n' + F.n.value)}`;};
   reveal();
-  // العدّادات
-  document.querySelectorAll('[data-count]').forEach(el => {const n = +el.dataset.count, t0 = performance.now(); const step = t => {const p = Math.min(1, (t - t0) / 1800), e = 1 - Math.pow(1 - p, 3); el.textContent = ar(n * e); if (p < 1) requestAnimationFrame(step);}; requestAnimationFrame(step);});
 })();
-
-// خلفية الواجهة تتحرك ببطء مع التمرير
-addEventListener('scroll', () => {const bg = $('#heroBg'); if (scrollY < innerHeight) bg.style.transform = `translateY(${scrollY * .25}px) scale(${1 + scrollY / innerHeight * .06})`;}, {passive: true});
-document.addEventListener('pointermove', e => {const t = e.target.closest && e.target.closest('.tile'); if (t) {const r = t.getBoundingClientRect(); t.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');}});
 
 // ===== الأسماء تنطلق مثل الصواريخ إلى الهذلي =====
 (async () => {
@@ -240,20 +215,21 @@ document.addEventListener('pointermove', e => {const t = e.target.closest && e.t
   const cv = $('#rockets'), g = cv.getContext('2d'), img = $('#treeImg');
   let D; try {D = await loadJSON('names.json');} catch (e) {return;}
   const N = D.n, [bx, by] = D.base, tx = D.trunkX;
-  let W = 0, H = 0, dpr = 1, R = {x: 0, y: 0, w: 0, h: 0};
+  let W = 0, H = 0, dpr = 1, R = {x: 0, y: 0, w: 0, h: 0}, onScreen = true;
   function size() {dpr = Math.min(2, devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr;
     const ir = img.getBoundingClientRect(); R = {x: ir.left - r.left, y: ir.top - r.top, w: ir.width, h: ir.height};}
   size(); addEventListener('resize', size); img.addEventListener('load', size);
+  new IntersectionObserver(e => onScreen = e[0].isIntersecting).observe(cv);
   const P = (nx, ny) => [R.x + nx * R.w, R.y + ny * R.h];
   const live = []; let last = 0, flash = 0;
-  const mobile = innerWidth < 700, rate = mobile ? 2.6 : 5.5;
+  const rate = 3.2;
   function spawn(t) {const q = N[(Math.random() * N.length) | 0]; const [sx, sy] = P(q[0], q[1]); if (sy > R.y + R.h * .8) return;
-    live.push({sx, sy, name: q[2], f: q[3], t0: t, dur: 1500 + Math.random() * 900, trail: []});}
+    live.push({sx, sy, name: q[2], f: q[3], t0: t, dur: 1600 + Math.random() * 900, trail: []});}
   const bez = (a, b, c, t) => {const u = 1 - t; return u * u * a + 2 * u * t * b + t * t * c;};
   function frame(t) {
     requestAnimationFrame(frame);
-    if (document.hidden || scrollY > innerHeight) return;
-    if (!RM && t - last > 1000 / rate && live.length < 40) {spawn(t); last = t;}
+    if (document.hidden || !onScreen) return;
+    if (!RM && t - last > 1000 / rate && live.length < 22) {spawn(t); last = t;}
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     const [ex, ey] = P(bx, by), [tX] = P(tx, 0);
     g.globalCompositeOperation = 'lighter';
@@ -261,18 +237,18 @@ document.addEventListener('pointermove', e => {const t = e.target.closest && e.t
       const e = p < .15 ? p / .15 * .15 * .6 : .09 + (p - .15) / .85 * .91, ease = e * e * (1.6 - .6 * e);
       const cx = tX + (r.sx - tX) * .25, cy = r.sy + (ey - r.sy) * .55;
       const x = bez(r.sx, cx, ex, ease), y = bez(r.sy, cy, ey, ease);
-      r.trail.push([x, y]); if (r.trail.length > 18) r.trail.shift();
-      for (let k = 1; k < r.trail.length; k++) {const a = k / r.trail.length; g.strokeStyle = `rgba(255,${200 + 30 * a | 0},${90 + 60 * a | 0},${a * .55})`; g.lineWidth = 1 + a * 3.2; g.beginPath(); g.moveTo(r.trail[k - 1][0], r.trail[k - 1][1]); g.lineTo(r.trail[k][0], r.trail[k][1]); g.stroke();}
-      const gl = g.createRadialGradient(x, y, 0, x, y, 12); gl.addColorStop(0, 'rgba(255,248,220,.95)'); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y, 12, 0, 7); g.fill();
+      r.trail.push([x, y]); if (r.trail.length > 16) r.trail.shift();
+      for (let k = 1; k < r.trail.length; k++) {const a = k / r.trail.length; g.strokeStyle = `rgba(255,${200 + 30 * a | 0},${90 + 60 * a | 0},${a * .6})`; g.lineWidth = 1 + a * 2.8; g.beginPath(); g.moveTo(r.trail[k - 1][0], r.trail[k - 1][1]); g.lineTo(r.trail[k][0], r.trail[k][1]); g.stroke();}
+      const gl = g.createRadialGradient(x, y, 0, x, y, 10); gl.addColorStop(0, 'rgba(255,248,220,.95)'); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y, 10, 0, 7); g.fill();
       const o = p < .12 ? p / .12 : p > .85 ? (1 - p) / .15 : 1;
       g.globalCompositeOperation = 'source-over';
-      g.font = `800 ${mobile ? 11 : 13}px Tajawal`; g.textAlign = 'center'; g.direction = 'rtl';
-      g.lineWidth = 3; g.strokeStyle = `rgba(20,12,4,${.8 * o})`; g.strokeText(r.name, x, y - 12);
-      g.fillStyle = r.f ? `rgba(255,214,232,${o})` : `rgba(220,255,210,${o})`; g.fillText(r.name, x, y - 12);
+      g.font = '700 12px Cairo'; g.textAlign = 'center'; g.direction = 'rtl';
+      g.lineWidth = 3; g.strokeStyle = `rgba(20,14,40,${.8 * o})`; g.strokeText(r.name, x, y - 11);
+      g.fillStyle = r.f ? `rgba(255,214,232,${o})` : `rgba(225,255,215,${o})`; g.fillText(r.name, x, y - 11);
       g.globalCompositeOperation = 'lighter';
     }
     flash *= .94;
-    if (flash > .02) {const rr = 60 + 90 * flash; const gl = g.createRadialGradient(ex, ey, 0, ex, ey, rr); gl.addColorStop(0, `rgba(255,240,200,${.55 * flash})`); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(ex, ey, rr, 0, 7); g.fill();}
+    if (flash > .02) {const rr = 40 + 70 * flash; const gl = g.createRadialGradient(ex, ey, 0, ex, ey, rr); gl.addColorStop(0, `rgba(255,240,200,${.55 * flash})`); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(ex, ey, rr, 0, 7); g.fill();}
     g.globalCompositeOperation = 'source-over';
   }
   requestAnimationFrame(frame);
