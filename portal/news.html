@@ -8,7 +8,8 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021245">
+<link rel="stylesheet" href="style.css?v=202611021310">
+<link rel="stylesheet" href="home.css?v=202611021310">
 </head>
 <body class="scened">
 <div id="scene" aria-hidden="true"></div>
@@ -30,11 +31,13 @@
     <div class="pager" id="pager"></div>
   </div>
 </section>
-<script src="common.js?v=202611021245"></script>
+<script src="common.js?v=202611021310"></script>
+<script src="rockets.js?v=202611021310"></script>
 <script>
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
   buildChrome(site);
+  withTree(document.querySelector('#grid').closest('.wrap'));
   $('#sic').innerHTML = svg('search', 20);
   const cats = ['', 'أخبار الاسرة', 'دعوات الأسرة', 'مناسبات الاسرة'];
   const counts = c => posts.filter(p => !c || p.c === c).length;

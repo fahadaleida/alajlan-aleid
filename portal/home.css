@@ -175,3 +175,18 @@ body.home:not(.mags) #scene{filter:none;transform:none}
 .vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}
 .vista .vtree{left:64%;bottom:15%;height:60%}
 @media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}
+
+/* الصفحات الداخلية بنفس فكرة الرئيسية */
+.hgrid.inner{padding-top:0;align-items:start}
+.hgrid.inner .inner-main{grid-area:news;min-width:0}
+.hgrid.inner .htree{position:sticky;top:calc(var(--nav) + 16px)}
+.hgrid.inner .news-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.hgrid.inner .vm,.hgrid.inner .two,.hgrid.inner .contact{grid-template-columns:1fr}
+.hgrid.inner .goals{grid-template-columns:1fr}
+.hgrid.inner .orbit-wrap{grid-template-columns:1fr;min-height:0;gap:10px}
+.hgrid.inner .orbit-wrap .oinfo{text-align:center}
+.hgrid.inner .orbit{width:min(560px,100%)}
+@media (max-width:1023px){.hgrid.inner .htree{position:relative;top:0}}
+.hgrid.inner{width:min(1280px,100% - 32px);margin-inline:auto}
+.hgrid.inner .inner-main.wrap{width:auto;margin:0}
+.hwrap .hgrid.inner{width:100%}
