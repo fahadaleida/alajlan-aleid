@@ -8,7 +8,7 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611020800">
+<link rel="stylesheet" href="style.css?v=202611020900">
 </head>
 <body>
 <!-- رأس الصفحة: المشهد (الجبل والبرج) بارتفاع قصير -->
@@ -22,12 +22,13 @@
 <section style="padding-top:44px">
   <div class="wrap" id="body"></div>
 </section>
-<script src="common.js?v=202611020800"></script>
+<script src="common.js?v=202611020900"></script>
 <script>
 (async () => {
   const site = await loadJSON('data/site.json');
   buildChrome(site);
   const k = new URLSearchParams(location.search).get('p') || 'vision';
+  if (k === 'magazines') {location.replace('magazines.html'); return;}
   const set = (t, lead) => {document.title = `${t} | أسرة العجلان والعيد`; $('#title').textContent = t; $('#crumb').textContent = t; $('#lead').textContent = lead || '';};
   const B = $('#body');
   const ic = (k, s = 18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;

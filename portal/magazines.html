@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مجلة الأسرة | أسرة العجلان والعيد</title>
+<meta name="description" content="مكتبة مجلة أسرة العجلان والعيد: كل الأعداد للتحميل والقراءة.">
+<meta name="theme-color" content="#1A1448">
+<link rel="icon" href="img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=202611020900">
+<link rel="stylesheet" href="home.css?v=202611020900">
+<link rel="stylesheet" href="mag.css?v=202611020900">
+</head>
+<body class="home mags">
+<div id="scene" aria-hidden="true"></div>
+
+<main class="hwrap" style="padding-top:calc(var(--nav) + 34px)">
+  <div class="mhead">
+    <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div>
+    <h1>مكتبة مجلة الأسرة</h1>
+    <p>أعداد مجلة أسرة العجلان والعيد، اختر العدد واضغط عليه للتحميل</p>
+  </div>
+
+  <div class="hgrid mgrid-lib">
+    <!-- الدولاب -->
+    <section class="cabinet" id="cab" aria-label="أعداد المجلة">
+      <div class="crown"><img src="img/logo-mark.png" alt=""><span>مجلة أسرة العجلان والعيد</span></div>
+      <div class="body">
+        <div class="shelves" id="shelves"></div>
+        <div class="door l"><i></i></div><div class="door r"><i></i></div>
+      </div>
+      <div class="plinth"></div>
+    </section>
+
+    <!-- الشجرة -->
+    <aside class="htree" aria-label="شجرة العائلة">
+      <div class="halo"></div>
+      <div class="st" id="st">
+        <div class="ground"></div><div class="gbar" id="gbar"></div>
+        <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
+        <canvas id="rockets"></canvas>
+      </div>
+      <div class="tinfo glass-panel">
+        <div class="l1">أبناء الأسرة يعودون إلى <b>الهذلي</b></div>
+        <div class="live" id="live" aria-hidden="true">&nbsp;</div>
+        <a class="cta" href="../v7/index.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك في الشجرة</a>
+      </div>
+    </aside>
+  </div>
+  <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة والمشاركات</a></div>
+  <div class="breath"></div>
+</main>
+
+<script src="common.js?v=202611020900"></script>
+<script src="rockets.js?v=202611020900"></script>
+<script>
+// تاريخ الإصدار: «مايو 12, 2026» ← «مايو ٢٠٢٦»
+const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
+(async () => {
+  const site = await loadJSON('data/site.json');
+  buildChrome(site);
+  const M = [...site.magazines].sort((a, b) => b.n - a.n);
+  const per = () => innerWidth < 640 ? 3 : innerWidth < 1024 ? 4 : 5;
+  const book = (m, k) => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" style="--d:${k}" aria-label="تحميل العدد ${m.n}">
+      <span class="b3"><span class="spine"><b>${ar(m.n)}</b></span><span class="cover">
+        <img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time><i>أسرة العجلان والعيد</i>
+      </span><span class="pages"></span></span>
+      <span class="tag">${svg('dl', 14)} تحميل</span></a>`;
+  const draw = () => {
+    const n = per(), rows = [];
+    for (let i = 0; i < M.length; i += n) rows.push(M.slice(i, i + n));
+    let k = 0;
+    $('#shelves').innerHTML = rows.map(r => `<div class="shelf">${r.map(m => book(m, k++)).join('')}<div class="board"></div></div>`).join('');
+  };
+  draw();
+  let w = innerWidth; addEventListener('resize', () => {if (Math.abs(innerWidth - w) > 60) {w = innerWidth; draw(); $('#cab').classList.add('open', 'shown');}});
+  // تنفتح الأبواب ثم تنزل الكتب رفّاً رفّاً من فوق لتحت
+  const cab = $('#cab');
+  const go = () => {cab.classList.add('open'); setTimeout(() => cab.classList.add('shown'), 650);};
+  new IntersectionObserver((e, o) => {if (e[0].isIntersecting) {setTimeout(go, 250); o.disconnect();}}, {threshold: .25}).observe(cab);
+  startRockets();
+})();
+</script>
+</body>
+</html>

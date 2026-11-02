@@ -49,7 +49,7 @@ const MENU = [
   {k: 'people', t: 'عن العائلة', h: 'page.html?p=about'},
   {k: 'tribe', t: 'قبيلة هذيل', h: 'page.html?p=hudhayl'},
   {k: 'news', t: 'الأخبار والمناسبات', h: 'news.html'},
-  {k: 'mag', t: 'المجلات', h: 'page.html?p=magazines'},
+  {k: 'mag', t: 'المجلات', h: 'magazines.html'},
   {k: 'fund', t: 'صندوق العائلة', h: 'page.html?p=fund'},
   {k: 'award', t: 'جائزة التفوق العلمي', h: 'page.html?p=award'},
   {k: 'film', t: 'الفيلم الوثائقي', h: 'page.html?p=film'},
@@ -71,7 +71,7 @@ function buildChrome(site) {
     <nav class="menu" aria-label="الأقسام">
       <a href="index.html"${cur('index.html')}>الرئيسية</a><a href="news.html"${cur('news.html')}>الأخبار</a>
       ${dd('الأسرة', ['vision', 'people', 'tribe', 'film'])}
-      <a href="page.html?p=magazines"${cur('page.html?p=magazines')}>المجلات</a>
+      <a href="magazines.html"${cur('magazines.html')}>المجلات</a>
       ${dd('المبادرات', ['fund', 'award', 'sms'])}
       <a href="page.html?p=contact"${cur('page.html?p=contact')}>تواصل معنا</a>
     </nav>
