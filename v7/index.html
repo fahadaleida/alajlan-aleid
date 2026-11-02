@@ -1177,8 +1177,11 @@ function drawBloom(g,now,dt){
   B.nodes=N.filter(o=>o.kind==='me'||(o.kind==='elder'&&(o===gN?tg:tf)>.5)||t>2.4).map(o=>({id:o.p.id,x:o.x,y:o.y,r:o.r*1.2}));
 }
 
+const SOIL=new Image();SOIL.src='bg/soil.webp?v=1';SOIL.onload=()=>dirty=true;
 function renderOverlay(now,dt){
   const g=octx;g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,VW,VH);
+  // التراب تحت الجذع: الشجرة مغروسة في الأرض (نفس صورة البوابة، وفيها فتحة للجذع فتبان «الهذلي»)
+  if(!POSTERBG&&!BL&&SOIL.complete&&SOIL.naturalWidth){const a=w2s(292,9587),b=w2s(7095,11274);g.save();g.shadowColor='rgba(24,10,20,.5)';g.shadowBlur=8;g.shadowOffsetY=5;g.drawImage(SOIL,a.x,a.y,b.x-a.x,b.y-a.y);g.restore();}
   // المضافين بعد الطبعة
   for(const p of Object.values(people)){if(p.pos||!people[p.father])continue;if(BL&&((BL.id===p.id||p.father===BL.id)||gl)&&BL.t>.05)continue;
     const m=posOf(p.id),s=w2s(m.x,m.y),r=Math.max(7,46*s.k);
