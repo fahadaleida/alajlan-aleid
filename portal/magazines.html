@@ -9,9 +9,9 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021430">
-<link rel="stylesheet" href="home.css?v=202611021430">
-<link rel="stylesheet" href="mag.css?v=202611021430">
+<link rel="stylesheet" href="style.css?v=202611021530">
+<link rel="stylesheet" href="home.css?v=202611021530">
+<link rel="stylesheet" href="mag.css?v=202611021530">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
@@ -31,15 +31,15 @@
       <a class="more-link" href="news.html?q=مجلة">أخبار المجلة والمشاركات ←</a>
     </div>
     <div class="orbit" id="orbit" aria-label="أعداد المجلة">
-      <div class="otree" id="st"><span class="oglow"></span><img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="420px" alt="شجرة عائلة العجلان والعيد" id="treeImg"><span class="mound" aria-hidden="true"><i class="sh"></i><i class="soil"></i><i class="rim"></i></span><canvas id="rockets"></canvas></div><div class="oring"></div>
+      <div class="otree" id="st"><span class="oglow"></span><img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="420px" alt="شجرة عائلة العجلان والعيد" id="treeImg"><img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas></div><div class="oring"></div>
       <div class="books" id="books"></div>
     </div>
   </section>
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021430"></script>
-<script src="rockets.js?v=202611021430"></script>
+<script src="common.js?v=202611021530"></script>
+<script src="rockets.js?v=202611021530"></script>
 <script>
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
 (async () => {
