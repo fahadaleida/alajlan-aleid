@@ -190,3 +190,19 @@ body.home:not(.mags) #scene{filter:none;transform:none}
 .hgrid.inner{width:min(1280px,100% - 32px);margin-inline:auto}
 .hgrid.inner .inner-main.wrap{width:auto;margin:0}
 .hwrap .hgrid.inner{width:100%}
+
+/* الشجرة مغروسة: كومة رمل نجدي تحت الجذع تغطي العشب، مع ظل وحصى */
+.mound{position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;z-index:2}
+.mound i{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%}
+.mound .sh{bottom:-6%;width:120%;height:40%;background:radial-gradient(ellipse at 50% 50%,rgba(40,20,8,.55),transparent 70%);filter:blur(6px)}
+.mound .soil{bottom:0;width:100%;height:100%;border-radius:50% 50% 46% 46%/70% 70% 30% 30%;
+  background:radial-gradient(ellipse at 50% 18%,#e3b07a 0%,#c98f57 38%,#9c6a3b 70%,#6e4625 100%);
+  box-shadow:inset 0 6px 10px rgba(255,220,170,.35),inset 0 -8px 14px rgba(60,30,10,.45)}
+.mound .soil::after{content:"";position:absolute;inset:18% 12% 30%;border-radius:50%;opacity:.55;
+  background:radial-gradient(circle,#7a5030 1.2px,transparent 1.6px) 0 0/9px 7px,radial-gradient(circle,#f0c690 1px,transparent 1.4px) 4px 3px/11px 8px}
+.mound .rim{bottom:62%;width:46%;height:22%;background:radial-gradient(ellipse at 50% 60%,rgba(60,30,10,.55),transparent 70%)}
+/* مكانها تحت الشجرة في كل الصفحات */
+.htree .st .mound{bottom:22px;width:230px;height:46px}
+.htree .ground{display:none}
+.orbit .otree .mound{left:50%;bottom:-5%;width:62%;height:12%}
+@media (max-width:639px){.htree .st .mound{width:200px;height:40px}}
