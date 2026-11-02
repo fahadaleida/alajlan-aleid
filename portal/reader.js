@@ -16,6 +16,9 @@
 
   const N = man.count, R = man.w / man.h, pad = i => String(i).padStart(3, '0');
   const IMG = p => `mags/${n}/p${pad(p)}.webp`, TH = p => `mags/${n}/t/p${pad(p)}.webp`;
+  // دقة عالية: الجوال والشاشات الحادة تاخذ صفحات 1800 بكسل، والتكبير دايم بالدقة العالية
+  const HD = p => `mags/${n}/hd/p${pad(p)}.webp`;
+  const SRC = p => (man.hd && (innerWidth < 700 || (devicePixelRatio || 1) >= 2)) ? HD(p) : IMG(p);
   const issueDate = s => {const x = (s || '').match(/^(\S+)\s+\d+,\s*(\d{4})/); return x ? `${x[1]} ${ar(+x[2])}` : (s || '');};
   document.title = `مجلة الأسرة، العدد ${ar(n)} | أسرة العجلان والعيد`;
   $('#rt').textContent = `مجلة الأسرة · العدد ${ar(n)}`;
@@ -63,7 +66,7 @@
     return (s === 0 ? [0] : [s, s + 1].filter(j => j < N)).map(P).sort((a, b) => a - b);
   };
   // تحميل الصور القريبة فقط
-  const near = (i, k = 6) => {for (let j = Math.max(0, i - k); j <= Math.min(N - 1, i + k); j++) {const im = pages[j].firstChild; if (!im.src) im.src = IMG(P(j));}};
+  const near = (i, k = 6) => {for (let j = Math.max(0, i - k); j <= Math.min(N - 1, i + k); j++) {const im = pages[j].firstChild; if (!im.src) im.src = SRC(P(j));}};
   // الغلاف وحده: نحرك الكتاب للوسط
   function place() {
     const i = pf.getCurrentPageIndex(), pw = parseFloat(stage.style.getPropertyValue('--pw'));
@@ -159,7 +162,7 @@
   };
   const zopen = () => {
     zp = visible().slice().reverse();          // اليسار أولاً كما تظهر في المجلة
-    zin.innerHTML = zp.map(p => `<img src="${IMG(p)}" alt="صفحة ${ar(p)}" draggable="false">`).join('');
+    zin.innerHTML = zp.map(p => `<img src="${man.hd ? HD(p) : IMG(p)}" alt="صفحة ${ar(p)}" draggable="false">`).join('');
     $('#zcap').textContent = `صفحة ${zp.slice().reverse().map(ar).join('–')}`;
     zm.hidden = false; document.body.classList.add('zooming');
     zset(innerWidth < 700 ? 1 : 1.6, .5, 0);

@@ -9,19 +9,12 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021800">
-<link rel="stylesheet" href="home.css?v=202611021800">
+<link rel="stylesheet" href="style.css?v=202611021830">
+<link rel="stylesheet" href="home.css?v=202611021830">
 </head>
 <body class="home">
 <div id="scene" aria-hidden="true"></div>
 
-<!-- البانر بعرض الشاشة -->
-<div class="hb" id="hb" role="region" aria-roledescription="carousel" aria-label="صور الأسرة">
-  <button class="ar prev" aria-label="السابق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
-  <button class="ar next" aria-label="التالي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <div class="bars" id="bars"></div>
-  <button class="pp" id="pp" aria-label="إيقاف"></button>
-</div>
 
 <main class="hwrap">
   <div class="hgrid">
@@ -55,8 +48,8 @@
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021800"></script>
-<script src="rockets.js?v=202611021800"></script>
+<script src="common.js?v=202611021830"></script>
+<script src="rockets.js?v=202611021830"></script>
 <script>
 // ===== البانر (مع الموسمية) =====
 const BANNER = [
@@ -69,7 +62,7 @@ const BANNER = [
   const now = new Date(), md = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
   const inSeason = b => !b.from || (md >= b.from && md <= b.to);
   const L = [...BANNER.filter(b => b.from && inSeason(b)), ...BANNER.filter(b => !b.from)];
-  const hb = $('#hb');
+  const hb = $('#hb'); if (!hb) return;
   L.forEach((b, k) => hb.insertAdjacentHTML('afterbegin', ''));
   hb.insertAdjacentHTML('afterbegin', L.map((b, k) => `<${b.href ? `a href="${b.href}"` : 'div'} class="s${k ? '' : ' on'}" aria-roledescription="slide" aria-label="${k + 1} من ${L.length}">
     <picture><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.webp" type="image/webp"><source media="(max-width:639px)" srcset="img/banner/${b.src}-m.jpg"><source srcset="img/banner/${b.src}-d.webp" type="image/webp">
