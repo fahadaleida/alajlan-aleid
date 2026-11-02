@@ -3,229 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>بوابة عائلة العجلان والعيد</title>
-<meta name="description" content="بوابة عائلة العجلان والعيد: شجرة العائلة، الأخبار والمناسبات، المجلات، صندوق العائلة، جائزة التفوق العلمي، والتواصل.">
+<title>أسرة العجلان والعيد</title>
+<meta name="description" content="بوابة أسرة العجلان والعيد: شجرة العائلة، الأخبار والمناسبات، المجلات، صندوق العائلة، جائزة التفوق العلمي، والتواصل.">
 <meta name="theme-color" content="#140d05">
 <link rel="icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --void:#0b0703;--ink:#140d05;--panel:#1d140a;--panel2:#261a0c;--line:rgba(243,201,90,.22);
-  --gold:#f3c95a;--gold-l:#ffe7a3;--gold-d:#b8862b;--ivory:#f4ead2;--muted:#c9b896;
-  --green:#5fae5a;--rose:#e58bae;
-  --grad:linear-gradient(180deg,#ffe7a3 0%,#f3c95a 50%,#b8862b 100%);
-  --r:22px;--nav:76px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{overflow-x:clip;scroll-behavior:smooth;scroll-padding-top:calc(var(--nav) + 12px)}
-body{background:var(--void);color:var(--ivory);font-family:Tajawal,system-ui,sans-serif;font-size:17px;line-height:1.8;overflow-x:clip;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-img{display:block;max-width:100%}
-.gold{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.ruqaa{font-family:"Aref Ruqaa",serif}
-.wrap{width:min(1240px,100% - 32px);margin-inline:auto}
-
-/* ===== شريط التنقل ===== */
-.nav{position:fixed;inset:0 0 auto;z-index:50;height:var(--nav);display:flex;align-items:center;transition:background .35s,box-shadow .35s,backdrop-filter .35s}
-.nav.solid{background:rgba(14,9,4,.82);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:22px}
-.brand{display:flex;align-items:center;gap:12px;flex:none}
-.brand img{width:46px;filter:drop-shadow(0 0 12px rgba(243,201,90,.35))}
-.brand b{font-family:"Aref Ruqaa";font-size:25px;line-height:1.1;white-space:nowrap}
-.menu{display:flex;gap:2px;margin-inline-start:auto;flex-wrap:nowrap;overflow:hidden}
-.menu a{padding:8px 12px;border-radius:12px;font-weight:700;font-size:15px;color:var(--ivory);opacity:.86;white-space:nowrap;transition:background .2s,opacity .2s,color .2s}
-.menu a:hover,.menu a.on{opacity:1;background:rgba(243,201,90,.12);color:var(--gold-l)}
-.menu a.tree{background:var(--grad);color:#2a1a06;opacity:1;box-shadow:0 6px 20px rgba(243,201,90,.25)}
-.burger{display:none;margin-inline-start:auto;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:rgba(27,18,6,.6);color:var(--gold);cursor:pointer}
-.burger svg{margin:auto}
-@media (max-width:1180px){.menu a:not(.tree):not(.keep){display:none}.burger{display:grid;margin-inline-start:0}.menu{margin-inline-start:auto}}
-@media (max-width:640px){.hero-cta{gap:8px;bottom:3svh}.hero-cta .btn{padding:11px 18px;font-size:15px}.stage{height:min(62svh,calc(100vw * 1.2))}.hero-text{inset-block-start:calc(var(--nav) + 1svh)}.brand b{font-size:20px}.brand img{width:38px}.menu .tree{padding:8px 12px;font-size:14px}}
-
-/* درج الجوال */
-.drawer{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
-.drawer .scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;transition:opacity .3s}
-.drawer .sheet{position:absolute;inset:0 0 0 auto;width:min(360px,86vw);background:var(--ink);border-inline-start:1px solid var(--line);transform:translateX(100%);transition:transform .38s cubic-bezier(.2,.9,.25,1);padding:22px 18px;overflow:auto}
-.drawer.open{pointer-events:auto}.drawer.open .scrim{opacity:1}.drawer.open .sheet{transform:none}
-.drawer a{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;font-weight:700}
-.drawer a:hover{background:rgba(243,201,90,.1)}
-.drawer a i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(243,201,90,.12);color:var(--gold);flex:none}
-.drawer h4{font-family:"Aref Ruqaa";font-size:26px;margin:4px 6px 14px}
-
-/* ===== الواجهة ===== */
-.hero{position:relative;height:100svh;min-height:640px;overflow:hidden;isolation:isolate}
-.hero .bg{position:absolute;inset:-4% 0 0;background:url(img/bg-scene.jpg) center 70%/cover no-repeat;transform-origin:50% 80%;will-change:transform}
-@media (max-aspect-ratio:1/1){.hero .bg{background-image:url(img/bg-scene-portrait.jpg);background-position:center bottom}}
-.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,7,3,.78) 0%,rgba(11,7,3,.25) 30%,rgba(11,7,3,0) 55%,rgba(11,7,3,.35) 82%,var(--void) 100%)}
-.stage{position:absolute;left:50%;bottom:0;height:min(70svh,calc(100vw * 1.15));aspect-ratio:1790/2342;transform:translateX(-50%);z-index:2}
-.stage img{width:100%;height:100%;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55));animation:breathe 9s ease-in-out infinite}
-.stage canvas{position:absolute;inset:-10% -30% 0;width:160%;height:110%;pointer-events:none}
-@keyframes breathe{50%{transform:scale(1.012)}}
-.hero-text{position:absolute;inset:calc(var(--nav) + 2svh) 0 auto;z-index:3;text-align:center;padding-inline:16px}
-.hero-text .bism{font-family:Amiri;font-size:18px;color:var(--ivory);opacity:.85}
-.hero-text h1{font-family:"Aref Ruqaa";font-weight:700;font-size:clamp(44px,7vw,96px);line-height:1.15;filter:drop-shadow(0 0 26px rgba(243,201,90,.35)) drop-shadow(0 4px 10px rgba(0,0,0,.6))}
-.hero-text p{font-size:clamp(16px,1.6vw,20px);color:var(--ivory);opacity:.92;text-shadow:0 2px 10px rgba(0,0,0,.8)}
-.hero-side{position:absolute;z-index:3;bottom:16svh;display:flex;flex-direction:column;gap:12px;width:min(300px,26vw)}
-.hero-side.s1{inset-inline-start:max(24px,4vw)}.hero-side.s2{inset-inline-end:max(24px,4vw)}
-@media (max-width:980px){.hero-side{display:none}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 26px;border-radius:16px;font-weight:800;font-size:17px;transition:transform .2s,box-shadow .2s,background .2s;cursor:pointer;border:0;font-family:inherit}
-.btn.primary{background:var(--grad);color:#2a1a06;box-shadow:0 12px 34px rgba(243,201,90,.28)}
-.btn.primary:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(243,201,90,.38)}
-.btn.ghost{background:rgba(20,13,5,.62);border:1px solid rgba(243,201,90,.55);color:var(--gold-l);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.btn.ghost:hover{background:rgba(243,201,90,.14)}
-.glass{background:rgba(20,13,5,.6);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.stat{padding:14px 18px;display:flex;align-items:center;gap:14px}
-.stat b{font-family:"Aref Ruqaa";font-size:38px;line-height:1}
-.stat span{font-size:14px;color:var(--muted);line-height:1.4}
-.verse{padding:16px 18px;text-align:center}
-.verse small{display:block;color:var(--gold);font-weight:800;font-size:13px;margin-bottom:4px}
-.verse q{font-family:Amiri;font-size:20px;line-height:1.7;quotes:none}
-.hero-cta{position:absolute;z-index:4;left:0;right:0;bottom:5svh;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding-inline:16px}
-.scroll-hint{position:absolute;z-index:4;left:50%;bottom:1.2svh;transform:translateX(-50%);width:26px;height:40px;border:2px solid rgba(243,201,90,.6);border-radius:14px}
-.scroll-hint::after{content:"";position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:4px;background:var(--gold);animation:wheel 1.8s infinite}
-@keyframes wheel{0%{opacity:0;transform:translateY(-4px)}40%{opacity:1}100%{opacity:0;transform:translateY(12px)}}
-
-/* ===== شريط الأخبار ===== */
-.ticker{position:relative;z-index:5;border-block:1px solid var(--line);background:linear-gradient(90deg,var(--ink),#1a1108,var(--ink));overflow:hidden}
-.ticker .wrap{display:flex;align-items:center;gap:16px;height:58px}
-.ticker .tag{flex:none;background:var(--grad);color:#2a1a06;font-weight:800;font-size:14px;padding:6px 14px;border-radius:10px}
-.ticker .run{flex:1;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.ticker .track{display:inline-flex;gap:48px;white-space:nowrap;animation:tick 40s linear infinite;padding-inline-start:100%}
-.ticker .track span::before{content:"◆";color:var(--gold);font-size:10px;margin-inline-end:12px;vertical-align:middle}
-@keyframes tick{to{transform:translateX(100%)}}
-
-/* ===== الأقسام العامة ===== */
-section{position:relative;padding:96px 0}
-.sec-head{text-align:center;margin-bottom:46px}
-.sec-head .k{display:inline-block;font-weight:800;font-size:14px;letter-spacing:.5px;color:var(--gold);border:1px solid var(--line);padding:4px 14px;border-radius:30px;margin-bottom:12px}
-.sec-head h2{font-family:"Aref Ruqaa";font-size:clamp(36px,4.6vw,58px);line-height:1.25}
-.sec-head p{color:var(--muted);max-width:640px;margin:8px auto 0}
-.orn{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px auto 0;color:var(--gold)}
-.orn::before,.orn::after{content:"";width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
-.orn::after{transform:scaleX(-1)}
-.draft{display:inline-block;font-size:12px;font-weight:800;color:#2a1a06;background:#e9c46a;border-radius:8px;padding:1px 8px;vertical-align:middle;margin-inline-start:6px}
-.soon{font-size:12px;font-weight:800;color:var(--gold);border:1px solid var(--line);border-radius:8px;padding:1px 8px}
-
-/* الرؤية والرسالة */
-.vm{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.vm .card{padding:34px 34px 30px;position:relative;overflow:hidden}
-.vm .card::before{content:"";position:absolute;inset:auto -60px -60px auto;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(243,201,90,.18),transparent 70%)}
-.vm h3{font-family:"Aref Ruqaa";font-size:38px;margin-bottom:6px}
-.vm p{font-size:18px;line-height:2}
-@media (max-width:820px){.vm{grid-template-columns:1fr}}
-.card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);box-shadow:0 24px 60px rgba(0,0,0,.35)}
-
-/* شبكة الأقسام */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
-.tile{position:relative;padding:26px 24px 22px;border-radius:var(--r);background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;display:flex;flex-direction:column;gap:10px;min-height:210px}
-.tile::after{content:"";position:absolute;inset:0;background:radial-gradient(500px 200px at var(--mx,50%) -20%,rgba(243,201,90,.14),transparent 60%);opacity:0;transition:opacity .3s}
-.tile:hover{transform:translateY(-4px);border-color:rgba(243,201,90,.55);box-shadow:0 26px 60px rgba(0,0,0,.45),0 0 0 1px rgba(243,201,90,.15)}
-.tile:hover::after{opacity:1}
-.tile .ic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#4a3412,#24180a);border:1px solid rgba(243,201,90,.4);color:var(--gold);box-shadow:inset 0 0 18px rgba(243,201,90,.12)}
-.tile h3{font-size:21px;font-weight:800}
-.tile p{color:var(--muted);font-size:15px;line-height:1.75;flex:1}
-.tile .go{display:flex;align-items:center;justify-content:space-between;font-weight:800;color:var(--gold);font-size:15px}
-.tile.big{grid-column:span 2;background:linear-gradient(160deg,#3a2810,#1d140a);min-height:260px}
-.tile.big h3{font-family:"Aref Ruqaa";font-size:34px;font-weight:700}
-.tile.big .mini-tree{position:absolute;inset-inline-end:-10px;bottom:-30px;width:46%;opacity:.9;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
-.tile.big .txt{max-width:56%;display:flex;flex-direction:column;gap:10px;flex:1}
-@media (max-width:620px){.tile.big{grid-column:span 1}.tile.big .txt{max-width:62%}.tile.big .mini-tree{width:44%}}
-
-/* الأخبار — مثل المنتدى */
-.forum{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
-@media (max-width:960px){.forum{grid-template-columns:1fr}}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.tabs button{font-family:inherit;font-weight:800;font-size:15px;padding:8px 16px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ivory);cursor:pointer}
-.tabs button.on{background:var(--grad);color:#2a1a06;border-color:transparent}
-.post{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:20px;border-radius:18px;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);margin-bottom:12px;transition:border-color .25s,transform .25s}
-.post:hover{border-color:rgba(243,201,90,.5);transform:translateX(-3px)}
-.post .av{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-family:"Aref Ruqaa";font-size:24px;color:#2a1a06;background:var(--grad)}
-.post .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
-.post .cat{font-weight:800;font-size:12px;padding:2px 10px;border-radius:8px;background:rgba(243,201,90,.14);color:var(--gold-l)}
-.post h4{font-size:19px;font-weight:800;margin:4px 0 2px;line-height:1.5}
-.post p{font-size:15px;color:var(--muted);line-height:1.7}
-.post .stats{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-top:8px}
-.post .stats span{display:inline-flex;gap:6px;align-items:center}
-.side-box{padding:22px;margin-bottom:16px}
-.side-box h4{font-family:"Aref Ruqaa";font-size:26px;margin-bottom:10px}
-.event{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
-.event:last-child{border:0}
-.event .d{width:58px;flex:none;text-align:center;border-radius:14px;border:1px solid rgba(243,201,90,.45);padding:6px 0;line-height:1.2}
-.event .d b{display:block;font-family:"Aref Ruqaa";font-size:26px;color:var(--gold)}
-.event .d small{font-size:12px;color:var(--muted)}
-.empty{border:1px dashed rgba(243,201,90,.35);border-radius:16px;padding:18px;text-align:center;color:var(--muted);font-size:15px}
-
-/* هذيل */
-.hudhayl{display:grid;grid-template-columns:1.1fr 1fr;gap:34px;align-items:center}
-.hudhayl .chain{display:flex;flex-direction:column-reverse;align-items:center;gap:8px}
-.hudhayl .chain span{font-family:"Aref Ruqaa";font-size:24px;padding:6px 26px;border-radius:40px;border:1px solid rgba(243,201,90,.5);background:rgba(243,201,90,.08);min-width:170px;text-align:center}
-.hudhayl .chain span:first-child{font-size:34px;background:var(--grad);color:#2a1a06;border:0}
-.hudhayl .chain i{width:1px;height:16px;background:var(--gold);opacity:.6}
-@media (max-width:860px){.hudhayl{grid-template-columns:1fr}}
-
-/* الفيلم */
-.film{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:21/9;min-height:300px;border:1px solid var(--line);background:url(img/bg-scene.jpg) center/cover}
-.film::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,7,3,.92) 0%,rgba(11,7,3,.55) 55%,rgba(11,7,3,.2) 100%)}
-.film .in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:clamp(24px,5vw,64px);max-width:680px}
-.film h3{font-family:"Aref Ruqaa";font-size:clamp(34px,4.4vw,56px);line-height:1.2}
-.play{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#2a1a06;box-shadow:0 0 0 10px rgba(243,201,90,.15),0 0 0 22px rgba(243,201,90,.07);animation:pulse 2.4s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 16px rgba(243,201,90,.12),0 0 0 32px rgba(243,201,90,.04)}}
-
-/* الصندوق والجائزة والاشتراك */
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-@media (max-width:900px){.trio{grid-template-columns:1fr}}
-.trio .card{padding:28px;display:flex;flex-direction:column;gap:12px}
-.trio h3{font-family:"Aref Ruqaa";font-size:32px;line-height:1.2}
-.trio ul{list-style:none;display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:15px}
-.trio li::before{content:"◆";color:var(--gold);font-size:9px;margin-inline-end:10px;vertical-align:middle}
-
-/* التواصل */
-.contact{display:grid;grid-template-columns:1fr 1.2fr;gap:22px}
-@media (max-width:860px){.contact{grid-template-columns:1fr}}
-.contact .card{padding:28px}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font-weight:700;font-size:14px;color:var(--muted)}
-.field input,.field textarea,.field select{font-family:inherit;font-size:16px;color:var(--ivory);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
-.field input:focus,.field textarea:focus{border-color:var(--gold)}
-
-footer{border-top:1px solid var(--line);padding:46px 0 34px;background:var(--ink);text-align:center}
-footer q{font-family:Amiri;font-size:24px;quotes:none}
-footer small{display:block;color:var(--muted);margin-top:10px}
-
-/* ظهور عند التمرير */
-.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.9,.25,1)}
-.rv.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.ticker .track{animation:none}.stage img{animation:none}}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-
-<!-- ===== التنقل ===== -->
-<header class="nav" id="nav">
-  <div class="wrap">
-    <a class="brand" href="#top"><img src="img/logo.png" alt="شعار العائلة"><b class="gold">عائلة العجلان والعيد</b></a>
-    <nav class="menu" aria-label="الأقسام">
-      <a href="#top" class="on">الرئيسية</a>
-      <a href="#vision">الرؤية والرسالة</a>
-      <a href="#family">عن الأهل</a>
-      <a href="#hudhayl">قبيلة هذيل</a>
-      <a href="#news">الأخبار والمناسبات</a>
-      <a href="#sections">المجلات</a>
-      <a href="#fund">صندوق العائلة</a>
-      <a href="#contact">تواصل معنا</a>
-      <a href="../v7/index.html" class="tree">شجرة العائلة</a>
-    </nav>
-    <button class="burger" id="burger" aria-label="القائمة"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
-  </div>
-</header>
-
-<div class="drawer" id="drawer">
-  <div class="scrim" data-close></div>
-  <div class="sheet">
-    <h4 class="gold">أقسام البوابة</h4>
-    <div id="drawerLinks"></div>
-  </div>
-</div>
+<body data-home="1">
 
 <!-- ===== الواجهة: الجبل والبرج والشجرة، والأسماء تنطلق إلى الهذلي ===== -->
 <section class="hero" id="top" style="padding:0">
@@ -237,13 +23,13 @@ footer small{display:block;color:var(--muted);margin-top:10px}
   </div>
   <div class="hero-text">
     <div class="bism">بسم الله الرحمن الرحيم</div>
-    <h1 class="gold">عائلة العجلان والعيد</h1>
+    <h1 class="gold">أسرة العجلان والعيد</h1>
     <p>من الهذلي إليك… أسرة واحدة، وأخبارها في مكان واحد</p>
   </div>
   <div class="hero-side s1">
     <div class="glass stat"><b class="gold" data-count="3394">٠</b><span>فرداً في شجرة<br>الطبعة الثالثة</span></div>
-    <div class="glass stat"><b class="gold" data-count="1884">٠</b><span>من الذكور</span></div>
-    <div class="glass stat"><b class="gold" data-count="1510">٠</b><span>من الإناث</span></div>
+    <div class="glass stat"><b class="gold" data-count="403">٠</b><span>خبراً ودعوة ومناسبة</span></div>
+    <div class="glass stat"><b class="gold" data-count="13">٠</b><span>عدداً من مجلة الأسرة</span></div>
   </div>
   <div class="hero-side s2">
     <div class="glass verse"><small>حديث شريف</small><q>«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q></div>
@@ -256,89 +42,109 @@ footer small{display:block;color:var(--muted);margin-top:10px}
   <div class="scroll-hint" aria-hidden="true"></div>
 </section>
 
-<!-- ===== شريط الأخبار ===== -->
-<div class="ticker">
-  <div class="wrap">
-    <span class="tag">جديد البوابة</span>
-    <div class="run"><div class="track" id="ticker"></div></div>
-  </div>
-</div>
+<div class="ticker"><div class="wrap"><span class="tag">آخر الأخبار</span><div class="run"><div class="track" id="ticker"></div></div></div></div>
 
-<!-- ===== الرؤية والرسالة ===== -->
-<section id="vision">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">من نحن</span><h2 class="gold">الرؤية والرسالة</h2><div class="orn">◆</div></div>
-    <div class="vm">
-      <div class="card rv"><h3 class="gold">الرؤية <span class="draft">نص مقترح</span></h3><p>أسرةٌ مترابطة تعرف نسبها، وتصل رحمها، وتعتز بتاريخها، وتبني لأجيالها مستقبلاً مشرقاً.</p></div>
-      <div class="card rv"><h3 class="gold">الرسالة <span class="draft">نص مقترح</span></h3><p>جمع أبناء العجلان والعيد في منصة واحدة، توثّق الشجرة، وتنقل الأخبار والمناسبات، وتدعم المتفوقين، وتقوّي روابط الأسرة.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== أقسام البوابة ===== -->
-<section id="sections" style="padding-top:20px">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="k">البوابة</span><h2 class="gold">كل ما يخص العائلة</h2><p>اختر القسم الذي تريده، وسيتم إضافة المحتوى أولاً بأول.</p></div>
-    <div class="grid" id="grid"></div>
-  </div>
-</section>
-
-<!-- ===== الأخبار والمناسبات (مثل المنتدى) ===== -->
+<!-- ===== الأخبار ===== -->
 <section id="news">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">المنتدى</span><h2 class="gold">الأخبار والمناسبات</h2><p>كل أخبار العجلان والعيد في مكان واحد: الأفراح، والمواليد، والتهاني، والتعازي، والإنجازات.</p></div>
+    <div class="sec-head rv"><span class="k">الأخبار والمناسبات</span><h2 class="gold">جديد الأسرة</h2><p>الأفراح والدعوات والتهاني والتعازي وأخبار أبناء الأسرة.</p></div>
+    <div id="feature"></div>
     <div class="forum">
-      <div class="rv">
-        <div class="tabs" id="tabs">
-          <button class="on" data-c="">الكل</button><button data-c="أفراح">الأفراح</button><button data-c="مواليد">المواليد</button><button data-c="تهاني">التهاني والإنجازات</button><button data-c="تعازي">التعازي</button><button data-c="إعلانات">إعلانات العائلة</button>
-        </div>
-        <div id="posts"></div>
+      <div>
+        <div class="tabs rv" id="tabs"></div>
+        <div class="news-grid" id="ngrid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
+        <div class="more"><a class="btn primary" href="news.html" id="allNews">كل الأخبار</a></div>
       </div>
-      <aside class="rv">
-        <div class="card side-box"><h4 class="gold">المناسبات القادمة</h4><div id="events"></div></div>
-        <div class="card side-box"><h4 class="gold">أضف خبراً</h4><p style="color:var(--muted);font-size:15px">عندك خبر أو مناسبة؟ أرسلها لنا وتُنشر بعد المراجعة.</p><a class="btn ghost" href="#contact" style="margin-top:12px;width:100%">أرسل خبرك</a></div>
+      <aside>
+        <div class="card side-box rv"><h4 class="gold">دعوات الأسرة</h4><div class="mini-list" id="invites"></div><a class="btn ghost" href="news.html?c=دعوات الأسرة" style="width:100%;margin-top:12px">كل الدعوات</a></div>
+        <div class="card side-box rv"><h4 class="gold">تابعنا</h4><div class="socials" id="soc1"></div></div>
       </aside>
     </div>
   </div>
 </section>
 
-<!-- ===== عن الأهل وقبيلة هذيل ===== -->
+<!-- ===== الرؤية والرسالة والأهداف ===== -->
+<section id="vision">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="k">من نحن</span><h2 class="gold">الرؤية والرسالة</h2><div class="orn">◆</div></div>
+    <div class="vm">
+      <div class="card rv"><h3 class="gold">الرؤية</h3><p id="vis"></p></div>
+      <div class="card rv"><h3 class="gold">الرسالة</h3><p id="mis"></p></div>
+    </div>
+    <h3 class="gold ruqaa rv" style="font-size:36px;text-align:center;margin-top:44px">الأهداف</h3>
+    <ol class="goals" id="goals"></ol>
+  </div>
+</section>
+
+<!-- ===== عن العائلة ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="k">عن العائلة</span><h2 class="gold">أصل الأسرة</h2></div>
+    <div class="card rv" style="padding:30px"><div class="prose"><p id="aboutIntro"></p></div></div>
+    <div class="hudhayl" style="margin-top:22px">
+      <div class="card rv" style="padding:30px"><h3 class="gold ruqaa" style="font-size:34px">مطارفة الطير</h3><div class="prose"><p id="mutarifa"></p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><a class="btn primary" href="../v7/index.html">الشجرة التفاعلية</a><a class="btn ghost" id="mutarifaDl" target="_blank" rel="noopener">تحميل شجرة مطارفة الطير</a></div></div>
+      <div class="chain rv" aria-label="جذع الشجرة"><span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span></div>
+    </div>
+    <h3 class="gold ruqaa rv" style="font-size:34px;text-align:center;margin-top:44px">ذرية مطارفة الطير في نجد</h3>
+    <div class="fams" id="fams"></div>
+  </div>
+</section>
+
+<!-- ===== قبيلة هذيل ===== -->
 <section id="hudhayl">
-  <div class="wrap hudhayl">
-    <div class="rv">
-      <div class="sec-head" style="text-align:start;margin-bottom:20px"><span class="k">الأصل</span><h2 class="gold">قبيلة هذيل</h2></div>
-      <p style="font-size:18px;line-height:2.1">تنتسب أسرة العجلان والعيد إلى <b class="gold">هذيل بن مدركة</b>، وتلتقي فروعها في الجد الجامع <b class="gold">علي</b>، ومنه تفرّعت ثلاثة فروع: فرع إبراهيم (العيد)، وفرع حمد (العجلان)، وفرع سليمان الطويل.</p>
-      <p style="color:var(--muted);margin-top:12px">يُضاف هنا التعريف الكامل بقبيلة هذيل وتاريخ الأسرة عند تزويدنا بالنص المعتمد.</p>
-      <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap" id="family"><a class="btn primary" href="../v7/index.html">تصفّح الشجرة كاملة</a><a class="btn ghost" href="../v7/nasab.html?id=19">مثال: صفحة نسب</a></div>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="k">الأصل</span><h2 class="gold">قبيلة هذيل</h2><div class="orn">◆</div></div>
+    <div class="card rv" style="padding:30px"><div class="fold" id="hudFold"><div class="prose" id="hud"></div></div>
+      <div class="more" style="margin-top:14px"><button class="btn ghost" id="hudMore">اقرأ المزيد</button></div></div>
+  </div>
+</section>
+
+<!-- ===== شجرة العائلة ===== -->
+<section id="tree">
+  <div class="wrap">
+    <div class="tile big rv" style="min-height:340px;padding:34px">
+      <img class="mini-tree" src="img/tree-cut-sm.webp" alt="" loading="lazy">
+      <div class="txt">
+        <h3 class="gold" style="font-size:44px">شجرة عائلة العجلان والعيد</h3>
+        <p style="font-size:17px">الطبعة الثالثة ١٤٤٧هـ - ٢٠٢٦م: ٣٣٩٤ فرداً في شجرة تفاعلية. ابحث عن اسمك، وامشِ في رحلة نسبك إلى الهذلي، واطبع شجرتك.</p>
+        <div><a class="btn primary" href="../v7/index.html">افتح الشجرة التفاعلية</a></div>
+        <div id="treeDl" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div>
+      </div>
     </div>
-    <div class="chain rv" aria-label="جذع الشجرة">
-      <span>الهذلي</span><i></i><span>المطرفي</span><i></i><span>عيد</span><i></i><span>محمد</span><i></i><span>سليمان</span><i></i><span>فهد</span><i></i><span>علي · الجد الجامع</span>
-    </div>
+  </div>
+</section>
+
+<!-- ===== المجلات ===== -->
+<section id="magazines">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="k">إصدارات الأسرة</span><h2 class="gold">مجلة أسرة العجلان والعيد</h2><p>أعداد المجلة للتحميل والقراءة.</p></div>
+    <div class="shelf" id="shelf"></div>
   </div>
 </section>
 
 <!-- ===== الفيلم الوثائقي ===== -->
 <section id="film" style="padding-top:20px">
   <div class="wrap rv">
-    <div class="film">
-      <div class="in">
-        <span class="soon" style="align-self:flex-start">قريباً</span>
-        <h3 class="gold">الفيلم الوثائقي للعائلة</h3>
-        <p>حكاية العجلان والعيد: الأجداد، والديار، والأحداث التي صنعت تاريخ الأسرة.</p>
-        <div style="display:flex;align-items:center;gap:18px;margin-top:8px"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" transform="scale(-1,1) translate(-24,0)"/></svg></div><span style="color:var(--muted)">يُعرض هنا عند جاهزيته</span></div>
-      </div>
-    </div>
+    <div class="sec-head"><span class="k">بالصوت والصورة</span><h2 class="gold">الفيلم الوثائقي للعائلة</h2></div>
+    <div class="yt" id="yt"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="cap gold" id="ytCap"></div></div>
   </div>
 </section>
 
-<!-- ===== الصندوق والجائزة والاشتراك ===== -->
+<!-- ===== الصندوق والجائزة والجوال ===== -->
 <section id="fund">
   <div class="wrap">
-    <div class="sec-head rv"><span class="k">مبادرات العائلة</span><h2 class="gold">نتكاتف معاً</h2></div>
+    <div class="sec-head rv"><span class="k">مبادرات الأسرة</span><h2 class="gold">نتكاتف معاً</h2></div>
     <div class="trio">
-      <div class="card rv"><h3 class="gold">صندوق العائلة</h3><p style="color:var(--muted)">صندوق تكافلي يدعم أبناء العائلة في المناسبات والظروف.</p><ul><li>أهداف الصندوق ولائحته</li><li>طريقة المساهمة</li><li>التقارير الدورية</li></ul><span class="soon" style="align-self:flex-start">بانتظار البيانات</span></div>
-      <div class="card rv" id="award"><h3 class="gold">جائزة التفوق العلمي</h3><p style="color:var(--muted)">تكريم المتفوقين من أبناء وبنات العائلة في التعليم العام والجامعي.</p><ul><li>شروط الترشح</li><li>فئات الجائزة</li><li>قائمة المكرّمين</li></ul><span class="soon" style="align-self:flex-start">بانتظار البيانات</span></div>
-      <div class="card rv" id="sms"><h3 class="gold">اشتراكات جوال العائلة</h3><p style="color:var(--muted)">خدمة رسائل تصلك فيها أخبار العائلة ومناسباتها أولاً بأول.</p><ul><li>طريقة الاشتراك</li><li>رسوم الاشتراك</li><li>إيقاف الخدمة</li></ul><span class="soon" style="align-self:flex-start">بانتظار البيانات</span></div>
+      <div class="card rv"><h3 class="gold">صندوق العائلة</h3><p style="color:var(--muted)">أرقام حسابات الصندوق في <b id="bank"></b> باسم: <span id="holder"></span></p><div id="ibans"></div>
+        <a class="btn ghost" href="news.html?q=صندوق" style="margin-top:6px">أخبار الصندوق</a></div>
+      <div class="card rv" id="award"><h3 class="gold">جائزة التفوق العلمي</h3><p style="color:var(--muted)">جائزة تكرّم المتفوقين من أبناء وبنات الأسرة، ولها موقعها الخاص.</p>
+        <a class="btn primary" id="awardLink" target="_blank" rel="noopener" style="margin-top:auto">موقع الجائزة</a>
+        <a class="btn ghost" href="news.html?q=التفوق">أخبار الجائزة</a></div>
+      <div class="card rv" id="sms"><h3 class="gold">الاشتراك بجوال العائلة</h3><p style="color:var(--muted)" id="smsIntro"></p>
+        <div class="iban" style="direction:rtl;font-family:Tajawal"><span>رقم جوال الأسرة: <b dir="ltr" id="smsPhone"></b></span><a class="btn primary" id="smsBtn" style="padding:8px 14px;font-size:14px">اشترك برسالة</a></div>
+        <button class="btn ghost" id="smsMore">طريقة الاشتراك والإلغاء</button>
+        <div id="smsFull" hidden style="color:var(--muted);font-size:15px;line-height:1.9"></div></div>
     </div>
   </div>
 </section>
@@ -348,150 +154,126 @@ footer small{display:block;color:var(--muted);margin-top:10px}
   <div class="wrap">
     <div class="sec-head rv"><span class="k">تواصل معنا</span><h2 class="gold">يسعدنا تواصلك</h2></div>
     <div class="contact">
-      <div class="card rv">
-        <h3 class="gold ruqaa" style="font-size:32px">قنوات التواصل</h3>
-        <p style="color:var(--muted);margin:8px 0 16px">تُضاف أرقام التواصل والبريد وحسابات العائلة عند تزويدنا بها.</p>
-        <div class="empty">رقم الجوال · واتساب · البريد الإلكتروني · حسابات التواصل</div>
-      </div>
-      <form class="card rv" onsubmit="event.preventDefault();this.querySelector('.note').hidden=false">
-        <div class="field"><label>الاسم</label><input required placeholder="اسمك واسم أبيك"></div>
-        <div class="field"><label>نوع الرسالة</label><select><option>خبر أو مناسبة</option><option>تصحيح في الشجرة</option><option>اقتراح</option><option>استفسار</option></select></div>
-        <div class="field"><label>الرسالة</label><textarea rows="4" required></textarea></div>
-        <button class="btn primary" style="width:100%">إرسال</button>
-        <p class="note" hidden style="margin-top:12px;color:var(--gold-l);font-size:14px">شكراً لك. (الإرسال يُفعّل بعد ربط البوابة بقاعدة البيانات)</p>
+      <div class="card rv"><h3 class="gold ruqaa" style="font-size:32px;margin-bottom:12px">بيانات التواصل</h3><div class="kv" id="kv"></div>
+        <div class="socials" id="soc2" style="margin-top:18px;justify-content:flex-start"></div></div>
+      <form class="card rv" id="cform">
+        <div class="field"><label>الاسم</label><input name="n" required placeholder="اسمك واسم أبيك"></div>
+        <div class="field"><label>نوع الرسالة</label><select name="t"><option>خبر أو مناسبة</option><option>تصحيح في الشجرة</option><option>اقتراح</option><option>استفسار</option></select></div>
+        <div class="field"><label>الرسالة</label><textarea name="m" rows="4" required></textarea></div>
+        <button class="btn primary" style="width:100%">إرسال عبر البريد</button>
+        <p style="margin-top:10px;color:var(--muted);font-size:13px">تُفتح رسالة جاهزة في بريدك إلى عنوان الأسرة.</p>
       </form>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">
-    <img src="img/logo.png" alt="" style="width:64px;margin:0 auto 12px">
-    <q class="gold">«تعلّموا من أنسابكم ما تصلون به أرحامكم»</q>
-    <small>بوابة عائلة العجلان والعيد · <a href="../v7/index.html" style="color:var(--gold)">شجرة العائلة</a></small>
-  </div>
-</footer>
-
+<script src="common.js"></script>
 <script>
-// ===== المحتوى =====
-// الأقسام: عدّلها هنا. الأخبار والمناسبات مؤقتة إلى أن تصل البيانات.
-const IC={
-  vision:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
-  people:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/>',
-  tribe:'<path d="M3 20h18M5 20V9l7-5 7 5v11"/><path d="M10 20v-5h4v5"/>',
-  news:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
-  mag:'<path d="M4 4h11a3 3 0 013 3v13H7a3 3 0 01-3-3z"/><path d="M18 7h2v13"/><path d="M8 8h6M8 12h6"/>',
-  tree:'<path d="M12 21v-7M12 14l-4-4M12 14l4-4M12 10V6"/><circle cx="12" cy="5" r="2"/><circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/>',
-  fund:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 11h18M8 7V5a4 4 0 018 0v2"/>',
-  award:'<circle cx="12" cy="9" r="5"/><path d="M8.5 13.5L7 21l5-3 5 3-1.5-7.5"/>',
-  film:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/>',
-  sms:'<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/>',
-  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
-};
-const svg=(k,s=26)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
-const SECTIONS=[
-  {big:1,ic:'tree',t:'شجرة العائلة',d:'٣٣٩٤ فرداً في شجرة تفاعلية: ابحث عن اسمك، وامشِ في رحلة نسبك إلى الهذلي، واطبع شجرتك.',href:'../v7/index.html',go:'افتح الشجرة'},
-  {ic:'vision',t:'الرؤية والرسالة',d:'رؤية العائلة ورسالتها وأهدافها.',href:'#vision'},
-  {ic:'people',t:'عن الأهل',d:'تعريف بالأسرة وفروعها وأعلامها.',href:'#hudhayl'},
-  {ic:'tribe',t:'قبيلة هذيل',d:'الأصل والنسب إلى هذيل بن مدركة.',href:'#hudhayl'},
-  {ic:'news',t:'أخبار المناسبات',d:'الأفراح والمواليد والتهاني والتعازي.',href:'#news'},
-  {ic:'mag',t:'المجلات',d:'أعداد مجلة العائلة للتصفح والتحميل.',href:'#sections',soon:1},
-  {ic:'fund',t:'صندوق العائلة',d:'الصندوق التكافلي وطريقة المساهمة.',href:'#fund',soon:1},
-  {ic:'award',t:'جائزة التفوق العلمي',d:'تكريم المتفوقين من أبناء وبنات العائلة.',href:'#award',soon:1},
-  {ic:'film',t:'الفيلم الوثائقي',d:'حكاية العائلة بالصوت والصورة.',href:'#film',soon:1},
-  {ic:'sms',t:'اشتراكات جوال العائلة',d:'تصلك الأخبار برسالة على جوالك.',href:'#sms',soon:1},
-  {ic:'mail',t:'تواصل معنا',d:'أرسل خبراً أو تصحيحاً أو اقتراحاً.',href:'#contact'},
-];
-// أمثلة توضيحية فقط لشكل المنتدى — تُستبدل بالأخبار الحقيقية
-const POSTS=[
-  {c:'أفراح',t:'مثال: عنوان خبر زواج',d:'نص الخبر يظهر هنا: التهنئة، وموعد الحفل ومكانه.',who:'إدارة البوابة',when:'اليوم'},
-  {c:'تهاني',t:'مثال: تهنئة بتخرج أو إنجاز',d:'تهنئة بالتخرج أو الترقية أو التفوق، مع صورة إن وُجدت.',who:'إدارة البوابة',when:'أمس'},
-  {c:'مواليد',t:'مثال: إعلان مولود جديد',d:'اسم المولود ووالده، ويُضاف تلقائياً إلى شجرة العائلة.',who:'إدارة البوابة',when:'قبل ٣ أيام'},
-  {c:'إعلانات',t:'مثال: اجتماع العائلة السنوي',d:'تفاصيل الاجتماع والبرنامج ورابط الموقع على الخريطة.',who:'إدارة البوابة',when:'قبل أسبوع'},
-];
-const EVENTS=[];   // مثال: {d:'١٥',m:'رجب',t:'اجتماع العائلة السنوي',p:'...'}
-const TICKER=['أهلاً بكم في بوابة عائلة العجلان والعيد','شجرة العائلة التفاعلية متاحة الآن: ابحث عن اسمك','أرسل أخبارك ومناسباتك لتُنشر في البوابة','الأخبار والمناسبات تُضاف هنا أولاً بأول'];
+(async () => {
+  const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
+  buildChrome(site);
+  // شريط الأخبار
+  const T = posts.slice(0, 8).map(p => `<a href="post.html?id=${p.id}">${esc(p.t)}</a>`);
+  $('#ticker').innerHTML = [...T, ...T].map(t => `<span>${t}</span>`).join('');
+  // الخبر المميز + الشبكة بالتبويبات
+  const f = posts[0];
+  $('#feature').innerHTML = `<a class="feature rv" href="post.html?id=${f.id}"><div class="im" style="background-image:url('${esc(f.i)}')"></div>
+    <div class="bd"><span class="cat" style="align-self:flex-start">${esc(catName(f.c))}</span><time style="color:var(--gold);font-weight:700">${fmtDate(f.d)}</time><h3 class="gold">${esc(f.t)}</h3><p>${esc(f.x)}…</p><span class="btn ghost" style="align-self:flex-start">اقرأ الخبر</span></div></a>`;
+  const cats = ['', 'أخبار الاسرة', 'مناسبات الاسرة', 'دعوات الأسرة'];
+  let cur = '';
+  const draw = () => {
+    $('#tabs').innerHTML = cats.map(c => `<button data-c="${c}" class="${c === cur ? 'on' : ''}">${c ? catName(c) : 'الأحدث'}</button>`).join('');
+    $('#ngrid').innerHTML = posts.filter(p => p.id !== f.id && (!cur || p.c === cur)).slice(0, 6).map(newsCard).join('');
+    $('#allNews').href = 'news.html' + (cur ? '?c=' + encodeURIComponent(cur) : '');
+    reveal();
+  };
+  $('#tabs').addEventListener('click', e => {const b = e.target.closest('button'); if (b) {cur = b.dataset.c; draw();}});
+  draw();
+  $('#invites').innerHTML = posts.filter(p => p.c === 'دعوات الأسرة').slice(0, 5).map(p => `<a href="post.html?id=${p.id}"><span class="th" style="background-image:url('${esc(p.i)}')"></span><span><b>${esc(p.t)}</b><br><small>${fmtDate(p.d)}</small></span></a>`).join('');
+  $('#soc1').innerHTML = $('#soc2').innerHTML = socials(site);
+  // الرؤية والرسالة
+  $('#vis').textContent = site.vision; $('#mis').textContent = site.mission;
+  $('#goals').innerHTML = site.goals.map(g => `<li class="rv">${esc(g)}</li>`).join('');
+  // عن العائلة
+  $('#aboutIntro').textContent = site.about.intro; $('#mutarifa').textContent = site.about.mutarifa;
+  $('#fams').innerHTML = site.about.branches.map((b, i) => `<div class="fam rv ${i ? '' : 'main'}"><h4 class="gold">${esc(b.name)}</h4><p>${esc(b.text)}</p></div>`).join('');
+  const md = site.tree.downloads.find(d => d.t.includes('مطارفة')); if (md) $('#mutarifaDl').href = md.u;
+  // هذيل: الفقرات، ثم المزايا، ثم الأقوال
+  const H = site.hudhayl, quotes = H.filter(l => /^قال عن/.test(l)), facts = H.filter(l => /^أن(ها| منها| كلاً|هم| عثمان)/.test(l)), paras = H.filter(l => !quotes.includes(l) && !facts.includes(l));
+  $('#hud').innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join('') + (facts.length ? `<h3 class="gold ruqaa" style="font-size:30px;margin-top:10px">من مزايا قبيلة هذيل</h3><ul class="facts">${facts.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '') +
+    (quotes.length ? `<h3 class="gold ruqaa" style="font-size:30px;margin-top:22px">قالوا عن هذيل</h3><div class="quotes">${quotes.map(x => `<div>${esc(x)}</div>`).join('')}</div>` : '');
+  $('#hudMore').onclick = e => {const o = $('#hudFold').classList.toggle('open'); e.target.textContent = o ? 'إخفاء' : 'اقرأ المزيد';};
+  // الشجرة: ملفات التحميل
+  $('#treeDl').innerHTML = site.tree.downloads.map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener" style="color:var(--gold-l);font-weight:700;display:flex;gap:8px;align-items:center">${svg('dl', 18)} ${esc(d.t)}</a>`).join('');
+  // المجلات
+  $('#shelf').innerHTML = site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b class="gold">${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)}</span><br><em>${svg('dl', 15)} تحميل</em></div></a>`).join('');
+  // الفيلم: يتحمّل يوتيوب عند الضغط فقط
+  const yt = $('#yt'); yt.style.backgroundImage = `url(https://i.ytimg.com/vi/${site.film.youtube}/hqdefault.jpg)`; $('#ytCap').textContent = site.film.title;
+  yt.onclick = () => {yt.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${site.film.youtube}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="${esc(site.film.title)}"></iframe>`; yt.style.cursor = 'default';};
+  // الصندوق
+  $('#bank').textContent = site.fund.bank; $('#holder').textContent = site.fund.holder;
+  $('#ibans').innerHTML = site.fund.accounts.map(a => `<div style="margin-top:10px"><b style="font-size:15px">${esc(a.name)}</b><div class="iban"><span>${esc(a.iban)}</span><button data-copy="${esc(a.iban)}">نسخ</button></div></div>`).join('');
+  document.addEventListener('click', e => {const b = e.target.closest('[data-copy]'); if (b) navigator.clipboard.writeText(b.dataset.copy).then(() => {b.textContent = 'تم ✓'; setTimeout(() => b.textContent = 'نسخ', 1600);});});
+  $('#awardLink').href = site.award.url;
+  // الجوال
+  $('#smsIntro').textContent = site.sms.lines[0]; $('#smsPhone').textContent = site.sms.phone;
+  $('#smsBtn').href = `sms:${site.sms.phone}`;
+  $('#smsFull').innerHTML = site.sms.lines.slice(1).map(l => `<div>${esc(l)}</div>`).join('');
+  $('#smsMore').onclick = () => {const x = $('#smsFull'); x.hidden = !x.hidden;};
+  // التواصل
+  const c = site.contact;
+  $('#kv').innerHTML = [[IC.pin, esc(c.city)], [IC.phone, `<a href="tel:${c.phone}" dir="ltr">${c.phone}</a>`], [IC.mail, `<a href="mailto:${c.email}">${c.email}</a>`], [IC.box, `${esc(c.pobox)} · ${esc(c.zip)}`]]
+    .map(([i, t]) => `<div><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${i}</svg></i><span>${t}</span></div>`).join('');
+  $('#cform').onsubmit = e => {e.preventDefault(); const F = e.target; location.href = `mailto:${c.email}?subject=${encodeURIComponent(F.t.value + ' - ' + F.n.value)}&body=${encodeURIComponent(F.m.value + '\n\n' + F.n.value)}`;};
+  reveal();
+  // العدّادات
+  document.querySelectorAll('[data-count]').forEach(el => {const n = +el.dataset.count, t0 = performance.now(); const step = t => {const p = Math.min(1, (t - t0) / 1800), e = 1 - Math.pow(1 - p, 3); el.textContent = ar(n * e); if (p < 1) requestAnimationFrame(step);}; requestAnimationFrame(step);});
+})();
 
-const $=s=>document.querySelector(s);
-const ar=n=>Math.round(n).toLocaleString('ar-SA',{useGrouping:false});
-
-// الأقسام
-$('#grid').innerHTML=SECTIONS.map(s=>`<a class="tile rv ${s.big?'big':''}" href="${s.href}">
-  ${s.big?'<img class="mini-tree" src="img/tree-cut-sm.webp" alt="" loading="lazy">':''}
-  <div class="${s.big?'txt':''}" style="display:flex;flex-direction:column;gap:10px;flex:1">
-  <div class="ic">${svg(s.ic)}</div><h3 class="${s.big?'gold':''}">${s.t}</h3><p>${s.d}</p>
-  <div class="go"><span>${s.go||'ادخل'}</span>${s.soon?'<span class="soon">قريباً</span>':'<span>←</span>'}</div></div></a>`).join('');
-// درج الجوال
-$('#drawerLinks').innerHTML=[{ic:'tree',t:'الرئيسية',href:'#top'},...SECTIONS].map(s=>`<a href="${s.href}" data-close><i>${svg(s.ic,18)}</i>${s.t}</a>`).join('');
-const dr=$('#drawer');$('#burger').onclick=()=>dr.classList.add('open');dr.addEventListener('click',e=>{if(e.target.closest('[data-close]'))dr.classList.remove('open');});
-// الشريط
-$('#ticker').innerHTML=[...TICKER,...TICKER].map(t=>`<span>${t}</span>`).join('');
-// المنتدى
-function renderPosts(c){const L=POSTS.filter(p=>!c||p.c===c);
-  $('#posts').innerHTML=(L.length?L.map(p=>`<article class="post"><div class="av">${p.who[0]}</div><div>
-    <div class="meta"><span class="cat">${p.c}</span><span>${p.who}</span><span>· ${p.when}</span><span class="draft">مثال</span></div>
-    <h4>${p.t}</h4><p>${p.d}</p>
-    <div class="stats"><span>${svg('news',15)} تعليقات</span><span>♡ تهنئة</span></div></div></article>`).join(''):'<div class="empty">لا توجد أخبار في هذا التصنيف بعد</div>');}
-renderPosts('');
-$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));renderPosts(b.dataset.c);});
-$('#events').innerHTML=EVENTS.length?EVENTS.map(e=>`<div class="event"><div class="d"><b>${e.d}</b><small>${e.m}</small></div><div><b>${e.t}</b><div style="color:var(--muted);font-size:14px">${e.p}</div></div></div>`).join(''):'<div class="empty">تُضاف المناسبات القادمة هنا</div>';
-
-// شريط التنقل يصير صلب عند التمرير، وتمييز القسم الحالي
-const nav=$('#nav');addEventListener('scroll',()=>{nav.classList.toggle('solid',scrollY>40);const bg=$('#heroBg');if(scrollY<innerHeight)bg.style.transform=`translateY(${scrollY*.25}px) scale(${1+scrollY/innerHeight*.06})`;},{passive:true});
-// ظهور العناصر
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-// إضاءة البطاقات تتبع الفأرة
-document.addEventListener('pointermove',e=>{const t=e.target.closest&&e.target.closest('.tile');if(t){const r=t.getBoundingClientRect();t.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');}});
-// العدّادات
-setTimeout(()=>document.querySelectorAll('[data-count]').forEach(el=>{const n=+el.dataset.count,t0=performance.now();const step=t=>{const p=Math.min(1,(t-t0)/1800),e=1-Math.pow(1-p,3);el.textContent=ar(n*e);if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}),600);
+// خلفية الواجهة تتحرك ببطء مع التمرير
+addEventListener('scroll', () => {const bg = $('#heroBg'); if (scrollY < innerHeight) bg.style.transform = `translateY(${scrollY * .25}px) scale(${1 + scrollY / innerHeight * .06})`;}, {passive: true});
+document.addEventListener('pointermove', e => {const t = e.target.closest && e.target.closest('.tile'); if (t) {const r = t.getBoundingClientRect(); t.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');}});
 
 // ===== الأسماء تنطلق مثل الصواريخ إلى الهذلي =====
-(async()=>{
-  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cv=$('#rockets'),g=cv.getContext('2d'),img=$('#treeImg');
-  let D;try{D=await (await fetch('names.json')).json();}catch(e){return;}
-  const N=D.n,[bx,by]=D.base,tx=D.trunkX;
-  let W=0,H=0,dpr=1,R={x:0,y:0,w:0,h:0};
-  function size(){dpr=Math.min(2,devicePixelRatio||1);const r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;
-    const ir=img.getBoundingClientRect();R={x:ir.left-r.left,y:ir.top-r.top,w:ir.width,h:ir.height};}
-  size();addEventListener('resize',size);img.addEventListener('load',size);
-  const P=(nx,ny)=>[R.x+nx*R.w,R.y+ny*R.h];
-  const live=[];let last=0,flash=0;
-  const mobile=innerWidth<700;
-  const rate=mobile?2.6:5.5;   // صواريخ في الثانية
-  function spawn(t){const q=N[(Math.random()*N.length)|0];const [sx,sy]=P(q[0],q[1]);if(sy>R.y+R.h*.8)return;
-    live.push({sx,sy,name:q[2],f:q[3],t0:t,dur:1500+Math.random()*900,trail:[]});}
-  function bez(a,b,c,t){const u=1-t;return u*u*a+2*u*t*b+t*t*c;}
-  function frame(t){
+(async () => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cv = $('#rockets'), g = cv.getContext('2d'), img = $('#treeImg');
+  let D; try {D = await loadJSON('names.json');} catch (e) {return;}
+  const N = D.n, [bx, by] = D.base, tx = D.trunkX;
+  let W = 0, H = 0, dpr = 1, R = {x: 0, y: 0, w: 0, h: 0};
+  function size() {dpr = Math.min(2, devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr;
+    const ir = img.getBoundingClientRect(); R = {x: ir.left - r.left, y: ir.top - r.top, w: ir.width, h: ir.height};}
+  size(); addEventListener('resize', size); img.addEventListener('load', size);
+  const P = (nx, ny) => [R.x + nx * R.w, R.y + ny * R.h];
+  const live = []; let last = 0, flash = 0;
+  const mobile = innerWidth < 700, rate = mobile ? 2.6 : 5.5;
+  function spawn(t) {const q = N[(Math.random() * N.length) | 0]; const [sx, sy] = P(q[0], q[1]); if (sy > R.y + R.h * .8) return;
+    live.push({sx, sy, name: q[2], f: q[3], t0: t, dur: 1500 + Math.random() * 900, trail: []});}
+  const bez = (a, b, c, t) => {const u = 1 - t; return u * u * a + 2 * u * t * b + t * t * c;};
+  function frame(t) {
     requestAnimationFrame(frame);
-    if(document.hidden)return;
-    if(!RM&&t-last>1000/rate&&live.length<40){spawn(t);last=t;}
-    g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
-    const [ex,ey]=P(bx,by),[tX]=P(tx,0);
-    g.globalCompositeOperation='lighter';
-    for(let i=live.length-1;i>=0;i--){const r=live[i];let p=(t-r.t0)/r.dur;if(p>=1){live.splice(i,1);flash=Math.min(1,flash+.35);continue;}
-      const e=p<.15?p/.15*.15*.6:.09+(p-.15)/.85*.91;   // انطلاقة هادئة ثم تسارع
-      const ease=e*e*(1.6-.6*e);
-      const cx=tX+(r.sx-tX)*.25,cy=r.sy+(ey-r.sy)*.55;   // ينحني إلى الجذع ثم ينزل عليه
-      const x=bez(r.sx,cx,ex,ease),y=bez(r.sy,cy,ey,ease);
-      r.trail.push([x,y]);if(r.trail.length>18)r.trail.shift();
-      // الذيل الذهبي
-      for(let k=1;k<r.trail.length;k++){const a=k/r.trail.length;g.strokeStyle=`rgba(255,${200+30*a|0},${90+60*a|0},${a*.55})`;g.lineWidth=1+a*3.2;g.beginPath();g.moveTo(r.trail[k-1][0],r.trail[k-1][1]);g.lineTo(r.trail[k][0],r.trail[k][1]);g.stroke();}
-      // رأس الصاروخ
-      const gl=g.createRadialGradient(x,y,0,x,y,12);gl.addColorStop(0,'rgba(255,248,220,.95)');gl.addColorStop(1,'rgba(243,201,90,0)');g.fillStyle=gl;g.beginPath();g.arc(x,y,12,0,7);g.fill();
-      // الاسم
-      const o=p<.12?p/.12:p>.85?(1-p)/.15:1;
-      g.globalCompositeOperation='source-over';
-      g.font=`800 ${mobile?11:13}px Tajawal`;g.textAlign='center';g.direction='rtl';
-      g.lineWidth=3;g.strokeStyle=`rgba(20,12,4,${.8*o})`;g.strokeText(r.name,x,y-12);
-      g.fillStyle=r.f?`rgba(255,214,232,${o})`:`rgba(220,255,210,${o})`;g.fillText(r.name,x,y-12);
-      g.globalCompositeOperation='lighter';
+    if (document.hidden || scrollY > innerHeight) return;
+    if (!RM && t - last > 1000 / rate && live.length < 40) {spawn(t); last = t;}
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const [ex, ey] = P(bx, by), [tX] = P(tx, 0);
+    g.globalCompositeOperation = 'lighter';
+    for (let i = live.length - 1; i >= 0; i--) {const r = live[i]; const p = (t - r.t0) / r.dur; if (p >= 1) {live.splice(i, 1); flash = Math.min(1, flash + .35); continue;}
+      const e = p < .15 ? p / .15 * .15 * .6 : .09 + (p - .15) / .85 * .91, ease = e * e * (1.6 - .6 * e);
+      const cx = tX + (r.sx - tX) * .25, cy = r.sy + (ey - r.sy) * .55;
+      const x = bez(r.sx, cx, ex, ease), y = bez(r.sy, cy, ey, ease);
+      r.trail.push([x, y]); if (r.trail.length > 18) r.trail.shift();
+      for (let k = 1; k < r.trail.length; k++) {const a = k / r.trail.length; g.strokeStyle = `rgba(255,${200 + 30 * a | 0},${90 + 60 * a | 0},${a * .55})`; g.lineWidth = 1 + a * 3.2; g.beginPath(); g.moveTo(r.trail[k - 1][0], r.trail[k - 1][1]); g.lineTo(r.trail[k][0], r.trail[k][1]); g.stroke();}
+      const gl = g.createRadialGradient(x, y, 0, x, y, 12); gl.addColorStop(0, 'rgba(255,248,220,.95)'); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(x, y, 12, 0, 7); g.fill();
+      const o = p < .12 ? p / .12 : p > .85 ? (1 - p) / .15 : 1;
+      g.globalCompositeOperation = 'source-over';
+      g.font = `800 ${mobile ? 11 : 13}px Tajawal`; g.textAlign = 'center'; g.direction = 'rtl';
+      g.lineWidth = 3; g.strokeStyle = `rgba(20,12,4,${.8 * o})`; g.strokeText(r.name, x, y - 12);
+      g.fillStyle = r.f ? `rgba(255,214,232,${o})` : `rgba(220,255,210,${o})`; g.fillText(r.name, x, y - 12);
+      g.globalCompositeOperation = 'lighter';
     }
-    // وهج الهذلي عند وصول الأسماء
-    flash*=.94;
-    if(flash>.02){const rr=60+90*flash;const gl=g.createRadialGradient(ex,ey,0,ex,ey,rr);gl.addColorStop(0,`rgba(255,240,200,${.55*flash})`);gl.addColorStop(1,'rgba(243,201,90,0)');g.fillStyle=gl;g.beginPath();g.arc(ex,ey,rr,0,7);g.fill();}
-    g.globalCompositeOperation='source-over';
+    flash *= .94;
+    if (flash > .02) {const rr = 60 + 90 * flash; const gl = g.createRadialGradient(ex, ey, 0, ex, ey, rr); gl.addColorStop(0, `rgba(255,240,200,${.55 * flash})`); gl.addColorStop(1, 'rgba(243,201,90,0)'); g.fillStyle = gl; g.beginPath(); g.arc(ex, ey, rr, 0, 7); g.fill();}
+    g.globalCompositeOperation = 'source-over';
   }
   requestAnimationFrame(frame);
 })();
