@@ -137,3 +137,29 @@ body.home .nav::before{content:"";position:absolute;inset:0;pointer-events:none;
 body.home .nav.solid{background:rgba(251,250,247,.86);border-bottom-color:rgba(192,133,55,.35)}
 body.home .menu>a,body.home .dd-b{color:#141030;text-shadow:0 1px 0 rgba(255,255,255,.55)}
 body.home .tree-btn{background:rgba(50,39,129,.88);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px rgba(20,16,48,.25)}
+
+/* ===== نافذة الديرة: المشهد ظاهر كامل بلا غطاء، والشجرة في الساحة بين الجبل والبرج ===== */
+.vista{position:relative;margin-top:28px;border-radius:26px;overflow:hidden;aspect-ratio:2.25/1;box-shadow:0 30px 60px -20px rgba(20,16,48,.55),0 0 0 1px rgba(255,255,255,.35)}
+.vista .vbg{position:absolute;inset:0;background:url(img/bg-scene.jpg) center 18%/100% auto no-repeat}
+.vista .vbg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,16,48,.45) 0%,transparent 26%)}
+/* الشجرة: قاعدتها على أرض الساحة (١١٪ من الأسفل) وبين الجبل (٣٦٪) والبرج (٧٧٪) */
+.vista .vtree{position:absolute;left:57%;bottom:9.5%;height:64%;transform:translateX(-50%);aspect-ratio:1790/2342}
+.vista .vtree img{width:100%;height:100%;filter:drop-shadow(0 12px 16px rgba(0,0,0,.4));transition:filter .5s}
+.vista .vtree img.pulse{filter:drop-shadow(0 12px 16px rgba(0,0,0,.4)) drop-shadow(0 4px 14px rgba(255,214,140,.9))}
+.vista canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.vcap{position:absolute;right:22px;bottom:18px;display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:14px;background:rgba(20,16,48,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff}
+.vcap b{font-size:16px;font-weight:800}
+.vcap span{font-size:13px;color:#F6E2B6;min-width:150px;transition:opacity .2s}
+.vcap a{font-size:14px;font-weight:800;color:#E3B66B;white-space:nowrap}
+.hgrid.one{grid-template-columns:1fr;grid-template-areas:"news";padding-top:28px}
+.hgrid.one .log{min-height:0}
+.hgrid.one .log-b{grid-template-columns:1fr 340px}
+@media (max-width:1023px){.hgrid.one .log-b{grid-template-columns:1fr}}
+@media (max-width:639px){
+  .vista{aspect-ratio:4/5;margin-top:16px;border-radius:20px}
+  .vista .vbg{background-size:auto 100%;background-position:58% 0}
+  .vista .vtree{left:52%;bottom:13%;height:52%}
+  .vcap{left:12px;right:12px;bottom:12px;justify-content:space-between;gap:8px;padding:8px 12px}.vcap span{display:none}
+}
+/* الخلفية الثابتة خلف الرئيسية تصير جو مغبش، والمعالم الواضحة في نافذة الديرة فقط */
+body.home:not(.mags) #scene{filter:blur(16px) brightness(.72) saturate(1.15);transform:scale(1.08)}
