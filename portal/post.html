@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611021830">
-<link rel="stylesheet" href="post.css?v=202611021830">
+<link rel="stylesheet" href="post.css?v=202611022230">
 </head>
 <body class="scened ps">
 <div id="scene" aria-hidden="true"></div>
@@ -126,7 +126,9 @@
   $('#title').textContent = p.t;
   const shareUrl = location.origin + location.pathname + '?id=' + id;
   const wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
-  $('#acts').innerHTML = `${gal.length ? `<a class="ps-btn gold" href="#gallery">${I(ICO.grid, 18)}شاهد الصور (${ar(gal.length)})</a><button class="ps-btn" id="slides">${I(ICO.play, 16)}عرض الشرائح</button>` : ''}
+  const magOK = all.length >= 2, magUrl = `album.html?id=${id}`;
+  const MAGI = '<path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/>';
+  $('#acts').innerHTML = `${magOK ? `<a class="ps-btn ps-magbtn" href="${magUrl}">${I(MAGI, 19)}تصفّحها كمجلة</a>` : ''}${gal.length ? `<a class="ps-btn gold" href="#gallery">${I(ICO.grid, 18)}شاهد الصور (${ar(gal.length)})</a><button class="ps-btn" id="slides">${I(ICO.play, 16)}عرض الشرائح</button>` : ''}
     <button class="ps-btn" data-share>${I(ICO.share, 18)}مشاركة</button>`;
   if (cover) {
     $('#cover').innerHTML = `<button data-k="0" aria-label="عرض الصورة بالحجم الكامل"><img alt="${esc(p.t)}" fetchpriority="high"><span class="zoom">${I(ICO.zoom, 20)}</span></button>`;
@@ -193,8 +195,13 @@
     const G = $('#gallery'); G.hidden = false;
     G.innerHTML = `<div class="ps-ghead"><div><small>ألبوم المناسبة</small><h2>صور من المناسبة<em>${ar(gal.length)} صورة</em></h2></div>
       <button class="ps-btn" id="slides2">${I(ICO.play, 16)}عرض الشرائح</button></div>
+      ${magOK ? `<a class="ps-magcard" href="${magUrl}" aria-label="تصفّح التغطية كمجلة">
+        <span class="mc-cv"><img id="mcImg" alt=""><i class="mc-sh"></i><span class="mc-mast"><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></span><span class="mc-t"><small>تغطية خاصة</small>${esc(p.t.replace(/^تغطية\s+(حفل\s+)?/, ''))}</span></span>
+        <span class="mc-tx"><small>جديد · مجلة التغطية</small><b>تصفّح الصور كمجلة مصوّرة</b><span>غلاف خاص، وافتتاحية، و${ar(all.length)} صورة مرتبة في صفحات تتقلّب كالمجلة المطبوعة.</span>
+          <em>افتح المجلة ${I(ICO.l, 16)}</em></span></a>` : ''}
       <div class="ps-jg${gal.length <= 3 ? ' few' : ''}" id="jg"></div><div class="ps-gmore" id="gmore"></div>`;
     const jg = $('#jg'), gm = $('#gmore');
+    if ($('#mcImg')) getThumb(/^phonto/i.test(key(all[0])) && all.length > 1 ? 1 : 0).then(r => {if (r) $('#mcImg').src = r.src;});
     let busy = false;
     const more = async n => {
       if (busy || shown >= gal.length) return; busy = true;
