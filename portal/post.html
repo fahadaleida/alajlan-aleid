@@ -8,8 +8,8 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021340">
-<link rel="stylesheet" href="home.css?v=202611021340">
+<link rel="stylesheet" href="style.css?v=202611021410">
+<link rel="stylesheet" href="home.css?v=202611021410">
 </head>
 <body class="scened">
 <div id="scene" aria-hidden="true"></div>
@@ -26,8 +26,8 @@
     <div class="article"><div class="nav-posts" id="np"></div></div>
   </div>
 </section>
-<script src="common.js?v=202611021340"></script>
-<script src="rockets.js?v=202611021340"></script>
+<script src="common.js?v=202611021410"></script>
+<script src="rockets.js?v=202611021410"></script>
 <script>
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
@@ -43,16 +43,46 @@
   $('#title').textContent = p.t;
   $('#crumbCat').textContent = catName(p.c);
   $('#meta').innerHTML = `<span class="cat" style="background:var(--gold-soft)">${esc(catName(p.c))}</span> &nbsp; ${fmtDate(p.d)}`;
-  // صورة الخبر إذا ما كانت أول صورة داخل النص
-  const firstImg = (f.h.match(/<img[^>]+src="([^"]+)"/) || [])[1] || '';
-  const same = firstImg && f.i && firstImg.replace(/-\d+x\d+(?=\.\w+$)/, '').split('/').pop().split('.')[0] === f.i.replace(/-\d+x\d+(?=\.\w+$)/, '').split('/').pop().split('.')[0];
+  // ===== التغطية: صورة رئيسية، نص في بطاقة، وكل صور المناسبة في معرض مرتب مع عارض كامل الشاشة =====
   const shareUrl = location.href, wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
-  $('#art').innerHTML = `${f.i && !same ? `<div class="hero-im"><img src="${esc(f.i)}" alt=""></div>` : ''}
-    <div class="content">${f.h}</div>
+  const box = document.createElement('div'); box.innerHTML = f.h;
+  const base = u => (u || '').split('?')[0].replace(/-\d+x\d+(?=\.\w+$)/, '').replace(/-scaled(?=\.\w+$)/, '').split('/').pop();
+  const pics = [], seen = new Set();
+  box.querySelectorAll('img').forEach(im => {
+    const a = im.closest('a'), big = a && /\.(jpe?g|png|webp)$/i.test(a.href) ? a.href : im.getAttribute('src');
+    const k = base(big); if (!seen.has(k)) {seen.add(k); pics.push(big);}
+    (a || im).remove();
+  });
+  // ننظف الفقرات اللي صارت فاضية بعد نقل الصور
+  box.querySelectorAll('p').forEach(el => {if (/^\s*صور من المناسبة\s*:?\s*$/.test(el.textContent)) el.remove();});
+  box.querySelectorAll('p,figure,div').forEach(el => {if (!el.textContent.trim() && !el.querySelector('iframe,video')) el.remove();});
+  let hero = f.i; if (!hero || !seen.has(base(hero))) {if (hero) pics.unshift(hero);} hero = hero || pics[0];
+  const gal = pics.filter(u => base(u) !== base(hero));
+  const [y, m, d] = p.d.split('-').map(Number);
+  $('#art').innerHTML = `
+    ${hero ? `<figure class="cv-hero" data-g="-1"><img src="${esc(hero)}" alt=""><figcaption><span class="cat">${esc(catName(p.c))}</span><time>${ar(d)} ${MONTHS[m - 1]} ${ar(y)}</time></figcaption></figure>` : ''}
+    <div class="content cv-text">${box.innerHTML}</div>
+    ${gal.length ? `<section class="cv-gal"><div class="cv-gh"><h2>صور من المناسبة</h2><span>${ar(gal.length)} صورة</span></div>
+      <div class="cv-grid">${gal.map((u, k) => `<button class="cv-ph${k >= 18 ? ' more' : ''}" data-g="${k}" aria-label="عرض الصورة ${k + 1}"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')}</div>
+      ${gal.length > 18 ? `<div class="more"><button class="btn navy" id="allPh">عرض كل الصور (${ar(gal.length)})</button></div>` : ''}</section>` : ''}
     <div class="share"><a class="btn ghost" href="${wa}" target="_blank" rel="noopener">مشاركة في واتساب</a><button class="btn ghost" id="copy">نسخ الرابط</button></div>`;
-  $('#art').querySelectorAll('img').forEach(im => {im.loading = 'lazy'; im.removeAttribute('width'); im.removeAttribute('height');});
+  $('#art').querySelectorAll('.cv-text img').forEach(im => {im.loading = 'lazy'; im.removeAttribute('width'); im.removeAttribute('height');});
   $('#art').querySelectorAll('a[href^="http"]').forEach(a => {a.target = '_blank'; a.rel = 'noopener';});
+  const ap = $('#allPh'); if (ap) ap.onclick = () => {$('.cv-grid').classList.add('all'); ap.remove();};
   $('#copy').onclick = e => {navigator.clipboard.writeText(shareUrl).then(() => e.target.textContent = 'تم النسخ ✓');};
+  // العارض
+  const all = hero ? [hero, ...gal] : gal;
+  document.body.insertAdjacentHTML('beforeend', `<div class="lb" id="lb" hidden><button class="lb-x" aria-label="إغلاق">✕</button><button class="lb-p" aria-label="السابق">›</button><img id="lbI" alt=""><button class="lb-n" aria-label="التالي">‹</button><span class="lb-c" id="lbC"></span></div>`);
+  let li = 0; const lb = $('#lb');
+  const show = k => {li = (k + all.length) % all.length; $('#lbI').src = all[li]; $('#lbC').textContent = `${ar(li + 1)} / ${ar(all.length)}`;};
+  const open = k => {show(k); lb.hidden = false; document.body.style.overflow = 'hidden';};
+  const close = () => {lb.hidden = true; document.body.style.overflow = '';};
+  $('#art').addEventListener('click', e => {const g = e.target.closest('[data-g]'); if (g) open(+g.dataset.g + (hero ? 1 : 0));});
+  lb.querySelector('.lb-x').onclick = close; lb.querySelector('.lb-n').onclick = () => show(li + 1); lb.querySelector('.lb-p').onclick = () => show(li - 1);
+  lb.addEventListener('click', e => {if (e.target === lb) close();});
+  addEventListener('keydown', e => {if (lb.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') show(li + 1); if (e.key === 'ArrowRight') show(li - 1);});
+  let sx = null; lb.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive: true});
+  lb.addEventListener('touchend', e => {if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) show(li + (dx < 0 ? -1 : 1)); sx = null;});
   const nx = posts[i - 1], pv = posts[i + 1];
   $('#np').innerHTML = `${pv ? `<a href="post.html?id=${pv.id}"><small>› الخبر السابق</small><div>${esc(pv.t)}</div></a>` : '<span></span>'}
     ${nx ? `<a href="post.html?id=${nx.id}" style="text-align:left"><small>الخبر التالي ‹</small><div>${esc(nx.t)}</div></a>` : ''}`;
