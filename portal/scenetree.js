@@ -3,7 +3,7 @@
 (() => {
   const scene = document.getElementById('scene'); if (!scene) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const V = '202611031610';
+  const V = '202611031645';
   const TK = .72;                               // تصغير الشجرة ليبان الجبل وراها
   // صورة الشجرة بإحداثيات المصدر: العرض، الارتفاع، ارتفاع الملصق الأصلي (لـ names.json)، قاعدة الجذع وخط الأرض
   const SRC = {w: 1790, h: 2400, h0: 2342, bx: 896.6, by: 2318};
@@ -49,7 +49,7 @@
     if (RM) drawStatic();
   }
   // اسم i → إحداثيات اللوحة (مع زاوية تمايل حول القاعدة)
-  const P = (i, a = 0) => {const q = i < 0 ? BASE : N[i]; let x = G.il + q[0] * SRC.w * G.ts, y = G.it + q[1] * SRC.h0 * G.ts;
+  const P = (i, a = 0, u, v) => {const q = i === -2 ? [u, v] : i < 0 ? BASE : N[i]; let x = G.il + q[0] * SRC.w * G.ts, y = G.it + q[1] * SRC.h0 * G.ts;
     if (a) {const dx = x - G.X, dy = y - G.Y, c = Math.cos(a), s = Math.sin(a); x = G.X + dx * c - dy * s; y = G.Y + dx * s + dy * c;}
     return [x - G.cl, y - G.top];};
 
@@ -84,44 +84,60 @@
   }
 
   // ===== الحركة: أسماء مضيئة تنطلق مثل الصواريخ من السماء وتصب في «الهذلي» =====
-  const act = [], fx = []; let clock = 0, prev = 0, acc = 0, raf = 0, heat = 0;
+  const act = [], fx = [], ups = [];
+  const PL = [[.5, .955], [.5, .935], [.5, .915], [.5, .893], [.5, .872], [.5, .85], [.474, .8323], [.5246, .8324], [.5637, .8339], [.45, .8087]]; let clock = 0, prev = 0, acc = 0, raf = 0, heat = 0;
   const T = () => P(-1);   // نقطة «الهذلي» أسفل الجذع
+  // ورقة الاسم نفسها تنفصل من مكانها في التاج وتتهادى نازلة حتى «الهذلي»
   function spawn() {
-    const [tx, ty] = T(), vw = G.cw, side = Math.random();
-    // من أعلى الشاشة أو من الجانبين في نصفها العلوي
-    let sx, sy;
-    if (side < .6) {sx = Math.random() * vw; sy = -20;} else {sx = side < .8 ? -20 : vw + 20; sy = Math.random() * G.Y * .55;}
-    const dist = Math.hypot(tx - sx, ty - sy), bend = (Math.random() - .5) * dist * .45;
-    const nx = -(ty - sy) / dist, ny = (tx - sx) / dist;
-    act.push({i: order[oi++ % order.length], sx, sy, cx: (sx + tx) / 2 + nx * bend, cy: (sy + ty) / 2 + ny * bend - dist * .12,
-      t0: clock, dur: 1000 + dist * 1.9 + Math.random() * 350, trail: []});
+    for (let t = 0; t < 30; t++) {
+      const i = order[oi++ % order.length], [sx, sy] = P(i);
+      if (sx < 0 || sx > G.cw) continue;
+      act.push({i, sx, sy, t0: clock, dur: 2600 + Math.random() * 1200, w: .8 + Math.random() * .6, ph: Math.random() * 6.28, amp: G.fs * (1.2 + Math.random() * 1.6), sp: (Math.random() - .5) * 2});
+      return;
+    }
+  }
+  const leafPos = (o, p, tx, ty) => {
+    const gy = p * p * (3 - 2 * p), gx = 1 - Math.pow(1 - p, 1.6);   // ينزل بتسارع ويتجه للجذع
+    const sw = Math.sin(p * 9 * o.w + o.ph) * o.amp * (1 - p);
+    return [o.sx + (tx - o.sx) * gx + sw, o.sy + (ty - o.sy) * gy];
+  };
+  function leaf(x, y, r, rot, fem, al) {
+    g.save(); g.translate(x, y); g.rotate(rot); g.globalAlpha = al;
+    g.shadowColor = 'rgba(255,190,90,.9)'; g.shadowBlur = r * 1.6;
+    g.fillStyle = fem ? '#E9A8C6' : '#5FA866'; g.beginPath(); g.ellipse(0, 0, r * 1.25, r * .8, 0, 0, 6.283); g.fill();
+    g.shadowBlur = 0; g.strokeStyle = 'rgba(255,240,210,.85)'; g.lineWidth = .8; g.stroke();
+    g.beginPath(); g.moveTo(-r * 1.1, 0); g.lineTo(r * 1.1, 0); g.strokeStyle = 'rgba(60,30,10,.35)'; g.stroke();
+    g.restore(); g.globalAlpha = 1;
   }
   const qb = (o, t, tx, ty) => {const u = 1 - t; return [u * u * o.sx + 2 * u * t * o.cx + t * t * tx, u * u * o.sy + 2 * u * t * o.cy + t * t * ty];};
   function frame(now) {
     raf = requestAnimationFrame(frame);
     const dt = prev ? Math.min(50, now - prev) : 16; prev = now; clock += dt;
     if (!G || !N.length) return;
-    const mob = mq.matches, rate = mob ? 2.4 : 4.5, maxN = mob ? 12 : 24;
+    const mob = mq.matches, rate = mob ? 1.3 : 2.2, maxN = mob ? 7 : 14;
     acc += dt / 1000 * rate; while (acc >= 1) {acc--; if (act.length < maxN) spawn();}
     const a = (Math.sin(clock * .00083) * .6 + Math.sin(clock * .0021 + 1.3) * .25 + Math.sin(clock * .0047) * .08) * .0016;
     tr.style.transform = `rotate(${a}rad)`;
-    heat = Math.max(0, heat - dt * .0009);
-    gl.style.opacity = (.55 + .45 * Math.min(1, heat) + .08 * Math.sin(clock * .002)).toFixed(3);
+    heat = Math.max(0, heat - dt * .0007);
+    gl.style.opacity = Math.min(1, .7 + .3 * Math.min(1, heat) + .1 * Math.sin(clock * .002)).toFixed(3);
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, G.cw, G.ch);
     const [tx, ty] = T();
-    glowAt(tx, ty, .5 + .5 * Math.min(1, heat));
-    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha = .5; glowAt(tx, ty - G.fs * .2, .3 + .3 * Math.min(1, heat)); g.globalAlpha = 1;
+    // ألواح الجذع (المطرفي، عيد، محمد، سليمان، فهد، علي) والفروع الأولى مضيئة، ونبضة ضوء تصعد مع كل ورقة تصل
+    for (const [u, v] of PL) {const [px, py] = P(-2, 0, u, v); let b = .2 + .2 * Math.min(1, heat);
+      for (const q of ups) {const h = (clock - q) / 900, yy = ty + (P(-2, 0, .5, .80)[1] - ty) * h; if (h <= 1) b += Math.max(0, 1 - Math.abs(py - yy) / (G.fs * 1.6)) * (1 - h * .4);}
+      glowAt(px, py, Math.min(.95, b));}
+    while (ups.length && clock - ups[0] > 900) ups.shift();
     for (let k = act.length - 1; k >= 0; k--) {
-      const o = act[k], p = Math.min(1, (clock - o.t0) / o.dur), e = p * p * (3 - 2 * p), [x, y] = qb(o, e, tx, ty);
-      o.trail.push([x, y]); if (o.trail.length > 18) o.trail.shift();
-      for (let j = 1; j < o.trail.length; j++) {   // ذيل ذهبي يتلاشى
-        const f = j / o.trail.length; g.strokeStyle = `rgba(255,${190 + 50 * f | 0},${110 + 90 * f | 0},${f * .75})`; g.lineWidth = .6 + f * 2.4;
-        g.beginPath(); g.moveTo(o.trail[j - 1][0], o.trail[j - 1][1]); g.lineTo(o.trail[j][0], o.trail[j][1]); g.stroke();
-      }
-      glowAt(x, y, .9);
-      if (p >= 1) {act.splice(k, 1); heat = Math.min(1.6, heat + .35);
-        fx.push({t0: clock}); for (let s = 0; s < 6; s++) {const an = -Math.PI * Math.random(), sp = .05 + Math.random() * .12; fx.push({t0: clock, sp: [Math.cos(an) * sp, Math.sin(an) * sp]});}}
+      const o = act[k], p = Math.min(1, (clock - o.t0) / o.dur), [x, y] = leafPos(o, p, tx, ty);
+      const r = G.fs * .42 * (1 - p * .35), rot = Math.sin(p * 9 * o.w + o.ph) * .9 + o.sp * p;
+      if (p < .12) glowAt(o.sx, o.sy, 1 - p / .12);   // وميض مكان الورقة لحظة انفصالها
+      leaf(x, y, r, rot, N[o.i][3], p > .9 ? (1 - p) / .1 : 1);
+      label(x, y - G.fs * .9, N[o.i][2], p < .1 ? p * 10 : p > .88 ? (1 - p) / .12 : 1, .7);
+      if (p >= 1) {act.splice(k, 1); heat = Math.min(1.6, heat + .45); ups.push(clock);
+        fx.push({t0: clock}); for (let s = 0; s < 5; s++) {const an = -Math.PI * Math.random(), sp = .04 + Math.random() * .08; fx.push({t0: clock, sp: [Math.cos(an) * sp, Math.sin(an) * sp]});}}
     }
+    g.globalCompositeOperation = 'lighter';
     for (let k = fx.length - 1; k >= 0; k--) {   // حلقة وشرر عند الوصول
       const f = fx[k], e = clock - f.t0;
       if (f.sp) {if (e > 700) {fx.splice(k, 1); continue;} glowAt(tx + f.sp[0] * e, ty + f.sp[1] * e + e * e * .00012, .5 * (1 - e / 700));}
@@ -129,8 +145,6 @@
         g.beginPath(); g.arc(tx, ty, G.fs * (.6 + 3 * e / 900), 0, 6.283); g.stroke(); g.globalAlpha = 1;}
     }
     g.globalCompositeOperation = 'source-over';
-    for (const o of act) {const p = Math.min(1, (clock - o.t0) / o.dur), e = p * p * (3 - 2 * p), [x, y] = qb(o, e, tx, ty);
-      label(x, y - G.fs * .7, N[o.i][2], p < .85 ? Math.min(1, p * 6) : (1 - p) / .15, .8);}
   }
   const run = () => {if (!raf && !RM && !document.hidden) {prev = 0; raf = requestAnimationFrame(frame);}};
   const stop = () => {cancelAnimationFrame(raf); raf = 0;};
