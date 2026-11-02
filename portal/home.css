@@ -296,8 +296,8 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
 /* ===== الشجرة بعيدة ورا المرقب، والسجل لوحة كبيرة شبه مربعة (سطح المكتب) ===== */
 .towerfg{display:none}
 @media (min-width:1024px){
-  body.far{--S:max(calc(100vw / 2560),calc(100vh / 1441));--fth:calc(470 * var(--S));--ftw:calc(var(--fth) * 1790 / 2342);
-    --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 2085 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
+  body.far{--S:max(calc(100vw / 2560),calc(100vh / 1441));--fth:calc(660 * var(--S));--ftw:calc(var(--fth) * 1790 / 2342);
+    --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 2070 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
     --fhl:calc((100vw - min(1280px, 100vw - 32px)) / 2)}
   /* المرقب مقصوص فوق الشجرة بنفس حساب الخلفية بالضبط */
   body.far .towerfg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;background:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
