@@ -134,3 +134,18 @@ function withTree(el) {
   </aside>`);
   if (typeof startRockets === 'function') startRockets();
 }
+
+// صورة الخبر تعبّي إطارها بالضبط: لو الصورة الأصلية داخل إطار أبيض (data/crops.json) نكبّر الجزء الحقيقي منها ليغطي الإطار
+let CROPS = null;
+const loadCrops = () => CROPS || (CROPS = fetch('data/crops.json?v=1').then(r => r.json()).catch(() => ({})));
+function fillFrame(im, id, bias = .22) {
+  const f = im.parentElement, W = f.clientWidth, H = f.clientHeight, nw = im.naturalWidth, nh = im.naturalHeight;
+  if (!W || !H || !nw) {im.dataset.fill = id || ''; return;}
+  delete im.dataset.fill;
+  loadCrops().then(C => {const c = C[id] || [0, 0, 1, 1], cw = (c[2] - c[0]) * nw, ch = (c[3] - c[1]) * nh;
+    const s = Math.max(W / cw, H / ch), dw = nw * s, dh = nh * s;
+    let l = W / 2 - (c[0] + c[2]) / 2 * dw, t = -c[1] * dh - (ch * s - H) * bias;
+    l = Math.min(-c[0] * dw, Math.max(W - c[2] * dw, l)); t = Math.min(-c[1] * dh, Math.max(H - c[3] * dh, t));
+    Object.assign(im.style, {position: 'absolute', inset: 'auto', objectFit: 'fill', transform: 'none', maxWidth: 'none',
+      width: dw / W * 100 + '%', height: dh / H * 100 + '%', left: l / W * 100 + '%', top: t / H * 100 + '%'});});
+}

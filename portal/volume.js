@@ -119,7 +119,7 @@
   const loadPage = i => {if (i < 0 || i >= N) return;
     els[i].querySelectorAll('img[data-src]:not([src])').forEach(im => {
       im.onload = () => {const f = im.closest('.vph'), a = im.naturalWidth / im.naturalHeight;
-        if (f && (f.dataset.poster || a < .9 || a > 1.65)) f.classList.add('fit'); im.classList.add('in');};
+        if (f) fillFrame(im, im.closest('[href]')?.getAttribute('href').match(/id=(\d+)/)?.[1]); im.classList.add('in');};
       im.src = im.dataset.src;});};
   const near = (i, k = 3) => {for (let j = i - 1; j <= i + k; j++) loadPage(j); for (let j = i - k; j < i - 1; j++) loadPage(j);};
 
@@ -176,8 +176,24 @@
     history.replaceState(null, '', location.pathname + location.search + (a === 1 ? '' : `#p=${a}`));
     place();
   };
-  const go = p => {p = Math.min(N, Math.max(1, p)); if (visible().includes(p)) return; near(IX(p), 2); pf.flip(IX(p));};
-  const next = () => pf.flipPrev(), prev = () => pf.flipNext();
+  const go = p => {p = Math.min(N, Math.max(1, p)); if (visible().includes(p)) return; near(IX(p), 2); (pf.getOrientation() === 'portrait' ? pf.turnToPage(IX(p)) : pf.flip(IX(p)));};
+  // الجوال (صفحة وحدة): مكتبة التقليب ما تقلّب للخلف/للأمام بالحركة في الوضع العمودي، فننتقل بأنفسنا مع انزلاق ناعم
+  const turn = d => {   // d = -1 التالي (يمين←يسار)، +1 السابق
+    if (pf.getOrientation() !== 'portrait') return d < 0 ? pf.flipPrev() : pf.flipNext();
+    const i = pf.getCurrentPageIndex() + d; if (i < 0 || i >= pf.getPageCount() || turn.busy) return;
+    turn.busy = 1; const s = d < 0 ? 1 : -1;
+    bookEl.animate([{opacity: 1, transform: 'none'}, {opacity: 0, transform: `translateX(${s * 36}px)`}], {duration: 150, easing: 'ease-in'}).onfinish = () => {
+      pf.turnToPage(i);
+      bookEl.animate([{opacity: 0, transform: `translateX(${-s * 36}px)`}, {opacity: 1, transform: 'none'}], {duration: 230, easing: 'ease-out'}).onfinish = () => {turn.busy = 0;};
+    };
+  };
+  const next = () => turn(-1), prev = () => turn(1);
+  {let sw = null;   // السحب على الجوال
+    bookEl.addEventListener('pointerdown', e => {sw = pf.getOrientation() === 'portrait' ? {x: e.clientX, y: e.clientY} : null;}, true);
+    bookEl.addEventListener('pointerup', e => {if (!sw) return; const dx = e.clientX - sw.x, dy = e.clientY - sw.y; sw = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) dx > 0 ? next() : prev();}, true);}
+  const refill = () => setTimeout(() => bookEl.querySelectorAll('img[data-fill]').forEach(im => im.complete && fillFrame(im, im.dataset.fill)), 60);
+  pf.on('flip', refill); addEventListener('resize', refill);
   pf.on('flip', () => {const was = curP; ui(); if (curP !== was && document.body.classList.contains('ready')) $('#hint').classList.add('gone');});
   pf.on('changeOrientation', () => ui());
   pf.on('changeState', e => {if (e.data === 'flipping' || e.data === 'user_fold') {near(pf.getCurrentPageIndex(), 4);
@@ -208,6 +224,11 @@
     if (!down) return; const d = Math.hypot(e.clientX - down.x, e.clientY - down.y), dt = Date.now() - down.t; down = null;
     if (d > 8 || dt > 700 || pf.getState() !== 'read') return;
     const t = e.target;
+    // الحواف تقلّب (يسار = التالي، يمين = السابق)، والغلاف بأي مكان يفتح المجلد؛ الوسط يفتح الخبر
+    const r = bookEl.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width;
+    const later = f => setTimeout(f, 30);
+    if (curP === 1) return later(next);
+    if (fx < .22) return later(next); if (fx > .78) return later(prev);
     const g = t.closest('[data-go]'); if (g) return go(+g.dataset.go);
     const m = t.closest('[data-album]'); if (m) {location.href = `album.html?id=${m.dataset.album}`; return;}
     const c = t.closest('[data-cat]'); if (c) return nav({c: c.dataset.cat});

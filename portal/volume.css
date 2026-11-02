@@ -137,3 +137,6 @@ body.volume{grid-template-rows:var(--bar) auto minmax(0,1fr) auto}
   body.volume{grid-template-rows:var(--bar) minmax(0,1fr) auto}
   .vfil{position:absolute;top:calc(var(--bar) + 4px);left:0;right:0;z-index:30}
 }
+/* الصورة تعبّي إطارها بالضبط: لا هوامش بيضاء جوا ولا تطلع برا */
+.pg .vph img{object-fit:cover;object-position:50% 22%;mix-blend-mode:normal}
+.pg .vph.frm img{transform:scale(1.32);transform-origin:50% 42%}

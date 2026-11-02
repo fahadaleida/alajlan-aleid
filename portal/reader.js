@@ -106,9 +106,23 @@
     p = Math.min(N, Math.max(1, p));
     if (visible().includes(p)) return;
     near(IX(p), 2);
-    pf.flip(IX(p));
+    (pf.getOrientation() === 'portrait' ? pf.turnToPage(IX(p)) : pf.flip(IX(p)));
   };
-  const next = () => pf.flipPrev(), prev = () => pf.flipNext();
+  // الجوال (صفحة وحدة): مكتبة التقليب ما تقلّب للخلف/للأمام بالحركة في الوضع العمودي، فننتقل بأنفسنا مع انزلاق ناعم
+  const turn = d => {   // d = -1 التالي (يمين←يسار)، +1 السابق
+    if (pf.getOrientation() !== 'portrait') return d < 0 ? pf.flipPrev() : pf.flipNext();
+    const i = pf.getCurrentPageIndex() + d; if (i < 0 || i >= pf.getPageCount() || turn.busy) return;
+    turn.busy = 1; const s = d < 0 ? 1 : -1;
+    bookEl.animate([{opacity: 1, transform: 'none'}, {opacity: 0, transform: `translateX(${s * 36}px)`}], {duration: 150, easing: 'ease-in'}).onfinish = () => {
+      pf.turnToPage(i);
+      bookEl.animate([{opacity: 0, transform: `translateX(${-s * 36}px)`}, {opacity: 1, transform: 'none'}], {duration: 230, easing: 'ease-out'}).onfinish = () => {turn.busy = 0;};
+    };
+  };
+  const next = () => turn(-1), prev = () => turn(1);
+  {let sw = null;   // السحب على الجوال
+    bookEl.addEventListener('pointerdown', e => {sw = pf.getOrientation() === 'portrait' ? {x: e.clientX, y: e.clientY} : null;}, true);
+    bookEl.addEventListener('pointerup', e => {if (!sw) return; const dx = e.clientX - sw.x, dy = e.clientY - sw.y; sw = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) dx > 0 ? next() : prev();}, true);}
 
   pf.on('flip', () => {const was = curP; ui(); if (curP !== was && document.body.classList.contains('ready')) $('#hint').classList.add('gone');});
   // عند تغيّر الاتجاه (جوال/شاشة) نبقى على نفس الصفحة
