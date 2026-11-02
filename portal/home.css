@@ -329,3 +329,11 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
   body.home:not(.mags) .years a{height:26px;padding:0 10px;font-size:12px;background:rgba(255,255,255,.5);border-color:rgba(192,133,55,.35)}
 }
 @media (min-width:1024px) and (max-height:760px){body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 340px))}body.home:not(.mags) .row .th{aspect-ratio:2/1}}
+/* السجل أكبر شوي ومزاح لليسار */
+@media (min-width:1024px){
+  body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 470px))}
+  body.home:not(.mags) .log{margin-left:calc(-1 * min(150px, max(0px, (100vw - 1280px) / 2 - 24px)))}
+  body.home:not(.mags) .row .th{aspect-ratio:4/3}
+  body.home:not(.mags) .row .tx b{font-size:15px}
+}
+@media (min-width:1024px) and (max-height:760px){body.home:not(.mags) .hgrid{padding-top:max(calc(var(--nav) + 26px),calc(100vh - 400px))}body.home:not(.mags) .row .th{aspect-ratio:16/10}}
