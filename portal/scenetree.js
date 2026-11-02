@@ -3,7 +3,7 @@
 (() => {
   const scene = document.getElementById('scene'); if (!scene) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const V = '202611031500';
+  const V = '202611031610';
   const TK = .72;                               // تصغير الشجرة ليبان الجبل وراها
   // صورة الشجرة بإحداثيات المصدر: العرض، الارتفاع، ارتفاع الملصق الأصلي (لـ names.json)، قاعدة الجذع وخط الأرض
   const SRC = {w: 1790, h: 2400, h0: 2342, bx: 896.6, by: 2318};

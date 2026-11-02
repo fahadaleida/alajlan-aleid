@@ -272,7 +272,7 @@ body.home:not(.mags) .hgrid{grid-template-areas:"news tree";grid-template-column
 @media (max-width:1023px){body.home:not(.mags) .hgrid{grid-template-areas:"news" "tree";grid-template-columns:1fr;padding-top:calc(var(--nav) + 16px)}}
 
 /* ===== شجرة السدر الواقعية داخل مشهد الخلفية (scenetree.js) — الرئيسية فقط ===== */
-.stree-l{position:absolute;inset:0;pointer-events:none}
+.stree-l{position:absolute;inset:0;pointer-events:none;z-index:1}
 .stree-l img,.stree-l canvas{position:absolute;max-width:none;user-select:none}
 .stree-l .st-sh{mix-blend-mode:multiply;opacity:.9}
 .stree-l .st-tr{transform-origin:50% 93.68%;will-change:transform}
@@ -307,3 +307,4 @@ body.stree #scene::after{background:linear-gradient(180deg,rgba(20,16,48,.08) 0%
 @media (min-width:640px){body.home.stree:not(.mags) .hgrid>.htree{left:calc(var(--tree-bx,25vw) + 64px);transform:none;top:min(calc(var(--tree-by,90vh) - 14px),calc(100vh - 40px))}}
 /* الوصول السريع تحت السجل فقط، فيبقى عمود الشجرة وجذعها ظاهراً */
 @media (min-width:1024px){body.home.stree:not(.mags) .quick{width:calc(100% - 472px);grid-template-columns:repeat(3,1fr)}}
+.stree-l .st-tr{filter:saturate(1.12) contrast(1.06);image-rendering:auto}
