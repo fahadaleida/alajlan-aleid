@@ -11,13 +11,13 @@ async function startRockets() {
   new IntersectionObserver(e => onScreen = e[0].isIntersecting).observe(cv);
   const P = (nx, ny) => [R.x + nx * R.w, R.y + ny * R.h];
   const mob = innerWidth < 640;
-  let rate = mob ? 1.2 : 2, maxN = mob ? 7 : 12;
+  let rate = mob ? 2.4 : 4.5, maxN = mob ? 12 : 24;   // أسرع وأكثر
   const rk = [], sp = [], rings = []; let last = 0, flash = 0, lastFlash = 0, lastLive = 0, arrived = 0, slow = 0, prevT = 0;
   const maxSp = mob ? 70 : 140;
   const SOIL = .9906;   // خط التراب تحت «الهذلي» (نسبة من ارتفاع صورة الشجرة)
   function spawn(t) {const q = N[(Math.random() * N.length) | 0]; const [sx, sy] = P(q[0], q[1]); if (sy > R.y + R.h * .78) return;
     const [ex, ey] = P(bx, by), dist = Math.hypot(ex - sx, ey - sy);
-    rk.push({sx, sy, name: q[2], t0: t, dur: 1700 + dist * 3.2 + Math.random() * 500, ph: Math.random() * 6.28,
+    rk.push({sx, sy, name: q[2], t0: t, dur: 1000 + dist * 1.9 + Math.random() * 350, ph: Math.random() * 6.28,
       sw: (8 + Math.min(22, Math.abs(ex - sx) * .12)) * (Math.random() < .5 ? -1 : 1), cyc: 1.2 + Math.random() * .8, lx: sx, ly: sy, trail: []});}
   function burst(x, y) {   // شرر ذهبي يتطاير من «الهذلي» ثم يسقط
     for (let k = 0; k < (mob ? 7 : 12) && sp.length < maxSp; k++) {const a = -Math.PI / 2 + (Math.random() - .5) * 2.4, v = (.03 + Math.random() * .06) * Math.max(.7, R.h / 500);

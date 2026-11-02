@@ -147,3 +147,18 @@
   .oinfo h1{font-size:clamp(30px,3.2vw,44px)}
 }
 @media (min-width:901px){.orbit{width:min(860px,100%,calc(100vh - var(--nav) - 170px));margin-block:70px 60px}}
+
+/* الصفوف تنزل من فوق لتحت وترجع من فوق بلا توقف */
+.maglib .mhead{text-align:start;padding:0 0 10px}
+.lib.down{height:calc(100vh - var(--nav) - 230px);min-height:460px}
+.lib.down .track{animation-direction:reverse}
+.lib.down .row{padding-bottom:16px}
+.lib.down .book .cover time{display:block;margin-top:auto;font-weight:800;color:#FFE7B8;background:rgba(0,0,0,.25);border-radius:6px;padding:2px 6px}
+.lib.down .mrow{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:clamp(14px,2.2vw,28px);padding-bottom:16px}
+.lib.down .mrow::after{content:"";position:absolute;left:6%;right:6%;bottom:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#E3B66B 18%,#FFE7B8 50%,#E3B66B 82%,transparent);box-shadow:0 0 14px rgba(227,182,107,.75),0 0 40px rgba(227,182,107,.35)}
+.lib.down .book{width:clamp(104px,10vw,140px)}
+.lib.down .track{gap:40px}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 20px))}}
+@media (max-width:639px){.lib.down .book{width:27vw}}
+.hgrid.inner>.maglib{width:100%;justify-self:stretch}
+.lib.down .book{flex:none}

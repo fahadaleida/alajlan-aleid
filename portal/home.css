@@ -245,3 +245,16 @@ body.home:not(.mags) #scene{filter:none;transform:none}
   .hgrid>.htree,.hgrid.inner>.htree{position:fixed;top:auto;z-index:0}
   .hb,.hgrid>.log,.hgrid.inner>.inner-main,.quick,.more,.mhead{position:relative;z-index:1}
 }
+
+/* الشجرة مغروسة على أرض الخلفية (أسفل الشاشة) قدام البرج، بدون لوحة تحتها */
+@media (min-width:1024px){
+  .hgrid>.htree,.hgrid.inner>.htree{bottom:0;--sh:min(680px,calc(100vh - var(--nav) - 40px));width:440px;right:max(0px,calc((100vw - 1280px)/2 - 30px))}
+  .hgrid>.htree .st{height:var(--sh)}
+  .hgrid>.htree .st img#treeImg{height:calc(var(--sh) - 50px);bottom:30px}
+  .hgrid>.htree .halo{inset:0}
+}
+.tinfo{display:none}
+.tlink{position:absolute;z-index:3;left:50%;bottom:6px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+  background:rgba(20,16,48,.55);backdrop-filter:blur(6px);color:#F6E2B6;font-size:12px;font-weight:700;white-space:nowrap;opacity:.85;transition:opacity .2s,background .2s}
+.tlink:hover{opacity:1;background:rgba(192,133,55,.9);color:#1B1833}
+@media (max-width:1023px){.htree{position:relative}.tlink{position:relative;left:auto;bottom:auto;transform:none;display:flex;width:max-content;margin:6px auto 0}}

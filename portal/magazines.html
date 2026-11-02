@@ -9,74 +9,45 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021610">
-<link rel="stylesheet" href="home.css?v=202611021610">
-<link rel="stylesheet" href="mag.css?v=202611021610">
+<link rel="stylesheet" href="style.css?v=202611021700">
+<link rel="stylesheet" href="home.css?v=202611021700">
+<link rel="stylesheet" href="mag.css?v=202611021700">
 </head>
 <body class="home mags">
 <div id="scene" aria-hidden="true"></div>
 
 <main class="hwrap" style="padding-top:calc(var(--nav) + 30px)">
-  <!-- الأعداد على دائرة حول شمس الغروب (يسار)، وتفاصيل العدد المختار (يمين) -->
-  <section class="orbit-wrap">
-    <div class="oinfo">
-      <div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div>
-      <h1>مكتبة مجلة الأسرة</h1>
-      <p class="lead">أعداد مجلة أسرة العجلان والعيد تدور حول شجرة العائلة. اضغط على أي عدد لتحميله.</p>
-      <div class="sel glass-panel" id="sel">
-        <small>العدد الحالي</small>
-        <div class="sn"><b id="selN"></b><div><span id="selD"></span><em id="selS"></em></div></div>
-        <a class="cta" id="selA" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>تحميل العدد</a>
-      </div>
-      <a class="more-link" href="news.html?q=مجلة">أخبار المجلة والمشاركات ←</a>
+    <div class="maglib">
+      <div class="mhead"><div class="crumbs"><a href="index.html">الرئيسية</a> ‹ المجلات</div><h1>مكتبة مجلة الأسرة</h1><p>أعداد مجلة أسرة العجلان والعيد، اضغط على العدد لتحميله</p></div>
+      <section class="lib down" id="lib" aria-label="أعداد المجلة"><div class="track" id="track"></div></section>
+      <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة والمشاركات</a></div>
     </div>
-    <div class="orbit" id="orbit" aria-label="أعداد المجلة">
-      <div class="otree" id="st"><span class="oglow"></span><img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="420px" alt="شجرة عائلة العجلان والعيد" id="treeImg"><img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas></div><div class="oring"></div>
-      <div class="books" id="books"></div>
-    </div>
-  </section>
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021610"></script>
-<script src="rockets.js?v=202611021610"></script>
+<script src="common.js?v=202611021700"></script>
+<script src="rockets.js?v=202611021700"></script>
 <script>
 const issueDate = s => {const m = s.match(/^(\S+)\s+\d+,\s*(\d{4})/); return m ? `${m[1]} ${ar(+m[2])}` : s;};
 (async () => {
   const site = await loadJSON('data/site.json');
   buildChrome(site);
-  startRockets();
+  withTree(document.querySelector('.maglib'));
   const M = [...site.magazines].sort((a, b) => b.n - a.n);
-  $('#books').innerHTML = M.map((m, i) => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" data-i="${i}" aria-label="تحميل العدد ${m.n}">
-    <span class="b3"><span class="cover"><img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time></span></span></a>`).join('');
-  const B = [...$('#books').children], N = B.length, orbit = $('#orbit');
-  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let phase = 0, last = performance.now(), paused = false, cur = -1;
-  orbit.addEventListener('mouseenter', () => paused = true); orbit.addEventListener('mouseleave', () => paused = false);
-  const setSel = i => {if (i === cur) return; cur = i; const m = M[i];
-    B.forEach((b, j) => b.classList.toggle('on', j === i));
-    const s = $('#sel'); s.classList.remove('flip'); void s.offsetWidth; s.classList.add('flip');
-    $('#selN').textContent = ar(m.n); $('#selD').textContent = issueDate(m.date); $('#selS').textContent = m.size; $('#selA').href = m.u;};
-  B.forEach((b, i) => b.addEventListener('mouseenter', () => setSel(i)));
-  const frame = t => {
-    requestAnimationFrame(frame);
-    const dt = Math.min(64, t - last); last = t;
-    if (!paused && !RM && !document.hidden) phase += dt * 0.000105;   // لفة كاملة كل دقيقة تقريباً (هادئة)
-    const w = orbit.clientWidth, R = w * .41, cx = w / 2, cy = orbit.clientHeight / 2;
-    let best = 0, bd = 9;
-    B.forEach((b, i) => {
-      const a = i / N * Math.PI * 2 + phase;           // تدور مع عقارب الساعة
-      const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
-      // العدد الأقرب إلى جهة التفاصيل (يمين الدائرة) يكبر ويصير هو المختار
-      const d = Math.abs(Math.atan2(Math.sin(a), Math.cos(a)));
-      if (d < bd) {bd = d; best = i;}
-      const k = 1 - Math.min(1, d / 1.2);
-      b.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) scale(${.82 + .26 * k})`;
-      b.style.zIndex = 10 + Math.round(k * 10);
-    });
-    if (!paused) setSel(best);
+  const book = m => `<a class="book" href="${esc(m.u)}" target="_blank" rel="noopener" aria-label="تحميل العدد ${m.n}">
+      <span class="b3"><span class="spine"><b>${ar(m.n)}</b></span><span class="cover">
+        <img src="img/logo-mark.png" alt=""><em>مجلة الأسرة</em><strong>${ar(m.n)}</strong><small>العدد</small><time>${esc(issueDate(m.date))}</time>
+      </span><span class="pages"></span></span></a>`;
+  const draw = () => {
+    const n = innerWidth < 640 ? 3 : innerWidth < 1280 ? 4 : 5, rows = [];
+    for (let i = 0; i < M.length; i += n) rows.push(M.slice(i, i + n));
+    const html = rows.map(r => `<div class="mrow">${r.map(book).join('')}</div>`).join('');
+    // نسختين: لما تنزل الأولى تحت، تكون الثانية داخلة من فوق، فالحركة ما تنقطع
+    $('#track').innerHTML = html + html.replace(/<a class="book"/g, '<a class="book" tabindex="-1" aria-hidden="true"');
+    $('#track').style.setProperty('--dur', rows.length * 8 + 's');
   };
-  requestAnimationFrame(frame);
+  draw();
+  let w = innerWidth; addEventListener('resize', () => {if (Math.abs(innerWidth - w) > 60) {w = innerWidth; draw();}});
 })();
 </script>
 </body>

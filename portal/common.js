@@ -130,8 +130,7 @@ function withTree(el) {
     <div class="st" id="st"><div class="ground"></div><div class="gbar" id="gbar"></div>
       <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
       <img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas></div>
-    <div class="tinfo glass-panel"><div class="l1">أبناء الأسرة يعودون إلى <b>الهذلي</b></div><div class="live" id="live" aria-hidden="true">&nbsp;</div>
-      <a class="cta" href="${TREE_URL}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك في الشجرة</a></div>
+    <span class="live" id="live" hidden></span><a class="tlink" href="${TREE_URL}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك</a>
   </aside>`);
   if (typeof startRockets === 'function') startRockets();
 }
