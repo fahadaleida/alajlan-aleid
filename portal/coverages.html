@@ -61,7 +61,7 @@
 <script src="common.js?v=202611022230"></script>
 <script>
 (async () => {
-  const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611022230').then(r => r.json()).catch(() => ({a: {}}))]);
+  const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611032300').then(r => r.json()).catch(() => ({a: {}}))]);
   buildChrome(site);
   const L = posts.filter(p => p.c === 'مناسبات الاسرة' || idx.a[p.id]);
   const short = t => {
