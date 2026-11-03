@@ -2529,7 +2529,9 @@ if(QS.includes('testpull'))setInterval(()=>{if(RUN&&RUN.pullShown&&!pulled)pullB
 // كل أسماء الطبعة (لو موجود الملف): ندمجهم بأرقام ≥١٠٠٠ بدون ما نخزنهم
 fetch('people_all.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;const list=Array.isArray(j)?j:(j.people||Object.values(j));let n=0;
   for(const q of list){if(!q||q.id==null||q.id<1000)continue;const o=people[q.id];   // بيانات البوستر من الملف دايم أحدث (تصحيح الأسماء يوصل للكل)، والصور والإضافات المحفوظة تبقى
-    if(o){let ch=0;for(const k of ['name','gender','father','pos','r','kind','gen','title'])if(q[k]!==undefined&&JSON.stringify(o[k])!==JSON.stringify(q[k])){o[k]=q[k];ch=1;}n+=ch;continue;}people[q.id]={...q,_ext:true};n++;}if(n){KIDX=null;onReindex();dirty=true;console.log('people_all',n);}}).catch(()=>{});
+    if(o){let ch=0;for(const k of ['name','gender','father','pos','r','kind','gen','title'])if(q[k]!==undefined&&JSON.stringify(o[k])!==JSON.stringify(q[k])){o[k]=q[k];ch=1;}n+=ch;continue;}people[q.id]={...q,_ext:true};n++;}if(n){KIDX=null;onReindex();dirty=true;console.log('people_all',n);}}).catch(()=>{})
+  // مسار كل اسم على خشب الطبعة (tools/build_via.py): الضوء يمشي على الغصن لين يوصل الاسم
+  .then(()=>fetch('via.json',{cache:'no-cache'})).then(r=>r&&r.ok?r.json():null).then(v=>{if(!v)return;for(const id in v){const p=people[id],a=v[id];if(p&&p.pos&&a.length){p.via=a;p.w=a[a.length-1][2];}}}).catch(()=>{});
 if(QS.includes('demoages')){const B={19:1405,26:1375,22:1435,23:1438,27:1400,28:1409,24:1345,13:1310};for(const[id,y]of Object.entries(B))if(people[id]){people[id].birth=y;people[id].cal='h';}if(people[13])people[13].death=1392;if(people[24])people[24].death=1420;}
 
 // للاختبار: ?zoom=s&at=x,y  ?keys=ArrowDown,ArrowUp  ?q=نص
