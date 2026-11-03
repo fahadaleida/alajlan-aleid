@@ -64,7 +64,7 @@
         <div class="nm-kick"><span>${esc(catName(p.c))}</span><i></i></div>
         <h3>${esc(p.t)}</h3>
         ${kind === 'q' ? '' : `<p>${esc((p.x || '').replace(/^\s*السلام عليكم ورحمة الله وبركاته\s*/, ''))}</p>`}
-        <div class="nm-meta"><time><b>${ar(d)}</b> ${MONTHS[m - 1]} ${ar(y)}</time>${A ? `<span class="nm-mag" data-album="${p.id}" role="link" title="تصفّح الصور كمجلة">${BOOK}مجلة · ${ar(A[2])} صورة</span>` : ''}${kind === 'lead' ? '<span class="nm-more">اقرأ الخبر ‹</span>' : ''}</div>
+        <div class="nm-meta"><time><b>${ar(d)}</b> ${MONTHS[m - 1]} ${ar(y)}</time>${A ? `<span class="nm-mag" data-album="${p.id}" role="link" title="تصفّح الصور كمجلة">${BOOK}مجلة مصوّرة</span>` : ''}${kind === 'lead' ? '<span class="nm-more">اقرأ الخبر ‹</span>' : ''}</div>
       </div></a>`;
   };
   const ROWS = [['t', 3], ['w', 2], ['q', 4]];

@@ -80,7 +80,7 @@
       const a = idx.a[p.id], T = short(p.t), img = a ? (/^https?:/.test(a[0]) ? a[0] : idx.base + a[0]) : p.i;
       return `<a class="mz" href="album.html?id=${p.id}"><span class="mz-cv"><img data-src="${esc(img)}" alt="" decoding="async">
         <span class="mz-m"><small>عدد خاص · ${fmtDate(p.d)}</small><b><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></b></span>
-        ${a ? `<span class="mz-n">${ar(a[2])}<small>صورة</small></span>` : ''}
+        
         <span class="mz-t"><span>تغطية خاصة</span>${T.k ? `<em>${esc(T.k)}</em>` : ''}<b class="${T.n.length > 26 ? 'sm' : ''}">${esc(T.n)}</b><i></i><small>${fmtDate(p.d)}</small></span></span>
         <p>${esc(p.t)}</p></a>`;}).join('')}</div>`;}).join('');
   const io = new IntersectionObserver(es => es.forEach(e => {if (!e.isIntersecting) return; const im = e.target; io.unobserve(im); im.onload = () => im.classList.add('in'); im.src = im.dataset.src;}), {rootMargin: '600px 0px'});

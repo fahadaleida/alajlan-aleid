@@ -84,7 +84,7 @@
   const gal = all.filter(x => x.k !== cov.k);
   const photos = [cov, ...gal];              // ترقيم العارض: الغلاف أولاً
   photos.forEach((x, j) => {x.n = j; x.a = x.w / x.h;});
-  $('#rs').textContent = `${hDate || gDate} · ${ar(gal.length + 1)} صورة`;
+  $('#rs').textContent = `${hDate || gDate}`;
 
   // ===== تخطيط الصفحات: شبكة واحدة ثابتة لكل المجلة =====
   // الصفحة ١٠٠ × ١٤١٫٤ وحدة. هوامش ثابتة (جانبي ٨، علوي ١٢، سفلي ١١) وفاصل ٢٫٤ بين الصور
@@ -184,7 +184,7 @@
       <div class="cmeta">${[day && `<span>${day}</span>`, hDate && `<span>${hDate}</span>`, `<span>${gDate}</span>`].filter(Boolean).join('<em>·</em>')}</div>
       ${venue ? `<div class="cven"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>${esc(venue)}${hall ? `<em>${esc(hall)}</em>` : ''}</div>` : ''}
     </div>
-    <div class="cbadge"><b>${ar(gal.length + 1)}</b><span>صورة</span></div>`});
+    `});
   // افتتاحية: النص
   const body = paras.length ? paras : [`صور ${p.t}`];
   const lead = body[0].match(/^(\S+)\s+([\s\S]*)$/);
@@ -200,7 +200,7 @@
       <dl class="efacts">
         <div><dt>التاريخ</dt><dd>${esc(hDate || gDate)}</dd></div>
         ${venue ? `<div><dt>المكان</dt><dd>${esc(venue)}</dd></div>` : `<div><dt>اليوم</dt><dd>${esc(day || gDate)}</dd></div>`}
-        <div><dt>الألبوم</dt><dd>${ar(gal.length + 1)} صورة</dd></div>
+        
       </dl>
     </div>`});
   // عناوين الأقسام
@@ -233,7 +233,7 @@
       <img src="img/logo-mark.png" alt="">
       <div class="eorn"><i></i><b></b><i></i></div>
       <p class="ebl">${esc(blessing)}</p>
-      <p class="ent">نهاية التغطية · ${ar(gal.length + 1)} صورة</p>
+      <p class="ent">نهاية التغطية</p>
       <a class="elink" href="post.html?id=${id}">اقرأ الخبر في الموقع</a>
     </div>`};
   if ((pages.length + 1) % 2) pages.push(closing);

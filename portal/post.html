@@ -135,7 +135,7 @@
   const [y, mo, d] = p.d.split('-').map(Number);
   const words = (box.textContent.match(/\S+/g) || []).length, mins = Math.max(1, Math.round(words / 180));
   $('#meta').innerHTML = `<a class="ps-chip" href="news.html">${esc(catName(p.c))}</a><span>${ar(d)} ${MONTHS[mo - 1]} ${ar(y)}</span>
-    <span class="dot"></span><span>قراءة ${ar(mins)} ${mins > 2 && mins < 11 ? 'دقائق' : 'دقيقة'}</span>${gal.length ? `<span class="dot"></span><span>${ar(gal.length)} صورة</span>` : ''}`;
+    <span class="dot"></span><span>قراءة ${ar(mins)} ${mins > 2 && mins < 11 ? 'دقائق' : 'دقيقة'}</span>`;
   $('#title').textContent = p.t;
   const shareUrl = location.origin + location.pathname + '?id=' + id;
   const wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
@@ -285,7 +285,7 @@
   // لمحة من الألبوم تحت العنوان
   if (gal.length >= 3) {
     const tz = [0, 1, 2, 3].filter(j => j < gal.length).map(j => off + j);
-    $('#teas').outerHTML = `<button class="ps-teas" data-k="${tz[0]}" aria-label="افتح الألبوم">${tz.map(() => '<img alt="">').join('')}<b>ألبوم من ${ar(gal.length)} صورة<small>اضغط لتصفّح الصور بالحجم الكامل</small></b></button>`;
+    $('#teas').outerHTML = `<button class="ps-teas" data-k="${tz[0]}" aria-label="افتح الألبوم">${tz.map(() => '<img alt="">').join('')}<b>ألبوم المناسبة<small>اضغط لتصفّح الصور بالحجم الكامل</small></b></button>`;
     const ims = document.querySelectorAll('.ps-teas img');
     tz.forEach((k, j) => getThumb(k).then(r => {if (r) ims[j].src = r.src;}));
   } else $('#teas').remove();
@@ -296,7 +296,7 @@
   if (gal.length) {
     const G = $('#gallery'); G.hidden = false;
     const MAG = all.length >= 4;   // الألبوم يظهر كمجلة تتقلّب صفحاتها هنا مباشرة
-    G.innerHTML = `<div class="ps-ghead"><div><small>${MAG ? 'مجلة المناسبة' : 'ألبوم المناسبة'}</small><h2>صور من المناسبة<em>${ar(gal.length)} صورة</em></h2></div>
+    G.innerHTML = `<div class="ps-ghead"><div><small>${MAG ? 'مجلة المناسبة' : 'ألبوم المناسبة'}</small><h2>صور من المناسبة</h2></div>
       <div class="ps-gbtns">${MAG ? `<button class="ps-btn" id="gridT" aria-pressed="false">${I(ICO.grid, 16)}<span>عرض الصور كشبكة</span></button>` : ''}<button class="ps-btn" id="slides2">${I(ICO.play, 16)}عرض الشرائح</button></div></div>
       ${MAG ? `<div class="ps-mag" id="pmag"><div class="ps-table"><div class="ps-mload"><i></i><span>جارٍ فتح المجلة…</span></div></div>
         <p class="ps-mnote">${I(MAGI, 16)}اسحب طرف الصفحة أو استخدم الأسهم، واضغط أي صورة لعرضها كاملة · <a href="${magUrl}">افتح المجلة بملء الشاشة</a></p></div>` : ''}
