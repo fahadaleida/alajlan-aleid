@@ -234,3 +234,78 @@ a.ps-fact{transition:border-color .2s,transform .2s}a.ps-fact:hover{border-color
 .ps-mnote svg{color:#E3B66B}
 .ps-mnote a{color:#E3B66B;font-weight:800;text-decoration:underline;text-underline-offset:4px}
 @media (max-width:640px){.ps-table{border-radius:16px;margin-inline:-6px}.ps-mnote{font-size:12.5px}}
+
+/* ===== مسرح الفيديو: عرض سينمائي بإطار ذهبي، ملصق كبير، ومشغّل بعرض الصفحة ===== */
+.ps-btn.ps-vidbtn{background:linear-gradient(180deg,#2B2380,#1A1448);border-color:rgba(227,182,107,.75);box-shadow:0 10px 26px rgba(10,6,40,.35),inset 0 1px 0 rgba(255,255,255,.12)}
+.ps-btn.ps-vidbtn svg{width:26px;height:26px;padding:6px 5px 6px 7px;border-radius:50%;background:var(--grad-gold);color:#1A1448;fill:currentColor;stroke:none;margin-inline-start:-8px}
+.ps-btn.ps-vidbtn:hover{background:linear-gradient(180deg,#352c94,#1f1857)}
+.ps-cine{position:relative;isolation:isolate;margin:44px auto 0;padding:clamp(22px,2.6vw,38px);border-radius:28px;overflow:hidden;color:#fff;scroll-margin-top:calc(var(--nav) + 16px);
+  background:radial-gradient(ellipse 70% 60% at 50% 62%,rgba(90,70,190,.28),transparent 70%),linear-gradient(180deg,#1d1752,#0f0b2c 70%,#0b0822);
+  border:1px solid rgba(227,182,107,.28);box-shadow:0 40px 90px rgba(5,3,20,.45),inset 0 1px 0 rgba(255,255,255,.06)}
+.ps-cine::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--grad-gold);z-index:2}
+.cn-amb{position:absolute;inset:16% 4% -10%;z-index:-1;background:center/cover no-repeat;filter:blur(70px) saturate(1.35);opacity:0;transform:scale(1.05);transition:opacity 1.4s ease}
+.ps-cine.ready .cn-amb{opacity:.42}
+.cn-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px;margin-bottom:clamp(18px,2vw,26px)}
+.cn-tt{min-width:0}
+.cn-tt small{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--gold-l);margin-bottom:4px}
+.cn-tt small i{width:8px;height:8px;border-radius:50%;background:#E3B66B;box-shadow:0 0 0 4px rgba(227,182,107,.18),0 0 14px #E3B66B}
+.cn-tt h2{font-size:clamp(24px,2.5vw,34px);font-weight:800;line-height:1.35}
+.cn-tt p{font-size:15px;font-weight:600;color:rgba(255,255,255,.62);margin-top:4px}
+.cn-tools{display:flex;flex-wrap:wrap;gap:10px}
+.cn-tools .ps-btn{height:44px}
+.cn-yt svg{color:#ff5a55}
+/* الإطار: خيط ذهبي وزوايا مثل إطار المجلة */
+.cn-frame{position:relative;padding:10px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(227,182,107,.35),0 50px 100px -30px rgba(0,0,0,.8)}
+.cn-frame::before,.cn-frame::after{content:"";position:absolute;width:34px;height:34px;border:2px solid #E3B66B;pointer-events:none;z-index:3}
+.cn-frame::before{top:-1px;right:-1px;border-width:2px 2px 0 0;border-radius:0 22px 0 0}
+.cn-frame::after{bottom:-1px;left:-1px;border-width:0 0 2px 2px;border-radius:0 0 0 22px}
+.cn-stage{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#05040f;box-shadow:0 0 0 1px rgba(0,0,0,.6)}
+.cn-play{position:absolute;inset:0;z-index:2;display:block;width:100%;padding:0;border:0;background:#0b0822;cursor:pointer;color:#fff;font:inherit;transition:opacity .5s,visibility 0s .5s}
+.cn-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity 1s ease,transform 6s cubic-bezier(.2,.7,.2,1)}
+.ps-cine.ready .cn-poster{opacity:1;transform:scale(1.0)}
+.cn-play:hover .cn-poster{transform:scale(1.035)}
+.cn-shade{position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(8,5,30,.05),rgba(8,5,30,.55) 100%),linear-gradient(0deg,rgba(8,5,28,.85),rgba(8,5,28,0) 42%),linear-gradient(180deg,rgba(8,5,28,.55),rgba(8,5,28,0) 26%)}
+.cn-brand{position:absolute;top:clamp(12px,2vw,22px);right:clamp(12px,2vw,24px);display:flex;align-items:center;gap:10px;font-weight:800;font-size:clamp(12px,1.1vw,15px);color:rgba(255,255,255,.92);text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.cn-brand img{width:clamp(28px,2.6vw,38px);height:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.cn-btn{position:absolute;top:50%;left:50%;width:clamp(76px,8vw,112px);aspect-ratio:1;margin:0;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#F6D79A,#D9A04F 45%,#9A6A26);color:#1A1448;box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,240,210,.6) inset,0 0 0 8px rgba(227,182,107,.16);transition:transform .35s cubic-bezier(.2,.9,.25,1),box-shadow .35s}
+.cn-btn svg{width:40%;height:40%;margin-left:-2%;margin-right:-6%;transform:translateX(6%)}
+.cn-btn i{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(227,182,107,.75);animation:cnRing 2.6s cubic-bezier(.2,.6,.3,1) infinite;pointer-events:none}
+.cn-btn i+i{animation-delay:1.3s}
+@keyframes cnRing{from{transform:scale(1);opacity:.9}to{transform:scale(1.75);opacity:0}}
+.cn-play:hover .cn-btn,.cn-play:focus-visible .cn-btn{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 22px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,240,210,.7) inset,0 0 0 12px rgba(227,182,107,.22)}
+.cn-play:focus-visible{outline:3px solid var(--gold-l);outline-offset:-3px}
+.cn-cta{position:absolute;bottom:clamp(14px,2.4vw,30px);left:0;right:0;text-align:center;font-weight:800;font-size:clamp(16px,1.5vw,20px);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.cn-cta small{display:block;font-size:.72em;font-weight:600;color:rgba(255,255,255,.72)}
+.cn-player{position:absolute;inset:0;z-index:1}
+.cn-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.ps-cine.on .cn-play{opacity:0;visibility:hidden;pointer-events:none}
+.cn-x{display:none}
+.cn-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.6);text-align:center}
+.cn-note svg{flex:none;color:#E3B66B}
+/* ملء الشاشة الحقيقي */
+.cn-stage:fullscreen{aspect-ratio:auto;width:100%;height:100%;border-radius:0;background:#000}
+.cn-stage:-webkit-full-screen{aspect-ratio:auto;width:100%;height:100%;border-radius:0;background:#000}
+/* بديل آيفون: المسرح يغطي الشاشة */
+.ps-cine.max{overflow:visible;z-index:120}
+.ps-cine.max .cn-frame{position:fixed;inset:0;z-index:120;padding:0;border-radius:0;background:#000;display:grid;place-items:center;box-shadow:none}
+.ps-cine.max .cn-frame::before,.ps-cine.max .cn-frame::after{display:none}
+.ps-cine.max .cn-stage{width:min(100vw,calc(100dvh * 16 / 9));border-radius:0;box-shadow:none}
+.ps-cine.max .cn-x{display:grid;place-items:center;position:fixed;z-index:121;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,16,48,.7);color:#fff;cursor:pointer;backdrop-filter:blur(8px)}
+@media (max-width:639px){
+  .ps-cine{margin:30px -16px 0;padding:22px 0 18px;border-radius:0;border-inline:0}
+  .cn-head{padding:0 16px;gap:14px}
+  .cn-tt h2{font-size:22px}
+  .cn-tt p{font-size:13.5px}
+  .cn-tools{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:8px}
+  .cn-tools .ps-btn{justify-content:center;height:48px;padding:0 8px;gap:7px;font-size:14px;white-space:nowrap}
+  .ps-cine::after{content:"";position:absolute;inset:auto 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(227,182,107,.55),transparent)}
+  .cn-frame{padding:0;border-radius:0;background:none;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+  .cn-frame::before,.cn-frame::after{display:none}
+  .cn-stage{border-radius:0;box-shadow:0 1px 0 rgba(227,182,107,.35),0 -1px 0 rgba(227,182,107,.35)}
+  .cn-btn{width:76px;top:47%}
+  .cn-brand{font-size:12px}.cn-brand img{width:26px}
+  .cn-cta small{display:none}
+  .cn-note{padding:0 18px;font-size:12.5px;line-height:1.8}
+}
+@media (prefers-reduced-motion:reduce){.cn-btn i{animation:none;opacity:0}.cn-poster{transition:opacity .3s}}

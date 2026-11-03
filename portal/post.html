@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611021830">
-<link rel="stylesheet" href="post.css?v=202611030130">
+<link rel="stylesheet" href="post.css?v=202611032330">
 </head>
 <body class="scened ps">
 <div id="scene" aria-hidden="true"></div>
@@ -105,6 +105,19 @@
   });
   box.querySelectorAll('p').forEach(el => {if (/^\s*صور من (المناسبة|الحفل)\s*:?\s*$/.test(el.textContent)) el.remove();});
   box.querySelectorAll('p,figure,div,span').forEach(el => {if (!el.textContent.replace(/[\s ⁨⁩]/g, '') && !el.querySelector('iframe,video')) el.remove();});
+  // فيديوهات يوتيوب تطلع من عمود القراءة إلى مسرح سينمائي بعرض الصفحة
+  const YTRE = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/;
+  const vids = [];
+  box.querySelectorAll('iframe').forEach(fr => {
+    const m = (fr.getAttribute('src') || '').match(YTRE); if (!m) return;
+    let host = fr.closest('figure') || fr.parentElement;
+    if (!host || host === box || (host.tagName !== 'FIGURE' && host.textContent.trim())) host = fr;
+    let cap = host.tagName === 'FIGURE' ? (host.querySelector('figcaption')?.textContent || '').trim() : '';
+    const prev = host.previousElementSibling;
+    if (prev && /فيديو|مقطع|شاهد/.test(prev.textContent) && prev.textContent.trim().length < 60 && !prev.querySelector('img,iframe')) {cap = cap || prev.textContent.trim(); prev.remove();}
+    host.remove();
+    if (!vids.some(v => v.id === m[1])) vids.push({id: m[1], t: (fr.getAttribute('title') || '').trim(), cap});
+  });
   // الغلاف: في الخبر القصير الصورة نفسها (دعوة/صورة) هي الغلاف كاملة، وفي التغطية الصورة المميزة
   let cover = null, gal = pics;
   const fi = f.i || p.i;
@@ -128,7 +141,7 @@
   const wa = `https://wa.me/?text=${encodeURIComponent(p.t + '\n' + shareUrl)}`;
   const magOK = all.length >= 2, magUrl = `album.html?id=${id}`;
   const MAGI = '<path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/>';
-  $('#acts').innerHTML = `${magOK ? `<a class="ps-btn ps-magbtn" href="${magUrl}">${I(MAGI, 19)}تصفّحها كمجلة</a>` : ''}${gal.length ? `<a class="ps-btn gold" href="#gallery">${I(ICO.grid, 18)}شاهد الصور (${ar(gal.length)})</a><button class="ps-btn" id="slides">${I(ICO.play, 16)}عرض الشرائح</button>` : ''}
+  $('#acts').innerHTML = `${vids.length ? `<a class="ps-btn ps-vidbtn" href="#video" data-cine>${I(ICO.play, 15)}شاهد الفيديو</a>` : ''}${magOK ? `<a class="ps-btn ps-magbtn" href="${magUrl}">${I(MAGI, 19)}تصفّحها كمجلة</a>` : ''}${gal.length ? `<a class="ps-btn gold" href="#gallery">${I(ICO.grid, 18)}شاهد الصور (${ar(gal.length)})</a><button class="ps-btn" id="slides">${I(ICO.play, 16)}عرض الشرائح</button>` : ''}
     <button class="ps-btn" data-share>${I(ICO.share, 18)}مشاركة</button>`;
   if (cover) {
     $('#cover').innerHTML = `<button data-k="0" aria-label="عرض الصورة بالحجم الكامل"><img alt="${esc(p.t)}" fetchpriority="high"><span class="zoom">${I(ICO.zoom, 20)}</span></button>`;
@@ -180,6 +193,95 @@
     <div class="ps-share"><span>شارك الخبر مع العائلة</span>
       <a class="ps-sbtn wa" href="${wa}" target="_blank" rel="noopener">${I(ICO.wa, 18)}واتساب</a>
       <button class="ps-sbtn" data-copy>${I(ICO.link, 18)}<span>نسخ الرابط</span></button></div>`;
+  // ===== مسرح الفيديو: ملصق كبير، زر تشغيل ذهبي، ومشغّل بأكبر حجم ممكن =====
+  // يوتيوب يختار الدقة من حجم المشغّل × كثافة الشاشة والسرعة، فنعطيه عرض المسرح كاملاً وملء الشاشة
+  if (vids.length) {
+    const YTI = '<path d="M21.6 7.2a2.5 2.5 0 00-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 002.4 7.2 26 26 0 002 12a26 26 0 00.4 4.8 2.5 2.5 0 001.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 001.8-1.8A26 26 0 0022 12a26 26 0 00-.4-4.8z"/><path d="M10 15l5-3-5-3z" fill="currentColor"/>';
+    const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 4.6c-.9-.6-2.2.1-2.2 1.2v12.4c0 1.1 1.3 1.8 2.2 1.2l9.6-6.2c.8-.5.8-1.8 0-2.4z" fill="currentColor"/></svg>';
+    $('#art').insertAdjacentHTML('afterend', vids.map((v, n) => `
+      <section class="ps-cine" id="${n ? 'video-' + (n + 1) : 'video'}" data-yt="${v.id}" aria-label="فيديو المناسبة">
+        <div class="cn-amb" aria-hidden="true"></div>
+        <header class="cn-head">
+          <div class="cn-tt"><small><i></i>${vids.length > 1 ? `فيديو ${ar(n + 1)} من ${ar(vids.length)}` : 'فيلم المناسبة'}</small>
+            <h2>${esc(v.t || p.t)}</h2><p>${esc(v.cap && !/^فيديو من (المناسبة|الحفل)$/.test(v.cap) ? v.cap : 'تغطية مصوّرة من المناسبة · ' + catName(p.c))}</p></div>
+          <div class="cn-tools">
+            <button class="ps-btn gold cn-fs" type="button">${I(ICO.full, 18)}<span>شاهد بملء الشاشة</span></button>
+            <a class="ps-btn cn-yt" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">${I(YTI, 19)}<span>افتح في يوتيوب</span></a>
+          </div>
+        </header>
+        <div class="cn-frame"><div class="cn-stage">
+          <button class="cn-play" type="button" aria-label="تشغيل الفيديو: ${esc(v.t || p.t)}">
+            <img class="cn-poster" alt="" decoding="async">
+            <span class="cn-shade"></span>
+            <span class="cn-brand"><img src="img/logo-mark.png" alt="">أسرة العجلان والعيد</span>
+            <span class="cn-btn"><i></i><i></i>${PLAY}</span>
+            <span class="cn-cta">تشغيل الفيديو<small>اضغط للمشاهدة هنا</small></span>
+          </button>
+          <div class="cn-player"></div>
+          <button class="cn-x" type="button" aria-label="إغلاق ملء الشاشة">${I(ICO.x, 22)}</button>
+        </div></div>
+        <p class="cn-note">${I(ICO.full, 15)}للحصول على أوضح صورة شاهد بملء الشاشة، ومن ترس الإعدادات في المشغّل اختر أعلى جودة متاحة</p>
+      </section>`).join(''));
+    // الملصق: أكبر صورة حقيقية من يوتيوب (maxres يرجع ٤٠٤ أو صورة ١٢٠×٩٠ إذا ما توفرت)
+    const ytThumb = vid => new Promise(res => {
+      const L = ['maxresdefault', 'sddefault', 'hqdefault'].map(n => `https://i.ytimg.com/vi/${vid}/${n}.jpg`);
+      const next = k => {if (k >= L.length) return res(null); const im = new Image();
+        im.onload = () => im.naturalWidth > 120 ? res(im.src) : next(k + 1); im.onerror = () => next(k + 1); im.src = L[k];};
+      next(0);
+    });
+    document.querySelectorAll('.ps-cine').forEach(sec => ytThumb(sec.dataset.yt).then(src => {
+      if (!src) return; const im = sec.querySelector('.cn-poster');
+      im.onload = () => sec.classList.add('ready'); im.src = src;
+      sec.querySelector('.cn-amb').style.backgroundImage = `url("${src}")`;
+    }));
+    // واجهة يوتيوب البرمجية (لو تعذّرت نستخدم الإطار العادي)
+    let api;
+    const ytApi = () => api || (api = new Promise((res, rej) => {
+      if (window.YT && YT.Player) return res(YT);
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {prev && prev(); res(YT);};
+      const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; s.onerror = rej; document.head.appendChild(s);
+      setTimeout(rej, 6000);
+    }));
+    const best = pl => {try {const lv = pl.getAvailableQualityLevels() || []; window.__cnq = lv;
+      pl.setPlaybackQuality(lv.includes('highres') ? 'highres' : lv[0] || 'highres');} catch (_) {}};
+    const start = sec => {
+      if (sec.classList.contains('on')) return;
+      sec.classList.add('on');
+      const id = sec.dataset.yt, host = sec.querySelector('.cn-player'), title = sec.querySelector('h2').textContent;
+      const vars = {autoplay: 1, rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3, color: 'white', hl: 'ar', vq: 'highres', enablejsapi: 1, origin: location.origin};
+      const plain = () => {if (host.querySelector('iframe')) return;
+        const fr = document.createElement('iframe'); fr.title = title;
+        fr.src = `https://www.youtube-nocookie.com/embed/${id}?${new URLSearchParams(vars)}`;
+        fr.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen; web-share'; fr.allowFullscreen = true;
+        host.replaceChildren(fr);};
+      const slot = document.createElement('div'); host.appendChild(slot);
+      ytApi().then(Y => {if (host.querySelector('iframe')) return;
+        new Y.Player(slot, {host: 'https://www.youtube-nocookie.com', videoId: id, width: '100%', height: '100%', playerVars: vars,
+          events: {onReady: e => {const f = e.target.getIframe(); f.title = title; f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen; web-share');
+            best(e.target); e.target.playVideo();}, onStateChange: e => {if (e.data === 1) best(e.target);}}});
+      }).catch(plain);
+    };
+    // ملء الشاشة: الحقيقي إن توفّر، وإلا (آيفون) مسرح ثابت يغطي الشاشة
+    const max = sec => {
+      const st = sec.querySelector('.cn-stage');
+      start(sec);
+      const rq = st.requestFullscreen || st.webkitRequestFullscreen;
+      if (rq && document.fullscreenEnabled !== false) {const r = rq.call(st); if (r && r.catch) r.catch(() => pseudo(sec, true));}
+      else pseudo(sec, true);
+    };
+    const pseudo = (sec, on) => {sec.classList.toggle('max', on); document.documentElement.style.overflow = on ? 'hidden' : '';};
+    document.addEventListener('click', e => {
+      const c = e.target.closest('[data-cine]');
+      if (c) {e.preventDefault(); const sec = $('#video'); (innerWidth < 640 ? sec : sec.querySelector('.cn-frame')).scrollIntoView({behavior: 'smooth', block: innerWidth < 640 ? 'start' : 'center'}); start(sec); return;}
+      const sec = e.target.closest('.ps-cine'); if (!sec) return;
+      if (e.target.closest('.cn-play')) start(sec);
+      else if (e.target.closest('.cn-fs')) max(sec);
+      else if (e.target.closest('.cn-x')) {if (document.fullscreenElement) document.exitFullscreen(); pseudo(sec, false);}
+    });
+    addEventListener('keydown', e => {if (e.key === 'Escape') document.querySelectorAll('.ps-cine.max').forEach(s => pseudo(s, false));});
+  }
+
   // لمحة من الألبوم تحت العنوان
   if (gal.length >= 3) {
     const tz = [0, 1, 2, 3].filter(j => j < gal.length).map(j => off + j);

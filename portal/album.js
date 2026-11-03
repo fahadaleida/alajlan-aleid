@@ -153,10 +153,16 @@
   const folio = (n, dark) => `<div class="fo${dark ? ' dk' : ''}"><b>${ar(n)}</b><span>${esc(T.short)}</span></div>`;
   const pct = (v, t) => (v / t * 100).toFixed(3) + '%';
   const fig = (im, s, opt = {}) => {
-    const [x, y, w, h] = s, r = w / h, c = 1 - Math.min(im.a, r) / Math.max(im.a, r), cover = c <= TOL;
+    let [x, y, w, h] = s; const r = w / h, c = 1 - Math.min(im.a, r) / Math.max(im.a, r), cover = c <= TOL;
     const pos = im.a > r ? '50% 50%' : '50% 30%';
-    return `<figure class="ph${cover ? '' : ' mat'}${opt.bleed ? ' bl' : ''}" data-n="${im.n}" style="left:${pct(x, PW)};top:${pct(y, PH)};width:${pct(w, PW)};height:${pct(h, PH)}">
-      <img alt="" draggable="false" decoding="async" data-w="${w}" data-h="${h}" style="object-fit:${cover ? 'cover' : 'contain'};object-position:${pos}"></figure>`;
+    // صورة لا تناسب الخانة: نقصّها قليلاً نحو شكل الخانة ثم نكبّرها لأقصى حجم داخلها بدل ما تصغر داخل إطار
+    if (!cover && !opt.bleed) {
+      const a = im.a > r ? Math.max(r, im.a * .86) : Math.min(r, im.a / .86);
+      const nw = a > r ? w : h * a, nh = a > r ? w / a : h;
+      x += (w - nw) / 2; y += (h - nh) / 2; w = nw; h = nh;
+    }
+    return `<figure class="ph${opt.bleed && !cover ? ' mat' : ''}${opt.bleed ? ' bl' : ''}" data-n="${im.n}" style="left:${pct(x, PW)};top:${pct(y, PH)};width:${pct(w, PW)};height:${pct(h, PH)}">
+      <img alt="" draggable="false" decoding="async" data-w="${w}" data-h="${h}" style="object-fit:${cover || !opt.bleed ? 'cover' : 'contain'};object-position:${pos}"></figure>`;
   };
   const pages = [];   // {cls, html, imgs:[n], hard}
   // الغلاف
