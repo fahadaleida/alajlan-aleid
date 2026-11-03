@@ -1195,6 +1195,14 @@ function renderOverlay(now,dt){
     else{const gr=g.createRadialGradient(s.x-r*.26,s.y-r*.26,1,s.x,s.y,r);if(p.gender==='f'){gr.addColorStop(0,'#f7b3cc');gr.addColorStop(1,'#d24f86');}else{gr.addColorStop(0,'#5cc04c');gr.addColorStop(1,'#1f6a2a');}
       g.fillStyle=gr;g.fillRect(s.x-r,s.y-r,r*2,r*2);if(r>9)nameIn(g,p.name,s.x,s.y,r);}
     g.restore();}
+  // الجوال: نص ألواح الجذع يذوب من صورة الطبعة المصغّرة، فنعيد كتابته على اللوح نفسه بخط واضح (نفس شكل اللابتوب)
+  if(MOBILE&&!POSTERBG){const T=[2,3,4,5,6].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===5){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[1].y-S[2].y),fa=SOILA*Math.max(0,Math.min(1,(26-pitch)/6));
+    if(fa>.02&&!S.some(q=>q.behind)){g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
+      T.forEach((p,i)=>{const q=S[i],h=pitch*.84,w=Math.max((p.rx||160)*2*q.k*1.02,h*2.4),fs=h*.8;
+        const gr=g.createLinearGradient(0,q.y-h/2,0,q.y+h/2);gr.addColorStop(0,'#fbe7a1');gr.addColorStop(.55,'#e8bd3c');gr.addColorStop(1,'#a8770c');
+        g.fillStyle=gr;g.beginPath();g.ellipse(q.x,q.y,w/2,h/2,0,0,7);g.fill();g.lineWidth=Math.max(.6,h*.06);g.strokeStyle='#7a5200';g.stroke();
+        g.font=`800 ${fs}px Tajawal`;g.fillStyle='#2b1700';g.fillText(p.name,q.x,q.y+fs*.08);});
+      g.restore();}}}
   const R=RUN;if(!R)return;
   // حلقات الأجداد تشتعل لما يوصلها الضوء
   g.save();g.globalCompositeOperation='lighter';
