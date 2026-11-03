@@ -323,3 +323,17 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
   body.home.far:not(.mags) .quick{width:min(940px,calc(var(--ftl) - var(--fhl) - 36px));margin-left:0;margin-right:auto;grid-template-columns:repeat(3,1fr)}
 }
 body.home.far:not(.mags) .hgrid>.htree .tlink{display:none}
+
+/* ===== صفحة المجلات: نفس فكرة الرئيسية، الشجرة بعيدة ورا المرقب (سطح المكتب) ===== */
+@media (min-width:1024px){
+  body.mags.far .hgrid.inner>.htree{position:fixed;z-index:-1;right:auto;bottom:auto;transform:none;margin:0;width:var(--ftw);
+    left:var(--ftl);top:calc(100vh - 1441 * var(--S) + 1215 * var(--S) - .9716 * var(--fth))}
+  body.mags.far .htree .halo,body.mags.far .htree .ground,body.mags.far .htree .gbar{display:none}
+  body.mags.far .hgrid.inner>.htree .st{height:var(--fth);--sh:var(--fth)}
+  body.mags.far .hgrid.inner>.htree .st img#treeImg{height:var(--fth);bottom:0;
+    filter:saturate(.7) sepia(.22) brightness(.86) contrast(.9) blur(.25px) drop-shadow(0 0 10px rgba(255,170,90,.18))}
+  body.mags.far .hgrid.inner>.htree .st img#treeImg.pulse{filter:saturate(.8) sepia(.2) brightness(1) contrast(.9) drop-shadow(0 0 10px rgba(255,190,110,.55))}
+  body.mags.far .hgrid.inner>.htree .st img.soilimg{width:calc(var(--fth) * 1700 / 2342);bottom:calc(var(--fth) * -180 / 2342);filter:saturate(.7) brightness(.8) blur(.3px)}
+  body.mags.far .hgrid.inner>.htree .st canvas{opacity:.9}
+  body.mags.far .hgrid.inner>.htree .tlink{position:absolute;top:calc(100% + 14px);bottom:auto;left:50%;transform:translateX(-62%);z-index:3;font-size:11.5px;padding:4px 11px}
+}
