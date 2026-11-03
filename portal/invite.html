@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مصمم الدعوات</title>
+<meta name="theme-color" content="#1A1448">
+<link rel="icon" href="img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{--bg:#f4efe6;--surface:#fff;--line:#e4d9c4;--text:#211c33;--muted:#6e6879;--navy:#322781;--navy-d:#1a1448;--gold:#c08537;--gold-l:#e3b66b;--field:#fbf8f2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#120f26;--surface:#1c1838;--line:#332c5c;--text:#f1ecdf;--muted:#a9a2bf;--field:#15122c}}
+:root[data-theme="dark"]{--bg:#120f26;--surface:#1c1838;--line:#332c5c;--text:#f1ecdf;--muted:#a9a2bf;--field:#15122c}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:Cairo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#3a2f96,#322781 50%,#1e1757);color:#fff;box-shadow:0 6px 20px rgba(20,16,48,.25)}
+header.top .in{max-width:1320px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+header.top img{height:40px}
+header.top h1{font-size:19px;margin:0;font-weight:800}
+header.top h1 small{display:block;font-size:12px;font-weight:600;color:var(--gold-l)}
+header.top a.home{margin-inline-start:auto;color:#fff;text-decoration:none;font-size:14px;font-weight:700;border:1px solid rgba(255,255,255,.3);padding:7px 14px;border-radius:999px}
+main{max-width:1320px;margin:auto;padding:20px 16px 120px;display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:24px;align-items:start}
+.stage{position:sticky;top:84px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.stage .cv{width:100%;max-width:640px;border-radius:14px;box-shadow:0 24px 60px rgba(20,16,48,.35);background:#1a1448;display:block}
+.acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{font:inherit;font-weight:800;font-size:15px;border:0;border-radius:12px;padding:12px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn.gold{background:linear-gradient(135deg,#e3b66b,#c08537 55%,#9a6a26);color:#1a1448;box-shadow:0 8px 20px rgba(192,133,55,.35)}
+.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line)}
+.panel{display:flex;flex-direction:column;gap:14px}
+details.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+details.card>summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
+details.card>summary::after{content:"⌄";margin-inline-start:auto;color:var(--muted);transition:transform .2s}
+details.card[open]>summary::after{transform:rotate(180deg)}
+.body{padding:0 16px 16px;display:grid;gap:12px}
+label.f{display:grid;gap:5px;font-size:13px;font-weight:700;color:var(--muted)}
+label.f input,label.f textarea,label.f select{font:inherit;font-size:15px;font-weight:600;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+label.f textarea{resize:vertical;min-height:64px}
+label.f input:focus,label.f textarea:focus,label.f select:focus{outline:2px solid var(--gold-l);outline-offset:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:14px;font-weight:700;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--text);cursor:pointer}
+.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ph{border:1px dashed var(--line);border-radius:14px;padding:12px;display:grid;gap:10px}
+.ph .hd{display:flex;align-items:center;gap:10px}
+.ph .th{width:56px;height:68px;border-radius:28px 28px 8px 8px;background:var(--field) center/cover no-repeat;border:2px solid var(--gold-l);flex:none}
+.ph .hd b{font-size:15px}
+.ph .hd .x{margin-inline-start:auto;display:flex;gap:6px}
+.ph .hd label.up,.ph .hd button{font:inherit;font-size:13px;font-weight:700;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--field);color:var(--text);cursor:pointer}
+.ph input[type=file]{display:none}
+.ph input[type=range]{width:100%;accent-color:var(--gold)}
+.hint{font-size:12.5px;color:var(--muted);line-height:1.7;margin:0}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(30px);opacity:0;background:#1a1448;color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;transition:.3s;z-index:50;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.fab{display:none}
+@media (max-width:980px){
+  main{grid-template-columns:1fr;padding-bottom:110px}
+  .stage{position:static}
+  .stage .acts{display:none}
+  .fab{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)}
+  .fab .btn{flex:1;justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <img src="img/logo-mark.png" alt="">
+  <h1>مصمم الدعوات<small>أسرة العجلان والعيد</small></h1>
+  <a class="home" href="index.html">الرئيسية</a>
+</div></header>
+
+<main>
+  <div class="stage">
+    <canvas class="cv" id="cv" aria-label="معاينة الدعوة"></canvas>
+    <div class="acts"><button class="btn gold" data-act="png">⬇ تحميل الصورة</button><button class="btn ghost" data-act="share">مشاركة</button></div>
+  </div>
+
+  <div class="panel" id="panel">
+    <details class="card" open><summary>الشكل</summary><div class="body">
+      <div><div class="hint" style="margin-bottom:6px">المقاس</div><div class="seg" data-k="size"><button data-v="post">بوست ٤:٥</button><button data-v="square">مربع</button><button data-v="story">ستوري</button></div></div>
+      <div><div class="hint" style="margin-bottom:6px">اللون</div><div class="seg" data-k="theme"><button data-v="navy">كحلي وذهبي</button><button data-v="ivory">عاجي وذهبي</button><button data-v="night">ليلي</button></div></div>
+      <label class="f">شارة أعلى الدعوة<input data-k="badge" placeholder="مثل: دعوة زواج"></label>
+      <label class="f">سطر التذكير (اختياري)<input data-k="remind" placeholder="مثل: تذكير · غداً بإذن الله"></label>
+    </div></details>
+
+    <details class="card" open><summary>الصور</summary><div class="body" id="photos"></div></details>
+
+    <details class="card" open><summary>نص الدعوة</summary><div class="body">
+      <label class="f">قبل الداعين<input data-k="lead"></label>
+      <label class="f">الداعي الأول<input data-k="host1"></label>
+      <label class="f">الداعي الثاني (اختياري)<input data-k="host2"></label>
+      <label class="f">نص الدعوة<textarea data-k="body"></textarea></label>
+      <div class="row2"><label class="f">قبل اسم العريس<input data-k="groomPre"></label><label class="f">اسم العريس<input data-k="groom"></label></div>
+      <div class="row2"><label class="f">قبل اسم والد العروس<input data-k="bridePre"></label><label class="f">والد العروس<input data-k="bride"></label></div>
+    </div></details>
+
+    <details class="card" open><summary>الموعد والمكان</summary><div class="body">
+      <div class="row3"><label class="f">اليوم<input data-k="day"></label><label class="f">هجري<input data-k="hijri"></label><label class="f">ميلادي<input data-k="greg"></label></div>
+      <div class="row2"><label class="f">الوقت<input data-k="time"></label><label class="f">المكان<input data-k="venue"></label></div>
+      <label class="f">رابط الموقع على الخريطة (يطلع باركود)<input data-k="map" dir="ltr" placeholder="https://maps.app.goo.gl/..."></label>
+      <label class="f">الختام<input data-k="close"></label>
+    </div></details>
+
+    <details class="card"><summary>التذييل</summary><div class="body">
+      <label class="f">حسابات الأسرة<input data-k="social" dir="ltr"></label>
+      <label class="f">الموقع<input data-k="site" dir="ltr"></label>
+      <button class="btn ghost" data-act="reset" style="justify-self:start">↺ رجّع النموذج الأصلي</button>
+      <p class="hint">كل اللي تكتبه ينحفظ في جهازك تلقائياً. الصور تنحفظ إذا كانت مساحة الجهاز تسمح.</p>
+    </div></details>
+  </div>
+</main>
+<div class="fab"><button class="btn gold" data-act="png">⬇ تحميل الصورة</button><button class="btn ghost" data-act="share">مشاركة</button></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEF={size:'post',theme:'navy',badge:'دعوة زواج',remind:'تذكير · غداً بإذن الله',
+  lead:'يتشرف أبناء',host1:'عبدالله بن إبراهيم السعد العجلان',host2:'عبدالله بن عبدالعزيز الشايع',
+  body:'بدعوتكم لحضور حفل الزواج وتناول طعام العشاء بمناسبة زواج',
+  groomPre:'الأخ',groom:'عبدالعزيز بن عبدالله العجلان',bridePre:'على كريمة',bride:'عبدالله بن عبدالعزيز الشايع',
+  day:'الثلاثاء',hijri:'٢٣ / ٥ / ١٤٤٨هـ',greg:'٣ / ١١ / ٢٠٢٦م',time:'مساءً',venue:'قاعة سراج',map:'',
+  close:'والدعوة عامة لجميع أفراد الأسرة',social:'@alajlanandaleid',site:'alajlanandaleid.com',
+  photos:[{src:'img/invite/p1.jpg',role:'والد العريس',name:'عبدالله بن إبراهيم العجلان',note:'رحمه الله',z:1,x:0,y:0},
+          {src:'img/invite/p2.jpg',role:'والد العروس',name:'عبدالله بن عبدالعزيز الشايع',note:'',z:1,x:0,y:0},
+          {src:'img/invite/p3.jpg',role:'العريس',name:'عبدالعزيز بن عبدالله العجلان',note:'',z:1,x:0,y:0}]};
+const KEY='ajlan-invite-v1';
+let S=structuredClone(DEF);
+try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v)S=Object.assign(structuredClone(DEF),v);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){try{localStorage.setItem(KEY,JSON.stringify({...S,photos:S.photos.map(p=>({...p,src:p.src.startsWith('data:')?'':p.src}))}));}catch(e2){}}};
+
+const THEMES={
+  navy:{bg0:'#241c6b',bg1:'#120d3a',pat:'rgba(227,182,107,.07)',frame:'#d8a650',goldA:'#f7dfa6',goldB:'#c08537',goldC:'#8a5a1c',ink:'#ffffff',soft:'rgba(255,255,255,.78)',muted:'rgba(240,225,190,.75)',panel:'rgba(255,255,255,.06)',panelLine:'rgba(227,182,107,.45)',glow:'rgba(227,182,107,.22)'},
+  ivory:{bg0:'#fbf6ea',bg1:'#efe3c9',pat:'rgba(154,106,38,.07)',frame:'#b98236',goldA:'#d9a04f',goldB:'#a8732c',goldC:'#6e4512',ink:'#1e1757',soft:'rgba(30,23,87,.82)',muted:'rgba(110,69,18,.8)',panel:'rgba(50,39,129,.05)',panelLine:'rgba(185,130,54,.5)',glow:'rgba(217,160,79,.18)'},
+  night:{bg0:'#1b2330',bg1:'#0b0f16',pat:'rgba(227,182,107,.06)',frame:'#d1a258',goldA:'#f3d79b',goldB:'#c4914a',goldC:'#80571f',ink:'#ffffff',soft:'rgba(255,255,255,.8)',muted:'rgba(230,214,180,.72)',panel:'rgba(255,255,255,.05)',panelLine:'rgba(209,162,88,.45)',glow:'rgba(209,162,88,.2)'}};
+const SIZES={post:[1080,1350],square:[1080,1080],story:[1080,1920]};
+
+const cv=document.getElementById('cv'),g=cv.getContext('2d');
+const IMG={},LOGO=new Image();LOGO.src='img/logo.png';LOGO.onload=()=>draw();
+function img(src){if(!src)return null;let i=IMG[src];if(!i){i=IMG[src]=new Image();i.onload=()=>draw();i.src=src;}return i.complete&&i.naturalWidth?i:null;}
+
+// أدوات الرسم
+function goldGrad(T,x0,y0,x1,y1){const gr=g.createLinearGradient(x0,y0,x1,y1);gr.addColorStop(0,T.goldA);gr.addColorStop(.5,T.goldB);gr.addColorStop(1,T.goldA);return gr;}
+function fitFont(txt,font,size,maxW,min){let s=size;g.font=font.replace('#',s);while(g.measureText(txt).width>maxW&&s>min){s-=1;g.font=font.replace('#',s);}return s;}
+function wrap(txt,maxW){const w=txt.split(/\s+/).filter(Boolean),L=[];let cur='';for(const t of w){const n=cur?cur+' '+t:t;if(g.measureText(n).width>maxW&&cur){L.push(cur);cur=t;}else cur=n;}if(cur)L.push(cur);return L;}
+function arch(x,y,w,h){const r=w/2;g.beginPath();g.moveTo(x,y+h);g.lineTo(x,y+r);g.arc(x+r,y+r,r,Math.PI,0);g.lineTo(x+w,y+h);g.closePath();}
+function star8(cx,cy,r){g.beginPath();for(let i=0;i<16;i++){const a=i*Math.PI/8-Math.PI/2,rr=i%2?r*.42:r;g.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}g.closePath();}
+function diamond(cx,cy,r){g.beginPath();g.moveTo(cx,cy-r);g.lineTo(cx+r,cy);g.lineTo(cx,cy+r);g.lineTo(cx-r,cy);g.closePath();}
+function divider(T,cx,y,w){const gr=g.createLinearGradient(cx-w/2,0,cx+w/2,0);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(.5,T.goldB);gr.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=gr;g.fillRect(cx-w/2,y-1,w,2);g.fillStyle=goldGrad(T,cx-12,y-12,cx+12,y+12);diamond(cx,y,10);g.fill();g.fillStyle=T.bg1;diamond(cx,y,4);g.fill();
+  g.fillStyle=T.goldB;for(const s of[-1,1]){diamond(cx+s*28,y,4);g.fill();}}
+
+function background(T,W,H){
+  const gr=g.createRadialGradient(W/2,H*.3,40,W/2,H*.45,Math.max(W,H)*.85);gr.addColorStop(0,T.bg0);gr.addColorStop(1,T.bg1);g.fillStyle=gr;g.fillRect(0,0,W,H);
+  // نقش نجدي: نجوم ثمانية ومعينات خفيفة
+  g.save();g.fillStyle=T.pat;g.strokeStyle=T.pat;g.lineWidth=1.5;const st=96;
+  for(let y=-st;y<H+st;y+=st)for(let x=-st;x<W+st;x+=st){const ox=((y/st)%2)?st/2:0;star8(x+ox,y,20);g.stroke();diamond(x+ox+st/2,y,5);g.fill();}
+  g.restore();
+  // توهج علوي
+  const gl=g.createRadialGradient(W/2,0,0,W/2,0,W*.7);gl.addColorStop(0,T.glow);gl.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gl;g.fillRect(0,0,W,H*.6);
+  // الإطار المزدوج
+  const m=34;g.strokeStyle=T.frame;g.lineWidth=3;g.strokeRect(m,m,W-2*m,H-2*m);g.globalAlpha=.55;g.lineWidth=1.2;g.strokeRect(m+12,m+12,W-2*m-24,H-2*m-24);g.globalAlpha=1;
+  // زخارف الزوايا
+  for(const[cx,cy,sx,sy]of[[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]]){g.save();g.translate(cx,cy);g.scale(sx,sy);
+    g.fillStyle=goldGrad(T,-30,-30,60,60);star8(0,0,22);g.fill();g.fillStyle=T.bg1;star8(0,0,8);g.fill();
+    g.strokeStyle=T.frame;g.lineWidth=2;g.beginPath();g.moveTo(30,6);g.quadraticCurveTo(70,6,96,26);g.moveTo(6,30);g.quadraticCurveTo(6,70,26,96);g.stroke();
+    g.fillStyle=T.frame;diamond(104,30,5);g.fill();diamond(30,104,5);g.fill();g.restore();}
+  // وسط الأضلاع
+  g.fillStyle=goldGrad(T,W/2-14,0,W/2+14,0);for(const[x,y]of[[W/2,m],[W/2,H-m]]){diamond(x,y,12);g.fill();}
+  g.fillStyle=T.bg1;for(const[x,y]of[[W/2,m],[W/2,H-m]]){diamond(x,y,5);g.fill();}
+}
+
+function photoCard(T,p,x,y,w,h){const im=img(p.src);
+  g.save();g.shadowColor='rgba(0,0,0,.4)';g.shadowBlur=26;g.shadowOffsetY=12;g.fillStyle=T.bg1;arch(x-9,y-9,w+18,h+18);g.fill();g.restore();
+  g.fillStyle=goldGrad(T,x,y,x+w,y+h);arch(x-9,y-9,w+18,h+18);g.fill();
+  g.fillStyle=T.bg1;arch(x-3,y-3,w+6,h+6);g.fill();
+  g.save();arch(x,y,w,h);g.clip();
+  if(im){const z=Math.max(w/im.naturalWidth,h/im.naturalHeight)*(p.z||1),iw=im.naturalWidth*z,ih=im.naturalHeight*z;g.drawImage(im,x+(w-iw)/2+(p.x||0)*w*.5,y+(h-ih)/2+(p.y||0)*h*.5,iw,ih);
+    const sh=g.createLinearGradient(0,y+h*.7,0,y+h);sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(1,'rgba(0,0,0,.28)');g.fillStyle=sh;g.fillRect(x,y,w,h);}
+  else{g.fillStyle=T.panel;g.fillRect(x,y,w,h);g.fillStyle=T.muted;g.font=`700 ${w*.1}px Cairo`;g.textAlign='center';g.fillText('أضف صورة',x+w/2,y+h/2);}
+  g.restore();
+  // شارة الدور على حافة الإطار
+  if(p.role){g.font=`800 ${Math.round(w*.083)}px Cairo`;const tw=g.measureText(p.role).width+34,bh=w*.15,bx=x+w/2-tw/2,by=y+h-bh/2+6;
+    g.fillStyle=goldGrad(T,bx,by,bx+tw,by+bh);g.beginPath();g.roundRect(bx,by,tw,bh,bh/2);g.fill();g.fillStyle=T===THEMES.ivory?'#fff':'#1a1448';g.textAlign='center';g.textBaseline='middle';g.fillText(p.role,x+w/2,by+bh/2+2);g.textBaseline='alphabetic';}
+}
+
+function draw(){const T=THEMES[S.theme]||THEMES.navy,[W,H]=SIZES[S.size]||SIZES.post;cv.width=W;cv.height=H;g.direction='rtl';g.textAlign='center';
+  background(T,W,H);const cx=W/2,PH=S.photos.filter(p=>p.src||p.name),story=S.size==='story',sq=S.size==='square';
+  // تخطيط مرن: نقيس المحتوى ونصغّر لين يدخل
+  const order=['logo','bism','badge','remind','photos','lead','hosts','body','groom','bride','date','venue','close','foot'];
+  let sc=1,h=0;EX=0;for(let k=0;k<14;k++){h=layout(T,W,H,sc,true);if(h<=H-110||sc<.6)break;sc-=.035;}
+  EX=Math.max(0,Math.min(70,(H-120-h)/6));   // المساحة الزايدة تتوزع بين الأقسام
+  layout(T,W,H,sc,false);
+}
+
+let EX=0;
+function layout(T,W,H,sc,dry){const cx=W/2,maxW=W-200,ink=T.ink;let y=78*sc+(S.size==='story'?120:0);const story=S.size==='story';
+  const txt=(t,font,col,yy,mw)=>{if(dry)return;g.font=font;g.fillStyle=col;g.fillText(t,cx,yy,mw||maxW);};
+  // الشعار
+  const lh=(S.size==='square'?78:96)*sc;if(!dry&&LOGO.complete&&LOGO.naturalWidth){const lw=lh*LOGO.naturalWidth/LOGO.naturalHeight;g.save();g.shadowColor=T.glow;g.shadowBlur=30;g.drawImage(LOGO,cx-lw/2,y,lw,lh);g.restore();}
+  y+=lh+66*sc;
+  // البسملة
+  txt('بسم الله الرحمن الرحيم',`700 ${Math.round(40*sc)}px "Aref Ruqaa",Amiri,serif`,goldGrad(T,cx-200,0,cx+200,0),y);y+=24*sc;
+  if(!dry)divider(T,cx,y,360*sc);y+=40*sc;
+  // الشارة
+  if(S.badge){const fs=Math.round(26*sc);g.font=`800 ${fs}px Cairo`;const bw=g.measureText(S.badge).width+56*sc,bh=fs*1.9;
+    if(!dry){g.strokeStyle=T.frame;g.lineWidth=2;g.fillStyle=T.panel;g.beginPath();g.roundRect(cx-bw/2,y,bw,bh,bh/2);g.fill();g.stroke();g.fillStyle=T.goldA;g.textBaseline='middle';g.fillText(S.badge,cx,y+bh/2+2);g.textBaseline='alphabetic';}
+    y+=bh+18*sc;}
+  if(S.remind){y+=22*sc;txt(S.remind,`700 ${Math.round(24*sc)}px Cairo`,T.muted,y);y+=22*sc;}
+  // الصور
+  const P=S.photos.filter(p=>p.src||p.name);
+  y+=EX;if(P.length){y+=18*sc;const n=P.length,gap=46*sc,pw=Math.min(story?280:262,(maxW+40-gap*(n-1))/n)*sc*(S.size==='square'?.6:1),ph=pw*(S.size==='square'?1.12:1.22);
+    const tot=n*pw+(n-1)*gap;let x=cx+tot/2-pw;   // من اليمين لليسار
+    let capH=0;
+    for(const p of P){if(!dry)photoCard(T,p,x,y,pw,ph);let cy=y+ph+44*sc;
+      cy+=6*sc;g.font=`800 ${Math.round(24*sc)}px Cairo`;const NL=wrap(p.name||'',pw+gap*.4);   // الاسم على سطرين إذا طال
+      NL.slice(0,2).forEach((l,j)=>{if(j)cy+=32*sc;if(!dry){g.font=`800 ${Math.round(24*sc)}px Cairo`;g.fillStyle=ink;g.fillText(l,x+pw/2,cy);}});
+      if(p.note){cy+=32*sc;g.font=`700 ${Math.round(21*sc)}px Cairo`;if(!dry){g.fillStyle=T.muted;g.fillText(p.note,x+pw/2,cy);}}
+      capH=Math.max(capH,cy-(y+ph));x-=pw+gap;}
+    y+=ph+capH+64*sc+EX;}
+  // الداعون
+  if(S.lead){txt(S.lead,`700 ${Math.round(28*sc)}px Cairo`,T.soft,y);y+=16*sc;}
+  for(const[i,h]of[S.host1,S.host2].entries()){if(!h)continue;const pre=i&&S.host1?'و':'';const fs=fitFont(pre+h,`700 #px "Aref Ruqaa",Amiri,serif`,Math.round(54*sc),maxW,26);y+=fs*1.12;txt(pre+h,`700 ${fs}px "Aref Ruqaa",Amiri,serif`,goldGrad(T,cx-300,y-fs,cx+300,y),y);}
+  y+=14*sc;
+  if(S.body){g.font=`600 ${Math.round(29*sc)}px Cairo`;for(const l of wrap(S.body,maxW)){y+=42*sc;txt(l,`600 ${Math.round(29*sc)}px Cairo`,T.soft,y);}}
+  // العريس
+  y+=EX*.6;if(S.groom){y+=24*sc;if(S.groomPre){y+=26*sc;txt(S.groomPre,`700 ${Math.round(24*sc)}px Cairo`,T.muted,y);}
+    const fs=fitFont(S.groom,`900 #px Cairo`,Math.round(46*sc),maxW,24);y+=fs*1.2;txt(S.groom,`900 ${fs}px Cairo`,ink,y);}
+  if(S.bride){y+=8*sc;const s=(S.bridePre?S.bridePre+' ':''),fs=fitFont(s+S.bride,`700 #px Cairo`,Math.round(32*sc),maxW,18);y+=fs*1.3;
+    if(!dry){g.font=`700 ${fs}px Cairo`;const a=g.measureText(s).width,b=g.measureText(S.bride).width,x0=cx+(a+b)/2;g.textAlign='right';g.fillStyle=T.muted;g.fillText(s,x0,y);g.fillStyle=goldGrad(T,x0-a-b,0,x0-a,0);g.fillText(S.bride,x0-a,y);g.textAlign='center';}}
+  // الموعد
+  const cells=[['اليوم',S.day],['التاريخ الهجري',S.hijri],['الموافق',S.greg]].filter(c=>c[1]);
+  if(cells.length){y+=38*sc+EX;const bh=104*sc,bw=Math.min(250*sc,(maxW-24*(cells.length-1))/cells.length),tot=cells.length*bw+(cells.length-1)*22*sc;let x=cx+tot/2-bw;
+    for(const[l,v]of cells){if(!dry){g.fillStyle=T.panel;g.strokeStyle=T.panelLine;g.lineWidth=1.6;g.beginPath();g.roundRect(x,y,bw,bh,18*sc);g.fill();g.stroke();
+      g.font=`700 ${Math.round(19*sc)}px Cairo`;g.fillStyle=T.muted;g.fillText(l,x+bw/2,y+36*sc);const fs=fitFont(v,`800 #px Cairo`,Math.round(30*sc),bw-20,14);g.fillStyle=ink;g.fillText(v,x+bw/2,y+78*sc);}
+      x-=bw+22*sc;}
+    y+=bh;}
+  // المكان والوقت
+  const pl=[S.time,S.venue].filter(Boolean).join('  ·  ');
+  if(pl){y+=56*sc;if(!dry){g.font=`800 ${Math.round(30*sc)}px Cairo`;const tw=g.measureText(pl).width,px=cx+tw/2+30*sc;g.fillStyle=ink;g.fillText(pl,cx-14*sc,y);
+    g.save();g.translate(px,y-11*sc);g.scale(sc,sc);g.fillStyle=T.goldB;g.beginPath();g.arc(0,-6,11,Math.PI,0);g.lineTo(0,16);g.closePath();g.fill();g.beginPath();g.arc(0,-6,11,0,Math.PI*2);g.fill();g.fillStyle=T.bg1;g.beginPath();g.arc(0,-6,4.5,0,7);g.fill();g.restore();}}
+  if(S.close){y+=30*sc+EX*.6;if(!dry)divider(T,cx,y,300*sc);y+=48*sc;txt(S.close,`700 ${Math.round(27*sc)}px Cairo`,T.goldA,y);}
+  // التذييل
+  const fy=H-64;if(!dry){const parts=[S.social,S.site].filter(Boolean).join('    |    ');g.font=`700 22px Cairo`;g.fillStyle=T.muted;g.direction='ltr';g.fillText(parts,cx,fy);g.direction='rtl';
+    if(S.map&&window.qrcode){try{const q=qrcode(0,'M');q.addData(S.map);q.make();const n=q.getModuleCount(),s=112,c=s/n,qx=W-70-s,qy=H-80-s;g.fillStyle='#fff';g.beginPath();g.roundRect(qx-8,qy-8,s+16,s+16,10);g.fill();g.fillStyle='#1a1448';
+      for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))g.fillRect(qx+k*c,qy+r*c,c+.3,c+.3);g.font='700 16px Cairo';g.fillStyle=T.muted;g.fillText('الموقع',qx+s/2,qy-16);}catch(e){}}}
+  return y+(S.map?150:0);
+}
+
+// ===== لوحة التحكم =====
+const panel=document.getElementById('panel');
+panel.querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;
+  if(el.classList.contains('seg')){const sync=()=>el.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S[k]));sync();
+    el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[k]=b.dataset.v;sync();save();draw();});}
+  else{el.value=S[k]||'';el.addEventListener('input',()=>{S[k]=el.value;save();draw();});}});
+function buildPhotos(){const box=document.getElementById('photos');box.innerHTML='';
+  S.photos.forEach((p,i)=>{const d=document.createElement('div');d.className='ph';
+    d.innerHTML=`<div class="hd"><span class="th" style="background-image:url('${p.src||''}')"></span><b>الصورة ${['الأولى (يمين)','الثانية','الثالثة (يسار)'][i]}</b><span class="x"><label class="up">تغيير<input type="file" accept="image/*"></label><button data-del>حذف</button></span></div>
+      <div class="row2"><label class="f">الصفة<input data-p="role"></label><label class="f">الاسم<input data-p="name"></label></div>
+      <label class="f">سطر تحت الاسم (اختياري)<input data-p="note" placeholder="مثل: رحمه الله"></label>
+      <div class="row3"><label class="f">تكبير<input type="range" min="1" max="2.5" step=".01" data-r="z"></label><label class="f">يمين/يسار<input type="range" min="-1" max="1" step=".01" data-r="x"></label><label class="f">فوق/تحت<input type="range" min="-1" max="1" step=".01" data-r="y"></label></div>`;
+    d.querySelectorAll('[data-p]').forEach(el=>{el.value=p[el.dataset.p]||'';el.addEventListener('input',()=>{p[el.dataset.p]=el.value;save();draw();});});
+    d.querySelectorAll('[data-r]').forEach(el=>{el.value=p[el.dataset.r]??(el.dataset.r==='z'?1:0);el.addEventListener('input',()=>{p[el.dataset.r]=+el.value;save();draw();});});
+    d.querySelector('input[type=file]').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{   // نصغّر الصورة عشان تنحفظ
+        const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        p.src=c.toDataURL('image/jpeg',.9);p.z=1;p.x=0;p.y=0;save();buildPhotos();draw();};im.src=r.result;};r.readAsDataURL(f);});
+    d.querySelector('[data-del]').addEventListener('click',()=>{p.src='';p.name='';p.role='';p.note='';save();buildPhotos();draw();});
+    box.appendChild(d);});
+  const h=document.createElement('p');h.className='hint';h.textContent='اترك الصورة والاسم فاضيين عشان تنشال من الدعوة. ارفع أي صورة وعدّل مكانها بالأزرار.';box.appendChild(h);}
+buildPhotos();
+
+const toast=t=>{const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200);};
+const fname=()=>'دعوة-'+(S.groom||'الأسرة').split(' ')[0]+'.png';
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='reset'){if(!confirm('ترجع كل شي للنموذج الأصلي؟'))return;S=structuredClone(DEF);save();location.reload();return;}
+  draw();const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  if(a==='share'&&navigator.canShare){const f=new File([blob],fname(),{type:'image/png'});if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'دعوة'});}catch(e){}return;}}
+  const u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download=fname();document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('تم تحميل الدعوة');});
+
+document.fonts.load('700 40px "Aref Ruqaa"').then(()=>document.fonts.load('800 30px Cairo')).then(()=>document.fonts.ready).then(draw);draw();
+</script>
+</body>
+</html>
