@@ -1198,7 +1198,7 @@ function renderOverlay(now,dt){
   // الجوال: نص ألواح الجذع يذوب من صورة الطبعة المصغّرة، فنعيد كتابته على اللوح نفسه بخط واضح (نفس شكل اللابتوب)
   if(MOBILE&&!POSTERBG){const T=[2,3,4,5,6].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===5){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[1].y-S[2].y),fa=SOILA*Math.max(0,Math.min(1,(26-pitch)/6));
     if(fa>.02&&!S.some(q=>q.behind)){g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
-      T.forEach((p,i)=>{const q=S[i],h=pitch*.84,w=Math.max((p.rx||160)*2*q.k*1.02,h*2.4),fs=h*.8;
+      T.forEach((p,i)=>{const q=S[i],h=Math.max(pitch*.92,Math.min(9.5,pitch*1.04)),w=Math.max((p.rx||160)*2*q.k*1.02,h*2.6),fs=h*.84;
         const gr=g.createLinearGradient(0,q.y-h/2,0,q.y+h/2);gr.addColorStop(0,'#fbe7a1');gr.addColorStop(.55,'#e8bd3c');gr.addColorStop(1,'#a8770c');
         g.fillStyle=gr;g.beginPath();g.ellipse(q.x,q.y,w/2,h/2,0,0,7);g.fill();g.lineWidth=Math.max(.6,h*.06);g.strokeStyle='#7a5200';g.stroke();
         g.font=`800 ${fs}px Tajawal`;g.fillStyle='#2b1700';g.fillText(p.name,q.x,q.y+fs*.08);});
@@ -1636,7 +1636,8 @@ function fitView(){if(PORT()){   // الجوال: الشجرة كبيرة مغر
     const SA=1200/2600,VA=VW/VH,k=VA<SA?VA/SA:SA/VA;let gx=VA<SA?.5+(492/1200-.5)/k:492/1200,gy=VA<SA?2275/2600:.5+(2275/2600-.5)/k;
     // خط الغرس: أرض الصورة، إلا إذا كان شريط التبويب أعلى منها، فنرفع الشجرة والخلفية معاً حتى يبان الجذع كله («الهذلي») وشريط أرض رفيع
     const g0=gy*VH,tt=CH.tt||(VH-(CH.b||0)),plant=Math.min(g0,tt-18);SCN_DY=Math.max(0,g0-plant);gy=plant/VH;
-    const s=Math.min(VW*.78/PW,(gy*VH-(CH.t||56)-10)/8950);return{x:PW/2,y:10520-(gy*VH-VH/2)/s,s,h:0,pitch:0,yaw:0,roll:0};}
+    // الجوال: الشجرة أكبر من عرض الشاشة شوي (أطراف التاج تنقص) عشان أسماء الجذع تنقرأ بدون زوم
+    const s=Math.min(VW*1.16/PW,(gy*VH-(CH.t||56)-10)/8950);return{x:PW/2,y:10520-(gy*VH-VH/2)/s,s,h:0,pitch:0,yaw:0,roll:0};}
   if(VW<=760&&CH.b){const y0=POSTERBG?0:1240,t=CH.t+8,b=CH.b+8,s=Math.min(VW/PW,(VH-t-b)/(PH-y0))*.98;return{x:PW/2,y:(y0+PH)/2-(t-b)/2/s,s,h:0,pitch:0,yaw:0,roll:0};}const top=VW<=760?58:70,s=Math.min(VW/PW,(VH-top)/PH)*.98;return{x:PW/2,y:PH/2-top/2/s,s,h:0,pitch:0,yaw:0,roll:0};}   // نترك مكان شريط البحث فوق عشان العنوان ما يختفي
 function tweenTo(t,ms=900){camTween={from:{...cam},to:{h:0,pitch:0,yaw:0,roll:0,...t},t0:performance.now(),ms};dirty=true;}
 function stepCamera(now){if(!camTween)return false;const{from,to,t0,ms}=camTween,t=Math.min(1,(now-t0)/ms),e=ez(t);
