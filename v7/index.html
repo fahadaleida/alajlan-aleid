@@ -1201,11 +1201,17 @@ function renderOverlay(now,dt){
     if(fa>.02&&!S.some(q=>q.behind)){LADA=fa;g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
       const P=12.5,HB=17,yB=S[0].y,ys=[yB],xs=S.map(q=>q.x);for(let i=1;i<7;i++){const mn=i===1||i===6?(HB+P)/2+1.5:P;ys.push(ys[i-1]-Math.max(S[i-1].y-S[i].y,mn));}
       const st=Math.max(0,Math.min(1,(13-pitch)/4));   // كم الجذع ممدود (١ = مصغّر بالكامل)
-      if(st>.02){const W=58,x=xs[0],top=ys[6]-HB/2-3,bot=yB+HB/2+2,tg=g.createLinearGradient(x-W/2,0,x+W/2,0);tg.addColorStop(0,'#2a1408');tg.addColorStop(.5,'#5a2e14');tg.addColorStop(1,'#2a1408');
+      if(false&&st>.02){const W=58,x=xs[0],top=ys[6]-HB/2-3,bot=yB+HB/2+2,tg=g.createLinearGradient(x-W/2,0,x+W/2,0);tg.addColorStop(0,'#2a1408');tg.addColorStop(.5,'#5a2e14');tg.addColorStop(1,'#2a1408');
         g.globalAlpha=fa*st;g.fillStyle=tg;g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=6;g.beginPath();g.roundRect(x-W/2,top,W,bot-top,[14,14,6,6]);g.fill();g.shadowBlur=0;g.globalAlpha=fa;}
-      T.forEach((p,i)=>{const big=i===0||i===6,h=big?HB:P-1.5,fs=big?11.5:9.2,y=ys[i],x=xs[i];g.font=`800 ${fs}px Tajawal`;const w=big?66:Math.min(52,Math.max(g.measureText(p.name).width+h*1.2,36));
-        const gr=g.createLinearGradient(0,y-h/2,0,y+h/2);gr.addColorStop(0,'#fbe7a1');gr.addColorStop(.55,'#e8bd3c');gr.addColorStop(1,'#a8770c');
-        g.fillStyle=gr;g.beginPath();g.ellipse(x,y,w/2,h/2,0,0,7);g.fill();g.lineWidth=.8;g.strokeStyle='#7a5200';g.stroke();g.fillStyle='#2b1700';g.fillText(p.name,x,y+fs*.08);});
+      // نفس هوية اللوحة الذهبية في الكمبيوتر ودليل الألوان: تدرّج ذهبي، حافة داكنة، لمعة داخلية، توهّج، ونص بارز
+      T.forEach((p,i)=>{const big=i===0||i===6,h=big?HB:P-1.5,fs=big?12:9.2,y=ys[i],x=xs[i];g.font=big?`700 ${fs}px "Aref Ruqaa",Amiri,serif`:`800 ${fs}px Tajawal`;const w=big?66:Math.min(52,Math.max(g.measureText(p.name).width+h*1.2,36)),hw=w/2,hh=h/2;
+        g.save();g.translate(x,y);const shp=(a,b)=>{g.beginPath();if(big)g.ellipse(0,0,a,b,0,0,7);else g.roundRect(-a,-b,a*2,b*2,b);};
+        g.shadowColor='rgba(255,190,70,.6)';g.shadowBlur=big?7:4;
+        const gr=g.createLinearGradient(0,-hh,0,hh);gr.addColorStop(0,'#fff7cf');gr.addColorStop(.36,'#f4cf5c');gr.addColorStop(.64,'#d49b22');gr.addColorStop(1,'#8c5c07');
+        g.fillStyle=gr;shp(hw,hh);g.fill();g.shadowColor='transparent';g.lineWidth=1;g.strokeStyle='#5a3604';g.stroke();
+        const hg=g.createLinearGradient(0,-hh,0,hh);hg.addColorStop(0,'rgba(255,253,235,.95)');hg.addColorStop(.5,'rgba(255,240,190,0)');hg.addColorStop(.85,'rgba(120,70,0,0)');hg.addColorStop(1,'rgba(90,50,0,.55)');
+        g.strokeStyle=hg;g.lineWidth=.9;shp(hw-1.3,hh-1.3);g.stroke();
+        const ty=fs*(big?-.02:.1);g.fillStyle='rgba(255,246,210,.75)';g.fillText(p.name,0,ty+.6);g.fillStyle='#3a1d02';g.fillText(p.name,0,ty);g.restore();});
       g.restore();}}}
   const R=RUN;if(!R)return;
   // حلقات الأجداد تشتعل لما يوصلها الضوء
