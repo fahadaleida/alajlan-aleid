@@ -1180,7 +1180,7 @@ function drawBloom(g,now,dt){
   B.nodes=N.filter(o=>o.kind==='me'||(o.kind==='elder'&&(o===gN?tg:tf)>.5)||t>2.4).map(o=>({id:o.p.id,x:o.x,y:o.y,r:o.r*1.2}));
 }
 
-let SOILA=1;const SOIL=new Image();SOIL.src='bg/soil.webp?v=1';SOIL.onload=()=>dirty=true;
+let SOILA=1,LADA=0;const SOIL=new Image();SOIL.src='bg/soil.webp?v=1';SOIL.onload=()=>dirty=true;
 function renderOverlay(now,dt){
   const g=octx;g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,VW,VH);
   // التراب تحت الجذع: الشجرة مغروسة في الأرض (نفس صورة البوابة، وفيها فتحة للجذع فتبان «الهذلي»)، ويختفي في رحلة النسب لأن الكاميرا مايلة
@@ -1196,8 +1196,9 @@ function renderOverlay(now,dt){
       g.fillStyle=gr;g.fillRect(s.x-r,s.y-r,r*2,r*2);if(r>9)nameIn(g,p.name,s.x,s.y,r);}
     g.restore();}
   // الجوال: ألواح الجذع صغيرة مرة على الشاشة، فنرسم الجذع (الهذلي ← علي) أطول شوي بألواح تنقرأ، قاعدته على «الهذلي» نفسه
+  LADA=0;
   if(MOBILE&&!POSTERBG){const T=[1,2,3,4,5,6,7].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===7){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[2].y-S[3].y),fa=SOILA*Math.max(0,Math.min(1,(20-pitch)/5));
-    if(fa>.02&&!S.some(q=>q.behind)){g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
+    if(fa>.02&&!S.some(q=>q.behind)){LADA=fa;g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
       const P=12.5,HB=17,x=S[0].x,yB=S[0].y,ys=[yB];for(let i=1;i<7;i++)ys.push(ys[i-1]-(i===1||i===6?(HB+P)/2+1.5:P));   // من تحت لفوق
       const W=58,top=ys[6]-HB/2-3,bot=yB+HB/2+2,tg=g.createLinearGradient(x-W/2,0,x+W/2,0);tg.addColorStop(0,'#2a1408');tg.addColorStop(.5,'#5a2e14');tg.addColorStop(1,'#2a1408');
       g.fillStyle=tg;g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=6;g.beginPath();g.roundRect(x-W/2,top,W,bot-top,[14,14,6,6]);g.fill();g.shadowBlur=0;
@@ -2154,7 +2155,8 @@ function drawDecor(g){if(!gl||BL||(RUN&&!RUN.done&&RUN.mode!=='poster'&&cam.pitc
 // ألواح الجذع الذهبية: فوق ألواح الطبعة نفسها (نفس المكان والمقاس، مقاسة من الصورة)، تكبر شوي من بعيد عشان تنقرا، وتغطي اللوح المطبوع بالكامل عند التقريب
 const TPL=[[7,'علي',3696,9260,229,132,'الجد الجامع'],[6,'فهد',3690,9487,173,57],[5,'سليمان',3692,9633,196,58],[4,'محمد',3692,9773,221,58,'قاضي ثرمداء'],[3,'عيد',3694,9919,243,61],[2,'المطرفي',3695,10065,283,61]];
 function drawTrunk(g){const a0=w2s(3690,9500),a1=w2s(3790,9500);if(a0.behind)return;const s=(a1.x-a0.x)/100;if(s<=0)return;
-  for(const[id,t,x,y,rx,ry,sub]of TPL){const big=id===7,al=1;const c=w2s(x,y);if(c.x<-300||c.x>VW+300||c.y<-200||c.y>VH+200)continue;
+  for(const[id,t,x,y,rx,ry,sub]of TPL){const big=id===7,al=1-LADA;if(al<.02)continue;   // الجوال: جذع الأسماء الكبير (LADA) ياخذ مكانها
+const c=w2s(x,y);if(c.x<-300||c.x>VW+300||c.y<-200||c.y>VH+200)continue;
     const hh=Math.min(Math.max(ry,Math.min(big?142:72,(big?12:9)/s))*s,Math.max(ry*s,(big?150:70)*s)),ss=sub&&hh>(big?22:15),sm=hh<(big?16:11),fz=hh*(sm?(big?1.05:1.86):(big?1.05:1.32))*(ss?.78:1),hl=SEL===id||HOV===id;
     g.font=sm?`800 ${fz}px Tajawal`:`700 ${fz}px "Aref Ruqaa",Amiri,serif`;   // صغيرة: خط تجوّل أوضح؛ كبيرة: رقعة مثل الطبعة
     const tw=g.measureText(t).width,hw=Math.max(rx*s,tw/2+fz*(big?.9:sm?.55:.75));
