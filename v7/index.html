@@ -865,7 +865,7 @@ function initGL(){
     // الخلفية: v7/bg/bg-scene.jpg (بانوراما المعلمين، يفضّل 3840×1600، تُعرض بملء الشاشة) و v7/bg/crown-mask.png (قناع قص الشجرة)
     if(!POSTERBG)loadImg(innerHeight>innerWidth*1.15?'bg/bg-tree-portrait.jpg?v=1':'bg/bg-scene.jpg?v=3',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
     if(!POSTERBG)loadImg('bg/node-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.node=t;});
-    if(!POSTERBG)loadImg('bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
+    if(!POSTERBG)loadImg(MOBILE?'bg/cut-mask.png?v=1':'bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
     try{initStageGL();}catch(e){console.warn('stage off:',e);G.bb=null;}
     glc.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback2D();});
     return true;
@@ -935,7 +935,7 @@ function renderGL(now,R){
   // الخلفية الممتدة (سماء + بحيرة وعشب) خلف الطبعة — ملفات قابلة للاستبدال في v7/bg
   if(G.scene){const S=G.sceneP;gl.useProgram(S.p);bindTex(S,'uT',0,G.scene);gl.uniform1f(S.u.uSA,G.sceneA);gl.uniform1f(S.u.uVA,VW/VH);if(PORT()){fitView();const va=VW/VH;gl.uniform2f(S.u.uOff,0,-SCN_DY/VH*(va>G.sceneA?G.sceneA/va:1));}/*الجوال: المشهد ثابت، ويرتفع بس إذا شريط التبويب غطى الأرض*/else gl.uniform2f(S.u.uOff,(cam.x/PW-.5)*-.02,(cam.y/PH-.5)*.015);{const a=w2s(3700,10520),b=w2s(4700,10520);const rx=Math.abs(b.x-a.x)/VW;gl.uniform4f(S.u.uSh,a.x/VW,1-a.y/VH,rx,rx*VW/VH*.16);}gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     gl.useProgram(P.p);}
-  const CUT=!!(G.crown&&G.scene&&G.node);gl.uniform1f(P.u.uCut,CUT?1:0);if(CUT){bindTex(P,'uCrown',3,G.crown);bindTex(P,'uNode',4,G.node);const fs=fitView().s;gl.uniform1f(P.u.uGlow,.12+.18*clamp01((cam.s-fs*1.5)/(fs*2.5)));gl.uniform1f(P.u.uVeil,RUN?0:.3+.15*clamp01((cam.s-fs*1.5)/(fs*3)));
+  const CUT=!!(G.crown&&G.scene&&G.node);gl.uniform1f(P.u.uCut,CUT?1:0);if(CUT){bindTex(P,'uCrown',3,G.crown);bindTex(P,'uNode',4,G.node);const fs=fitView().s;gl.uniform1f(P.u.uGlow,.12+.18*clamp01((cam.s-fs*1.5)/(fs*2.5)));gl.uniform1f(P.u.uVeil,RUN||MOBILE?0:.3+.15*clamp01((cam.s-fs*1.5)/(fs*3)));
     const L=RUN?null:litState(performance.now());if(L&&!L.D.tex){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,L.D.dim);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);L.D.tex=t;}
     bindTex(P,'uLit',5,L?L.D.tex:G.mask);gl.uniform1f(P.u.uLitK,L?L.dk:0);}if(CUT){gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);}
   if(false&&(G.bgSky||G.bgGround)){gl.uniform1f(P.u.uBg,1);const X0=-4*PW,X1=5*PW;
@@ -1197,7 +1197,7 @@ function renderOverlay(now,dt){
     g.restore();}
   // الجوال: ألواح الجذع صغيرة على الشاشة، فنرسمها بحجم ينقرأ؛ المسافة بينها = الأكبر من مسافتها الحقيقية والحد الأدنى، فمع الزوم تنزل لمكانها الحقيقي شوي شوي (بدون نطّة) وتتسلّم الألواح الأصلية
   LADA=0;
-  if(MOBILE&&!POSTERBG){const T=[1,2,3,4,5,6,7].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===7){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[2].y-S[3].y),fa=SOILA*Math.max(0,Math.min(1,(15-pitch)/2));
+  if(false&&MOBILE&&!POSTERBG){const T=[1,2,3,4,5,6,7].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===7){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[2].y-S[3].y),fa=SOILA*Math.max(0,Math.min(1,(15-pitch)/2));
     if(fa>.02&&!S.some(q=>q.behind)){LADA=fa;g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
       const P=12.5,HB=17,yB=S[0].y,ys=[yB],xs=S.map(q=>q.x);for(let i=1;i<7;i++){const mn=i===1||i===6?(HB+P)/2+1.5:P;ys.push(ys[i-1]-Math.max(S[i-1].y-S[i].y,mn));}
       const st=Math.max(0,Math.min(1,(13-pitch)/4));   // كم الجذع ممدود (١ = مصغّر بالكامل)
@@ -2161,7 +2161,8 @@ function drawDecor(g){if(!gl||BL||(RUN&&!RUN.done&&RUN.mode!=='poster'&&cam.pitc
   drawTrunk(g);g.restore();}
 // ألواح الجذع الذهبية: فوق ألواح الطبعة نفسها (نفس المكان والمقاس، مقاسة من الصورة)، تكبر شوي من بعيد عشان تنقرا، وتغطي اللوح المطبوع بالكامل عند التقريب
 const TPL=[[7,'علي',3696,9260,229,132,'الجد الجامع'],[6,'فهد',3690,9487,173,57],[5,'سليمان',3692,9633,196,58],[4,'محمد',3692,9773,221,58,'قاضي ثرمداء'],[3,'عيد',3694,9919,243,61],[2,'المطرفي',3695,10065,283,61]];
-function drawTrunk(g){const a0=w2s(3690,9500),a1=w2s(3790,9500);if(a0.behind)return;const s=(a1.x-a0.x)/100;if(s<=0)return;
+function drawTrunk(g){if(MOBILE&&G&&G.crown)return;   // الجوال: جذع الطبعة الأصلي بألواحه يبان مثل شجرة الصفحة الرئيسية
+  const a0=w2s(3690,9500),a1=w2s(3790,9500);if(a0.behind)return;const s=(a1.x-a0.x)/100;if(s<=0)return;
   for(const[id,t,x,y,rx,ry,sub]of TPL){const big=id===7,al=1-LADA;if(al<.02)continue;   // الجوال: جذع الأسماء الكبير (LADA) ياخذ مكانها
 const c=w2s(x,y);if(c.x<-300||c.x>VW+300||c.y<-200||c.y>VH+200)continue;
     const hh=Math.min(Math.max(ry,Math.min(big?142:72,(big?12:9)/s))*s,Math.max(ry*s,(big?150:70)*s)),ss=sub&&hh>(big?22:15),sm=hh<(big?16:11),fz=hh*(sm?(big?1.05:1.86):(big?1.05:1.32))*(ss?.78:1),hl=SEL===id||HOV===id;
