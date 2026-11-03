@@ -86,83 +86,26 @@
   photos.forEach((x, j) => {x.n = j; x.a = x.w / x.h;});
   $('#rs').textContent = `${hDate || gDate}`;
 
-  // ===== تخطيط الصفحات: شبكة واحدة ثابتة لكل المجلة =====
-  // الصفحة ١٠٠ × ١٤١٫٤ وحدة. هوامش ثابتة (جانبي ٨، علوي ١٢، سفلي ١١) وفاصل ٢٫٤ بين الصور
-  // كل الصور مطبوعة داخل الإطار نفسه؛ الصورة الكاملة حتى الحافة تُستخدم نادراً وللصفحة كلها فقط
-  const PW = 100, PH = 141.4, X0 = 8, Y0 = 12, CW = 84, G = 2.4, YB = PH - 11, CH = YB - Y0;
-  const half = (CW - G) / 2, hrow = (CH - G) / 2, sm = 27.2, headH = CH - (sm * 3 + G * 2) - G;
-  const XR = X0 + half + G;   // العمود الأيمن (القراءة من اليمين)
-  const topH = 56, botH = CH - topH - G;
-  const hy = YB - (sm * 3 + G * 2);   // بداية الصور تحت عنوان القسم
-  const LAY = {
-    bleed: {n: 1, bleed: 1, s: [[0, 0, PW, PH]]},
-    stack: {n: 2, s: [[X0, Y0, CW, hrow], [X0, Y0 + hrow + G, CW, hrow]]},
-    grid: {n: 4, s: [[XR, Y0, half, hrow], [X0, Y0, half, hrow], [XR, Y0 + hrow + G, half, hrow], [X0, Y0 + hrow + G, half, hrow]]},
-    l2p: {n: 3, s: [[X0, Y0, CW, topH], [XR, Y0 + topH + G, half, botH], [X0, Y0 + topH + G, half, botH]]},
-    p2l: {n: 3, s: [[XR, Y0, half, botH], [X0, Y0, half, botH], [X0, YB - topH, CW, topH]]},
-    sq: {n: 2, s: [[(PW - hrow) / 2, Y0, hrow, hrow], [(PW - hrow) / 2, Y0 + hrow + G, hrow, hrow]]},
-    solo: {n: 1, solo: 1},
-    // صفحات تفتتح قسماً: عنوان في الأعلى ثم الصور على نفس خطوط الشبكة
-    feat: {n: 3, head: 1, s: [[X0, hy, CW, sm * 2 + G], [XR, YB - sm, half, sm], [X0, YB - sm, half, sm]]},
-    six: {n: 6, head: 1, s: [0, 1, 2].flatMap(r => [[XR, hy + r * (sm + G), half, sm], [X0, hy + r * (sm + G), half, sm]])},
-  };
-  const MIRROR = {l2p: 'p2l', p2l: 'l2p'};
-  const BIAS = {feat: -.04, six: .05, bleed: -.12, stack: 0, l2p: -.05, p2l: -.05, grid: .02, sq: .12, solo: .6};
-  const TOL = .17;
-  const fitCost = (a, w, h) => {const r = w / h, c = 1 - Math.min(a, r) / Math.max(a, r); return c <= TOL ? c * 1.6 : 1.2 + c;};
-  const perms = n => n === 1 ? [[0]] : perms(n - 1).flatMap(q => Array.from({length: n}, (_, k) => [...q.slice(0, k), n - 1, ...q.slice(k)]));
-  const PERM = [0, 1, 2, 3, 4].map(n => n ? perms(n) : []);
-  PERM[6] = [[0, 1, 2, 3, 4, 5]];
-  const plan = [];
-  {
-    let i = 0, sinceHead = 3, sinceBleed = 6, sinceSpread = 4, lastHead = '', pages = 0;
-    const wide = innerWidth >= 700;   // الصورة الممتدة على صفحتين تناسب عرض الصفحتين معاً
-    while (i < gal.length) {
-      const pg = 3 + pages, right = pg % 2 === 0;
-      // لحظة مصمّمة: صورة عريضة ممتدة على الصفحتين كل بضع صفحات
-      if (wide && right && sinceSpread >= 9 && gal.length - i > 6) {
-        const k = [0, 1, 2].map(j => i + j).find(j => j < gal.length && gal[j].w >= 1200 && fitCost(gal[j].a, PW * 2, PH) <= TOL * .8);
-        if (k != null) {const [im] = gal.splice(k, 1); gal.splice(i, 0, im);
-          plan.push({name: 'spread', ims: [im]}); i++; pages += 2; sinceSpread = 0; sinceHead++; sinceBleed += 2; continue;}
-      }           // الصفحات الزوجية يمين الكتاب
-      const facing = !right && plan.length && plan[plan.length - 1].name !== 'spread' ? plan[plan.length - 1].name : null;
-      const prevSpread = right ? plan.slice(-2).map(x => x.name) : plan.slice(-3, -1).map(x => x.name);
-      let best = null;
-      for (const [name, L] of Object.entries(LAY)) {
-        const n = L.n; if (i + n > gal.length) continue;
-        if (L.head && (!right || pg < 4)) continue;                  // عناوين الأقسام تفتتح الصفحة اليمنى فقط
-        const ims = gal.slice(i, i + n);
-        if (L.bleed && (fitCost(ims[0].a, PW, PH) > TOL * 1.6 || sinceBleed < 7)) continue;
-        let bc = 1e9, bp = null;
-        if (L.solo) {bc = 0; bp = [0];}
-        else for (const q of PERM[n]) {let c = 0; q.forEach((k, s) => c += fitCost(ims[k].a, L.s[s][2], L.s[s][3])); if (c < bc) {bc = c; bp = q;}}
-        let score = (bc + .42 + BIAS[name] + (prevSpread.includes(name) ? .2 : 0)) / Math.pow(n, .8);
-        if (L.head) score += (sinceHead < 5 ? .6 : -.06) + (lastHead === name ? .12 : 0);
-        if (facing && (facing === name || MIRROR[facing] === name)) score -= .14;   // الصفحتان المتقابلتان متوازنتان
-        if (facing === 'bleed' && name === 'solo') score += .3;
-        if (!best || score < best.score) best = {name, score, ims: bp.map(k => ims[k])};
-      }
-      plan.push(best); i += best.ims.length; pages++; sinceSpread++;
-      if (LAY[best.name].head) lastHead = best.name;
-      sinceHead = LAY[best.name].head ? 0 : sinceHead + 1; sinceBleed = best.name === 'bleed' ? 0 : sinceBleed + 1;
-    }
-  }
+  // ===== تخطيط الصفحات: نظام شبكي ثابت مثل كتب الصور المطبوعة =====
+  // الصفحة ١٠٠ × ١٤١٫٤ وحدة، هوامش ثابتة (جانبي ٨، علوي ١٢، سفلي ١١) وفاصل ٢٫٤ في كل مكان.
+  // كل إطار = مجموعة خلايا من شبكة معيارية (٢×٤، ٣×٣، ٢×٣، ٣×٢، ٢×٥) — التفاصيل في planAlbum أسفل الملف فتتكرر نفس المقاسات في المجلة كلها،
+  // وكل صورة تملأ إطارها حتى الحافة (قصّ محدود)، والصور تُجمع حسب اتجاهها في صفحات تناسبها.
+  const LAYOUT = planAlbum(gal, {wide: innerWidth >= 700});
+  const {PW, PH, X0, Y0, CW, G, LAY} = LAYOUT, plan = LAYOUT.plan;
+  // ترقيم العارض يتبع ترتيب الصفحات (بعد تجميع الصور حسب اتجاهها) فيتنقّل العارض كما تتقلّب المجلة
+  {const seq = [cov, ...plan.flatMap(pl => pl.ims)];
+    if (seq.length === photos.length) {photos.length = 0; seq.forEach((x, j) => {x.n = j; photos.push(x);});}}
 
   // ===== بناء الصفحات =====
   const run = `<div class="rh"><b>أسرة العجلان والعيد</b><i></i><span>${esc(T.short)}</span></div>`;
   const folio = (n, dark) => `<div class="fo${dark ? ' dk' : ''}"><b>${ar(n)}</b><span>${esc(T.short)}</span></div>`;
   const pct = (v, t) => (v / t * 100).toFixed(3) + '%';
+  // الصورة تملأ الإطار دائماً؛ إن كانت أطول من الإطار نُبقي أعلاها (الوجوه)، وإن كانت أعرض نقصّ من الجانبين بالتساوي
   const fig = (im, s, opt = {}) => {
-    let [x, y, w, h] = s; const r = w / h, c = 1 - Math.min(im.a, r) / Math.max(im.a, r), cover = c <= TOL;
-    const pos = im.a > r ? '50% 50%' : '50% 30%';
-    // صورة لا تناسب الخانة: نقصّها قليلاً نحو شكل الخانة ثم نكبّرها لأقصى حجم داخلها بدل ما تصغر داخل إطار
-    if (!cover && !opt.bleed) {
-      const a = im.a > r ? Math.max(r, im.a * .86) : Math.min(r, im.a / .86);
-      const nw = a > r ? w : h * a, nh = a > r ? w / a : h;
-      x += (w - nw) / 2; y += (h - nh) / 2; w = nw; h = nh;
-    }
-    return `<figure class="ph${opt.bleed && !cover ? ' mat' : ''}${opt.bleed ? ' bl' : ''}" data-n="${im.n}" style="left:${pct(x, PW)};top:${pct(y, PH)};width:${pct(w, PW)};height:${pct(h, PH)}">
-      <img alt="" draggable="false" decoding="async" data-w="${w}" data-h="${h}" style="object-fit:${cover || !opt.bleed ? 'cover' : 'contain'};object-position:${pos}"></figure>`;
+    const [x, y, w, h] = s, r = w / h;
+    const pos = im.a < r ? `50% ${im.a < r * .9 ? 22 : 30}%` : '50% 50%';
+    return `<figure class="ph${opt.bleed ? ' bl' : ''}" data-n="${im.n}" style="left:${pct(x, PW)};top:${pct(y, PH)};width:${pct(w, PW)};height:${pct(h, PH)}">
+      <img alt="" draggable="false" decoding="async" data-w="${w}" data-h="${h}" style="object-fit:cover;object-position:${pos}"></figure>`;
   };
   const pages = [];   // {cls, html, imgs:[n], hard}
   // الغلاف
@@ -219,13 +162,10 @@
     }
     const L = LAY[pl.name];
     let html;
-    if (L.solo) {
-      const im = pl.ims[0], a = im.a, maxH = CH - 16;
-      let w = CW, h = CW / a; if (h > maxH) {h = maxH; w = h * a;}
-      html = `${run}${fig(im, [(PW - w) / 2, Y0 + 3 + (maxH - h) / 2, w, h])}<div class="orn"><i></i><b></b><i></i></div>`;
-    } else html = (L.bleed ? '' : run) + pl.ims.map((im, s) => fig(im, L.s[s], {bleed: L.bleed})).join('');
-    if (L.head) {const [k, t] = HEADS[hk++ % HEADS.length], top = L.s[0][1];
-      html += `<div class="shd" style="top:${pct(Y0, PH)};height:${pct(top - Y0 - G, PH)}"><span>${k}</span><h3>${t}</h3><div class="orn2"><i></i><b></b><i></i></div></div>`;}
+    if (L.solo) html = `${run}${fig(pl.ims[0], pl.s[0])}<div class="orn"><i></i><b></b><i></i></div>`;
+    else html = (L.bleed ? '' : run) + pl.ims.map((im, s) => fig(im, L.s[s], {bleed: L.bleed})).join('');
+    if (L.head) {const [k, t] = pl.end ? ['ختام التغطية', 'لحظات لا تُنسى'] : HEADS[hk++ % HEADS.length];
+      html += `<div class="shd" style="top:${pct(Y0, PH)};height:${pct(L.head - Y0 - G, PH)}"><span>${k}</span><h3>${t}</h3><div class="orn2"><i></i><b></b><i></i></div></div>`;}
     pages.push({cls: 'pp lay-' + pl.name + (L.bleed ? ' isbleed' : ''), imgs: pl.ims.map(x => x.n), html});
   });
   // الختام (إن احتجنا لعدد زوجي) والغلاف الخلفي
@@ -461,6 +401,189 @@
   });
   window.__album = {N, plan: plan.map(x => x.name), pf};
 })();
+
+//<plan>
+// ===== محرك تخطيط صفحات الصور =====
+// نظام شبكي مثل كتب الصور المطبوعة: محتوى الصفحة ٨٤ × ١١٨٫٤ وحدة يُقسم إلى شبكات معيارية بنفس الفاصل:
+//   A = عمودان × ٤ صفوف  ← أفقية كبيرة ٨٤×٥٨، أفقية صغيرة ٤٠٫٨×٢٧٫٨، طولية ٤٠٫٨×٥٨، طولية كاملة
+//   B = ٣ أعمدة × ٣ صفوف ← طولية صغيرة ٢٦٫٤×٣٧٫٩، طولية كبيرة ٥٥٫٢×٧٨، مربعة عريضة ٨٤×٧٨
+//   D = عمودان × ٣ صفوف  ← شبه مربعة ٤٠٫٨×٣٧٫٩، طولية نحيفة ٤٠٫٨×٧٨ (لقطات الجوال)، بانورامية
+//   C = ٣ أعمدة × صفّان  ← لقطات شاشة طويلة ٢٦٫٤×٥٨
+//   E = عمودان × ٥ صفوف  ← عريضة ١٦:٩ ‏٨٤×٤٥٫٩، صور الجوال الطولية ٤٠٫٨×٦٩٫٩، شبه مربعة ٨٤×٦٩٫٩
+// كل صورة تملأ إطارها (قصّ أقصاه ١٩٪ من العرض أي نحو ٩٪ من كل جانب، و٢٠٪ من طول الطولية أغلبه من الأسفل)، والمخطِّط يختار من الصور القادمة
+// ما يناسب كل قالب فتتجمع الطولية مع الطولية والأفقية مع الأفقية مع بقاء الترتيب الزمني تقريباً.
+function planAlbum(gal, opt = {}) {
+  const PW = 100, PH = 141.4, X0 = 8, Y0 = 12, CW = 84, G = 2.4, YB = PH - 11, CH = YB - Y0;
+  const GR = {A: [2, 4], B: [3, 3], C: [3, 2], D: [2, 3], E: [2, 5]};
+  const cell = (g, [c, r, cs = 1, rs = 1]) => {   // العمود ٠ هو الأيمن (القراءة من اليمين)
+    const [nc, nr] = GR[g], cw = (CW - (nc - 1) * G) / nc, rh = (CH - (nr - 1) * G) / nr;
+    const w = cs * cw + (cs - 1) * G, h = rs * rh + (rs - 1) * G;
+    return [X0 + CW - c * (cw + G) - w, Y0 + r * (rh + G), w, h];
+  };
+  const cells = (g, r0 = 0) => {const [nc, nr] = GR[g], o = []; for (let r = r0; r < nr; r++) for (let c = 0; c < nc; c++) o.push([c, r]); return o;};
+  // [الشبكة، الإطارات بترتيب القراءة [عمود، صف، امتداد أعمدة، امتداد صفوف]، ميل التفضيل، خيارات]
+  const TPL = {
+    L2: ['A', [[0, 0, 2, 2], [0, 2, 2, 2]], 0],
+    L1s4: ['A', [[0, 0, 2, 2], [0, 2], [1, 2], [0, 3], [1, 3]], .03],
+    s4L1: ['A', [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2, 2, 2]], .03],
+    Ls8: ['A', cells('A'), .1],
+    L1P2: ['A', [[0, 0, 2, 2], [0, 2, 1, 2], [1, 2, 1, 2]], -.02],
+    P2L1: ['A', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2, 2, 2]], -.02],
+    P4: ['A', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2, 1, 2], [1, 2, 1, 2]], -.04],
+    PsL: ['A', [[0, 0, 1, 2], [1, 0], [1, 1], [0, 2, 2, 2]], .05],
+    sPL: ['A', [[0, 0], [1, 0, 1, 2], [0, 1], [0, 2, 2, 2]], .05],
+    LPs: ['A', [[0, 0, 2, 2], [0, 2, 1, 2], [1, 2], [1, 3]], .05],
+    LsP: ['A', [[0, 0, 2, 2], [0, 2], [1, 2, 1, 2], [0, 3]], .05],
+    P2s4: ['A', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2], [1, 2], [0, 3], [1, 3]], .05],
+    s4P2: ['A', [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2, 1, 2], [1, 2, 1, 2]], .05],
+    PsPs: ['A', [[0, 0, 1, 2], [1, 0], [1, 1], [0, 2], [1, 2, 1, 2], [0, 3]], .08],
+    T1s5: ['A', [[0, 0, 1, 3], [1, 0], [1, 1], [1, 2], [0, 3], [1, 3]], .06],
+    s5T1: ['A', [[0, 0], [1, 0, 1, 3], [0, 1], [0, 2], [0, 3], [1, 3]], .06],
+    X2: ['A', [[0, 0, 1, 4], [1, 0, 1, 4]], .04],   // لقطات شاشة طويلة جداً
+    Pfull: ['A', [[0, 0, 2, 4]], .12],
+    Sq1s2: ['A', [[0, 0, 2, 3], [0, 3], [1, 3]], .02],
+    s2Sq1: ['A', [[0, 0], [1, 0], [0, 1, 2, 3]], .02],
+    W1L1s2: ['A', [[0, 0, 2, 1], [0, 1, 2, 2], [0, 3], [1, 3]], 0],
+    P9: ['B', cells('B'), .12],
+    P6a: ['B', [[0, 0, 2, 2], [2, 0], [2, 1], [0, 2], [1, 2], [2, 2]], .02],
+    P6b: ['B', [[0, 0], [1, 0, 2, 2], [0, 1], [0, 2], [1, 2], [2, 2]], .02],
+    P3S: ['B', [[0, 0], [1, 0], [2, 0], [0, 1, 3, 2]], .03],
+    SP3: ['B', [[0, 0, 3, 2], [0, 2], [1, 2], [2, 2]], .03],
+    WS: ['B', [[0, 0, 3, 1], [0, 1, 3, 2]], 0],
+    S6: ['D', cells('D'), .06],
+    S1s2: ['D', [[0, 0, 2, 2], [0, 2], [1, 2]], 0],
+    s2S1: ['D', [[0, 0], [1, 0], [0, 1, 2, 2]], 0],
+    T2S2: ['D', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2], [1, 2]], .03],
+    S2T2: ['D', [[0, 0], [1, 0], [0, 1, 1, 2], [1, 1, 1, 2]], .03],
+    TS4: ['D', [[0, 0, 1, 2], [1, 0], [1, 1], [0, 2], [1, 2]], .05],
+    T2W: ['D', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2, 2, 1]], 0],
+    WS4: ['D', [[0, 0, 2, 1], [0, 1], [1, 1], [0, 2], [1, 2]], .03],
+    T2Q2: ['E', [[0, 0, 1, 3], [1, 0, 1, 3], [0, 3, 1, 2], [1, 3, 1, 2]], .04],
+    Q2T2: ['E', [[0, 0, 1, 2], [1, 0, 1, 2], [0, 2, 1, 3], [1, 2, 1, 3]], .04],
+    W2w2: ['E', [[0, 0, 2, 2], [0, 2], [1, 2], [0, 3, 2, 2]], 0],
+    WS12: ['E', [[0, 0, 2, 2], [0, 2, 2, 3]], .02],
+    S12W: ['E', [[0, 0, 2, 3], [0, 3, 2, 2]], .02],
+    T2We: ['E', [[0, 0, 1, 3], [1, 0, 1, 3], [0, 3, 2, 2]], 0],
+    WT2e: ['E', [[0, 0, 2, 2], [0, 2, 1, 3], [1, 2, 1, 3]], 0],
+    Tw3W: ['E', [[0, 0, 1, 3], [1, 0], [1, 1], [1, 2], [0, 3, 2, 2]], .05],
+    w3TW: ['E', [[0, 0], [1, 0, 1, 3], [0, 1], [0, 2], [0, 3, 2, 2]], .05],
+    T6: ['C', cells('C'), .04],
+    T3L: ['C', [[0, 0], [1, 0], [2, 0], [0, 1, 3, 1]], .02],
+    LT3: ['C', [[0, 0, 3, 1], [0, 1], [1, 1], [2, 1]], .02],
+    // صفحات تفتتح قسماً: العنوان يأخذ الصف الأول من الشبكة
+    hL1s2: ['A', [[0, 1, 2, 2], [0, 3], [1, 3]], -.04, 1],
+    hs6: ['A', cells('A', 1), .04, 1],
+    hP2s2: ['A', [[0, 1, 1, 2], [1, 1, 1, 2], [0, 3], [1, 3]], -.04, 1],
+    hSq: ['A', [[0, 1, 2, 3]], .02, 1],
+    hP6: ['B', cells('B', 1), 0, 1],
+    hPl3: ['B', [[0, 1, 2, 2], [2, 1], [2, 2]], -.04, 1],
+    hS4: ['D', cells('D', 1), .02, 1],
+    hW2: ['E', [[0, 1, 2, 2], [0, 3, 2, 2]], -.02, 1],
+    hT2: ['D', [[0, 1, 1, 2], [1, 1, 1, 2]], .02, 1],
+  };
+  const LAY = {bleed: {n: 1, bleed: 1, s: [[0, 0, PW, PH]], r: [PW / PH], bias: -.1}, solo: {n: 1, solo: 1}};
+  for (const [name, [g, fr, bias, head]] of Object.entries(TPL)) {
+    const s = fr.map(f => cell(g, f));
+    LAY[name] = {n: s.length, s, g, r: s.map(q => q[2] / q[3]), bias, head: head ? Math.min(...s.map(q => q[1])) : 0};
+  }
+  const MIRROR = {L1s4: 's4L1', L1P2: 'P2L1', PsL: 'sPL', LPs: 'LsP', P2s4: 's4P2', Sq1s2: 's2Sq1', P6a: 'P6b', P3S: 'SP3', S1s2: 's2S1', T2S2: 'S2T2', T3L: 'LT3', hP2s2: 'hL1s2', WS12: 'S12W', T1s5: 's5T1', T2Q2: 'Q2T2', T2We: 'WT2e', Tw3W: 'w3TW'};
+  for (const [a, b] of Object.entries(MIRROR)) MIRROR[b] = a;
+  // القصّ: نسبة ما يضيع من الصورة. القصّ من الجانبين أخطر (أطراف صور الجماعات) فحدّه أصغر
+  const HC = .19, VC = .205;   // ٩٪ من كل جانب كحد أقصى، والطولية يُقصّ أغلبها من الأسفل، والأفقية لا تُقصّ رأسياً أكثر من ١٣٪
+  const cost = (a, r) => {const c = 1 - Math.min(a, r) / Math.max(a, r);
+    if (c > (a > r ? HC : a >= 1.3 ? .13 : VC)) return Infinity; return c * 2.4 + Math.max(0, c - .08) * 5 + (a > r ? Math.max(0, c - .12) * 6 : 0);};
+  const n0 = gal.length, D = Math.min(3, 2.1 + n0 / 500);   // كثافة مستهدفة: صور أكبر في الألبومات الصغيرة
+  const K = 14;                                              // نافذة الصور القادمة التي يجوز تقديمها
+  const pool = gal.slice(), plan = [];
+  let placed = 0, sinceHead = 3, sinceBleed = 6, sinceSpread = 4, lastHead = '', pages = 0, age = 0, headId = pool[0];
+  const soloRect = im => {const maxH = CH - 16; let w = CW, h = CW / im.a; if (h > maxH) {h = maxH; w = h * im.a;}
+    return [(PW - w) / 2, Y0 + 3 + (maxH - h) / 2, w, h];};
+  // أقل عدد من الصفحات المنفردة يحتاجه ما تبقى من صور (بحث كامل لأن الباقي قليل)
+  const TAILN = 10, memo = new Map(), NAMES = Object.keys(TPL);
+  const minSolo = rest => {
+    if (!rest.length) return 0;
+    const key = rest.map(x => x.n).join(','); if (memo.has(key)) return memo.get(key);
+    let m = 1 + minSolo(rest.slice(1)) - (cost(rest[0].a, LAY.Pfull.r[0]) < Infinity ? .5 : 0);
+    for (const name of NAMES) {const L = LAY[name]; if (L.n > rest.length || (L.head && L.n !== rest.length)) continue;
+      const u = new Set();
+      for (const r of L.r) {const j = rest.findIndex(x => !u.has(x) && cost(x.a, r) < Infinity); if (j < 0) break; u.add(rest[j]);}
+      if (u.size === L.n && u.has(rest[0])) m = Math.min(m, minSolo(rest.filter(x => !u.has(x))));
+      if (!m) break;}
+    memo.set(key, m); return m;
+  };
+  while (pool.length) {
+    const pg = 3 + pages, right = pg % 2 === 0;
+    if (pool[0] !== headId) {headId = pool[0]; age = 0;}
+    let win = pool.slice(0, K); const force = age >= 2;
+    // إيقاع الكثافة: إن تأخرنا عن المعدل المستهدف نفضّل صفحة بصور أكثر ثم نعود للصور الكبيرة
+    const Dt = D + Math.max(-1.2, Math.min(3, (D * pages - placed) * .5));
+    // لحظة مصمّمة: صورة عريضة ممتدة على الصفحتين كل بضع صفحات
+    if (opt.wide && right && sinceSpread >= 9 && pool.length > 6) {
+      const k = [0, 1, 2].find(j => j < win.length && win[j].w >= 1200 && cost(win[j].a, PW * 2 / PH) <= .3 && (!force || j === 0));
+      if (k != null) {const [im] = pool.splice(k, 1);
+        plan.push({name: 'spread', ims: [im]}); pages += 2; placed++; sinceSpread = 0; sinceHead++; sinceBleed += 2; age++; continue;}
+    }
+    const facing = !right && plan.length && plan[plan.length - 1].name !== 'spread' ? plan[plan.length - 1].name : null;
+    const prevSpread = (right ? plan.slice(-2) : plan.slice(-3, -1)).map(x => x.name);
+    const search = win => {let best = null;
+    for (const [name, L] of Object.entries(LAY)) {
+      if (L.solo || L.n > win.length) continue;
+      const last = L.n === pool.length;   // الصفحة الأخيرة يجوز أن تحمل عنوان الختام في أي جهة
+      if (L.head && !last && (!right || pg < 4 || sinceHead < 4)) continue;   // عناوين الأقسام تفتتح الصفحة اليمنى فقط وبينها مسافة
+      if (L.bleed && (sinceBleed < 7 || facing === 'bleed')) continue;
+      // نختار لكل إطار أبكر صورة قادمة تناسبه (أو أنسب واحدة من أول ثلاث مناسبة)
+      const used = [], sum = [0];
+      let ok = true;
+      for (const r of L.r) {
+        let pick = -1, pc = Infinity, seen = 0;
+        if (force && !used.includes(0) && cost(win[0].a, r) < Infinity && !(L.bleed && win[0].w < 1000)) seen = 9, pick = 0;   // الصورة المؤجلة تأخذ أول إطار يناسبها
+        for (let j = 0; j < win.length && seen < 3; j++) {
+          if (used.includes(j)) continue;
+          let c = cost(win[j].a, r); if (L.bleed && (c > .25 || win[j].w < 1000)) c = Infinity;
+          if (c === Infinity) continue;
+          seen++; const v = c + .03 * (seen - 1);
+          if (v < pc) {pc = v; pick = j;}
+        }
+        if (pick < 0) {ok = false; break;}
+        used.push(pick); sum[0] += cost(win[pick].a, r);
+      }
+      if (!ok || (force && !used.includes(0))) continue;
+      const n = L.n;
+      const disp = used.reduce((t, j) => t + j, 0) - n * (n - 1) / 2;
+      let score = sum[0] / n + L.bias + .04 * Math.min(9, (n - Dt) ** 2) + .012 * disp + (used.includes(0) ? 0 : .08 * (age + 1));
+      if (prevSpread.includes(name)) score += .1;
+      let runN = 0; for (let j = plan.length - 1; j >= 0 && plan[j].name === name; j--) runN++;
+      if (runN >= 3) score += .07 * (runN - 2);   // تنويع هادئ: لا تتكرر الصفحة نفسها طويلاً
+      if (L.head) score += last && (!right || sinceHead < 7) ? .3 : (sinceHead < 7 ? .7 : -.06) + (lastHead === name ? .12 : 0);
+      if (facing) score -= MIRROR[facing] === name ? .14 : facing === name ? (MIRROR[name] ? .06 : .14) : 0;   // الصفحتان المتقابلتان متوازنتان (ويُفضَّل التناظر)
+      if (facing && LAY[facing].g && LAY[facing].g !== L.g) score += .04;   // خطوط الشبكة نفسها على الصفحتين
+      if (facing === 'bleed' && n < 3) score += .2;
+      // قرب النهاية: نتجنب ترك صور لا يصلح لها إلا صفحة منفردة
+      if (pool.length <= TAILN) {const left = new Set(used.map(j => win[j])); score += .6 * minSolo(pool.filter(x => !left.has(x)));}
+      if (!best || score < best.score) best = {name, score, used, end: last && !!L.head && (!right || sinceHead < 7)};
+    }
+    return best;};
+    let best = search(win);
+    // صورة مؤجلة لا يناسبها شيء مما يليها (بانوراما مثلاً): نبحث لها عن رفيقات أبعد بدل صفحة منفردة
+    if (!best && force && pool.length > K) best = search(win = pool.slice(0, 90));
+    if (!best) {const im = pool.shift(); plan.push({name: 'solo', ims: [im], s: [soloRect(im)]});}
+    else {
+      // ترتيب الصور داخل الصفحة: الإطارات المتشابهة تأخذ الصور بترتيبها الزمني
+      const L = LAY[best.name], ims = best.used.map(j => win[j]);
+      const byR = {}; L.r.forEach((r, s) => (byR[r.toFixed(3)] ||= []).push(s));
+      const out = new Array(L.n);
+      Object.values(byR).forEach(slots => {const js = slots.map(s => best.used[s]).sort((a, b) => a - b); slots.forEach((s, k) => out[s] = win[js[k]]);});
+      plan.push(best.end ? {name: best.name, ims: out, end: 1} : {name: best.name, ims: out});
+      const set = new Set(ims); for (let j = pool.length - 1; j >= 0; j--) if (set.has(pool[j])) pool.splice(j, 1);
+      if (L.head) lastHead = best.name;
+    }
+    const nm = plan[plan.length - 1].name;
+    pages++; sinceSpread++; age++; placed += plan[plan.length - 1].ims.length;
+    sinceHead = LAY[nm].head ? 0 : sinceHead + 1; sinceBleed = nm === 'bleed' ? 0 : sinceBleed + 1;
+  }
+  return {PW, PH, X0, Y0, CW, G, LAY, plan};
+}
+//</plan>
 
 const arD = s => s.replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 // عنوان المجلة: «تغطية حفل زواج فلان» ← نوع المناسبة + الاسم
