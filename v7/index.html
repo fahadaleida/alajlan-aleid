@@ -1197,7 +1197,7 @@ function renderOverlay(now,dt){
     g.restore();}
   // الجوال: ألواح الجذع صغيرة مرة على الشاشة، فنرسم الجذع (الهذلي ← علي) أطول شوي بألواح تنقرأ، قاعدته على «الهذلي» نفسه
   LADA=0;
-  if(MOBILE&&!POSTERBG){const T=[1,2,3,4,5,6,7].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===7){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[2].y-S[3].y),fa=SOILA*Math.max(0,Math.min(1,(20-pitch)/5));
+  if(MOBILE&&!POSTERBG){const T=[1,2,3,4,5,6,7].map(i=>people[i]).filter(p=>p&&p.pos);if(T.length===7){const S=T.map(p=>w2s(p.pos[0],p.pos[1])),pitch=Math.abs(S[2].y-S[3].y),fa=SOILA*Math.max(0,Math.min(1,(7.4-pitch)/1.2));   // يختفي أول ما تكبر الألواح الأصلية وينكتب عليها الاسم (pitch≈7)
     if(fa>.02&&!S.some(q=>q.behind)){LADA=fa;g.save();g.globalAlpha=fa;g.textAlign='center';g.textBaseline='middle';g.direction='rtl';
       const P=12.5,HB=17,x=S[0].x,yB=S[0].y,ys=[yB];for(let i=1;i<7;i++)ys.push(ys[i-1]-(i===1||i===6?(HB+P)/2+1.5:P));   // من تحت لفوق
       const W=58,top=ys[6]-HB/2-3,bot=yB+HB/2+2,tg=g.createLinearGradient(x-W/2,0,x+W/2,0);tg.addColorStop(0,'#2a1408');tg.addColorStop(.5,'#5a2e14');tg.addColorStop(1,'#2a1408');
