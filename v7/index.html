@@ -99,6 +99,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn.gold{background:linear-gradient(135deg,#f6dc8c,#c9970f);border:0;color:#3a2a05;font-weight:800}
 .btn.dark{background:#3a2416;color:#fff;border-color:#3a2416}
 .btn.danger{color:#c0392b}
+.phf h4 small{font-weight:500;opacity:.7}.phr{display:flex;gap:8px}.phr input{flex:1;min-width:0;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:inherit;font:600 16px Tajawal,sans-serif}.phf p{margin:6px 0 0;font-size:13px;line-height:1.6;opacity:.75}
 .notes{white-space:pre-wrap;font-size:14px;border:1px solid var(--line);border-radius:12px;padding:10px}
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#3a2416;color:#fff;padding:8px 18px;border-radius:99px;z-index:30;display:none;white-space:nowrap}
 .toast.show{display:block}
@@ -605,8 +606,11 @@ const SEED=[
   {id:23,name:'لينا',gender:'f',father:19,pos:[615,7155],r:36,via:[[815,7205,12],[770,7192,12],[720,7178,10],[670,7165,10],[635,7158,8]],w:8},
 ];
 const AGES=false;   // الأعمار مخفية بطلب فهد (true يرجّعها)
-const SELF_PHOTO=false;   // الصور يضيفها المشرف فقط من «صور الرجال» في لوحة التحكم، فأزرار الكاميرا مخفية عن الزوار (true يرجّعها)
+const SELF_PHOTO=true;   // زر «أضف صورتك» والكاميرات ظاهرة للزوار، والصورة تنحفظ في جهاز الزائر حتى يتفعّل الخادم (false يخفيها)
 const PW=7387,PH=10554,TILE=512,AJLAN_ID=9,DEFAULT_ID=19,KEY='ajlan-aleid-v7';
+const PHKEY='ajlan-phone';   // جوال صاحب الجهاز، اختياري، ولا ينرفع لأي مكان حتى تتفعّل حسابات الأسرة
+const normPhone=v=>String(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[\s-]/g,'');
+const okPhone=v=>/^(05\d{8}|\+?\d{9,15})$/.test(v);
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 let people=(()=>{try{const s=store.get(KEY);if(s){const o=JSON.parse(s);for(const p of SEED)if(!o[p.id])o[p.id]=structuredClone(p);return o;}}catch(e){}return Object.fromEntries(SEED.map(p=>[p.id,structuredClone(p)]))})();
 function save(){KIDX=null;const own=Object.fromEntries(Object.entries(people).filter(([k,p])=>!p._ext));if(!store.set(KEY,JSON.stringify(own)))(typeof toast==='function'?toast('تعذر الحفظ في المتصفح، مساحة الصور ممتلئة',4000):alert('تعذر الحفظ'));}
@@ -2258,6 +2262,7 @@ function renderCard(id){
     ${sibs.length?`<div class="sec"><h4>${isF?'إخوانها وأخواتها':'إخوانه وأخواته'}</h4>${chips(sibs)}</div>`:''}
     ${p.notes?`<div class="sec"><h4>ملاحظات</h4><div class="notes"></div></div>`:''}
     <div class="sec"><h4>سلسلة النسب</h4>${nasabChain(id)}</div>
+    ${id===meId()&&!isF?`<div class="sec phf"><h4>رقم جوالك <small>(اختياري)</small></h4><div class="phr"><input id="myPhone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" maxlength="16" placeholder="05xxxxxxxx" aria-label="رقم جوالك، اختياري"><button class="btn gold" data-act="savephone">حفظ</button></div><p>يُحفظ في جهازك فقط الآن، ولا يراه أحد. سيظهر لأفراد الأسرة بعد تسجيل الدخول عند تفعيل حسابات الأسرة.</p></div>`:''}
     <div class="actions">
       ${isF||!SELF_PHOTO?'':`<button class="btn gold" data-act="photo">📷 ${p.photo?'غيّر الصورة':'أضف صورتك'}</button>`}
       ${isF?'':`<button class="btn dark" data-act="add">+ أضف ابن أو بنت</button>`}
@@ -2267,6 +2272,7 @@ function renderCard(id){
       ${id>37&&!ks.length?`<button class="btn danger" data-act="del">حذف</button>`:''}
     </div>`;
   if(p.notes)$('#card .notes').textContent=p.notes;
+  if($('#myPhone'))$('#myPhone').value=store.get(PHKEY)||'';
   $('#card').querySelectorAll('canvas.ftc').forEach(c=>requestAnimationFrame(()=>paintCardTree(c)));
 }
 $('#card').addEventListener('click',async e=>{
@@ -2280,6 +2286,7 @@ $('#card').addEventListener('click',async e=>{
   if(a==='family'){openFamily(selected);return;}
   if(a==='pull'){pullBack();return;}
   if(a==='photo')openPhotoFor(selected);
+  if(a==='savephone'){const v=normPhone($('#myPhone').value);if(v&&!okPhone(v)){toast('رقم الجوال غير صحيح');return;}if(v)store.set(PHKEY,v);else{try{localStorage.removeItem(PHKEY);}catch(e){}}$('#myPhone').value=v;toast(v?'تم حفظ رقمك في جهازك':'تم حذف الرقم');}
   if(a==='photomode'){PHOTO_MODE=!PHOTO_MODE;renderCard(selected);toast(PHOTO_MODE?'اضغط 📷 على أي رجل في الشجرة لإضافة صورته':'تم');}
   if(a==='copynasab'){const t=fullNasab(selected)+' '+familyOf(selected);try{await navigator.clipboard.writeText(t);toast('تم نسخ النسب ✓');}catch(err){toast(t,5000);}}
   if(a==='share'){const url=location.href.split('#')[0]+'#'+selected;
