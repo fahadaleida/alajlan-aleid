@@ -2,7 +2,7 @@
 const Panel = (() => {
   const {view, head, say, verb, ing, modal, closeModal, confirmBox, progress, done, norm, clean} = Editor.ui, S = Editor.S, R = Editor.routes;
   const NAV = [['', 'الرئيسية', 'home'], ['news', 'الأخبار والمناسبات', 'news'], ['covers', 'مجلات التغطيات', 'film'], ['mags', 'مكتبة المجلات', 'mag'], ['home', 'الصفحة الرئيسية', 'vision'],
-    ['pages', 'صفحات الموقع', 'box'], ['tree', 'شجرة العائلة', 'tree'], ['invite', 'مصمم الدعوات', 'mail'], ['account', 'الحساب', 'people']];
+    ['pages', 'صفحات الموقع', 'box'], ['tree', 'شجرة العائلة', 'tree'], ['invite', 'مصمم المناسبات', 'mail'], ['account', 'الحساب', 'people']];
   const size = b => b >= 1073741824 ? `${(b / 1073741824).toLocaleString('ar-SA', {maximumFractionDigits: 1})} جيجا` : b < 1048576 ? 'أقل من ١ ميجا' : `${ar(b / 1048576)} ميجا`;
 
   // ===== النظرة العامة =====
@@ -238,7 +238,7 @@ const Panel = (() => {
   R.tree = (id, sub) => id === 'men' ? Men.show(sub) : id ? personView(id) : treeSearch();
 
   // ===== مصمم الدعوات =====
-  R.invite = () => {view().innerHTML = `${head('مصمم الدعوات', '', 'صمّم بطاقة دعوة ونزّلها')}<section class="pcard pmid">${svg('mail', 34)}<p>مصمم الدعوات صفحة مستقلة، وربطه باللوحة يأتي لاحقاً.</p><a class="ebtn big gold" href="invite.html" target="_blank" rel="noopener">فتح مصمم الدعوات</a></section>`;};
+  R.invite = () => {view().innerHTML = `${head('مصمم المناسبات', '', 'صمّم بطاقة لأي مناسبة ونزّلها')}<section class="pcard pmid">${svg('mail', 34)}<p>مصمم المناسبات صفحة مستقلة، وربطه باللوحة يأتي لاحقاً.</p><a class="ebtn big gold" href="invite.html" target="_blank" rel="noopener">فتح مصمم المناسبات</a></section>`;};
 
   // ===== الحساب =====
   R.account = () => {
