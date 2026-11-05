@@ -18,7 +18,7 @@ const Panel = (() => {
     const {posts, idx, site} = S, cats = c => posts.filter(p => p.c === c).length;
     view().innerHTML = `${head('أهلاً بك', '', 'من هنا تدير كل ما يظهر في الموقع')}
       <div class="enote" id="edraft" hidden></div>
-      <section class="astats" aria-label="أرقام الموقع">${[['الأخبار', cats('أخبار الاسرة'), '#news'], ['المناسبات', cats('مناسبات الاسرة'), '#news'], ['الدعوات', cats('دعوات الأسرة'), '#news'], ['مجلات التغطيات', Object.keys(idx.a).length, '#covers'], ['أعداد المجلة', site.magazines.length, '#mags'], ['أسماء الشجرة', '…', '#tree']]
+      <section class="astats" aria-label="أرقام الموقع">${[['الأخبار', cats('أخبار الاسرة'), '#news/news'], ['المناسبات', cats('مناسبات الاسرة'), '#news/occ'], ['الدعوات', cats('دعوات الأسرة'), '#news/inv'], ['مجلات التغطيات', Object.keys(idx.a).length, '#covers'], ['أعداد المجلة', site.magazines.length, '#mags'], ['أسماء الشجرة', '…', '#tree']]
         .map(([t, n, h]) => `<a href="${h}"><b${t === 'أسماء الشجرة' ? ' id="stTree"' : ''}>${typeof n === 'number' ? ar(n) : n}</b><span>${t}</span></a>`).join('')}</section>
       <section class="pcard" id="disk" aria-label="المساحة"><div class="mhead"><b>مساحة الموقع</b></div></section>
       <h3 class="ph3">ماذا تريد أن تفعل؟</h3>
@@ -162,7 +162,7 @@ const Panel = (() => {
   const chain = (T, p) => {const o = [], seen = new Set(); while (p && !seen.has(p.id)) {seen.add(p.id); o.push(p); p = T.by.get(p.father);} return o;};
   const nasab = (T, p, n = 99) => chain(T, p).slice(0, n).map((x, i, a) => i ? `${a[i - 1].gender === 'f' ? 'بنت' : 'بن'} ${x.name}` : x.name).join(' ');
   const pack = list => JSON.stringify(list);
-  const treeTabs = on => `<nav class="mtabs" aria-label="أقسام الشجرة"><a href="#tree"${on ? '' : ' class="on" aria-current="page"'}>الأسماء</a><a href="#tree/men"${on ? ' class="on" aria-current="page"' : ''}>صور الرجال</a></nav>`;
+  const treeTabs = on => `<nav class="adtabs" aria-label="أقسام الشجرة"><a href="#tree"${on ? '' : ' class="on" aria-current="page"'}>الأسماء</a><a href="#tree/men"${on ? ' class="on" aria-current="page"' : ''}>صور الرجال</a></nav>`;
   function treeSearch() {
     view().innerHTML = `${head('شجرة العائلة', '', 'ابحث عن الاسم، ثم صحّحه أو أضف له ابناً أو بنتاً')}
       ${treeTabs(0)}
@@ -285,6 +285,8 @@ const Panel = (() => {
     $('#demoTag').hidden = !Store.demo;
     const side = $('#side'), open = v => {side.classList.toggle('open', v); $('#scrim').hidden = !v; $('#burger').setAttribute('aria-expanded', v);};
     $('#burger').onclick = () => open(!side.classList.contains('open'));
+    const tabs = () => {const h = location.hash.replace(/^#/, ''), k = h === '' ? 'home' : /^(news|new|edit|draft|card)/.test(h) ? 'occ' : h.split('/')[0] === 'invite' ? 'invite' : ''; document.querySelectorAll('#adtabs [data-k]').forEach(e => e.dataset.k === k ? e.setAttribute('aria-current', 'page') : e.removeAttribute('aria-current'));};
+    addEventListener('hashchange', tabs); tabs(); $('#mMore').onclick = () => open(true);
     $('#scrim').onclick = () => open(false);
     side.addEventListener('click', e => {if (e.target.closest('a')) open(false);});
     return k => {

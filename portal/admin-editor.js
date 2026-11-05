@@ -58,12 +58,15 @@ const Editor = (() => {
   }));
 
   // ===== قائمة الأخبار (والتغطيات: نفس القائمة بفلتر) =====
-  function listView(kind) {
-    const covers = kind === 'covers'; lastList = '#' + kind;
-    const all = covers ? S.posts.filter(p => p.c === OCC || S.idx.a[p.id]) : S.posts;
+  const FILT = [['', 'الكل', null], ['occ', 'المناسبات', OCC], ['inv', 'الدعوات', 'دعوات الأسرة'], ['news', 'الأخبار', 'أخبار الاسرة']];
+  const TOUCH = matchMedia('(pointer:coarse)').matches;
+  function listView(kind, sub = '') {
+    const covers = kind === 'covers', fl = covers ? null : FILT.find(f => f[0] === sub) || FILT[0]; lastList = '#' + kind + (fl && fl[0] ? '/' + fl[0] : '');
+    const base = covers ? S.posts.filter(p => p.c === OCC || S.idx.a[p.id]) : S.posts, all = fl && fl[2] ? base.filter(p => p.c === fl[2]) : base;
     view().innerHTML = `${head(covers ? 'مجلات التغطيات' : 'الأخبار والمناسبات', '', covers ? 'كل مناسبة فيها صور تصير مجلة تلقائياً' : 'كل ما يظهر في سجل الأسرة')}
-      <div class="etop"><a class="ebtn big gold" href="#new${covers ? '/occ' : ''}">${svg('plus', 20)}إضافة جديد</a>
+      <div class="etop"><a class="ebtn big gold" href="#new${covers || (fl && fl[0] === 'occ') ? '/occ' : ''}">${svg('plus', 20)}إضافة جديد</a>
       <label class="esearch">${svg('search', 18)}<input id="eq" type="search" placeholder="ابحث في ${ar(all.length)} عنصر" aria-label="بحث"></label></div>
+      ${covers ? '' : `<nav class="efilt" aria-label="تصفية">${FILT.map(f => `<a href="#news${f[0] ? '/' + f[0] : ''}"${f === fl ? ' aria-current="true"' : ''}>${f[1]}<small>${ar(f[2] ? S.posts.filter(p => p.c === f[2]).length : S.posts.length)}</small></a>`).join('')}</nav>`}
       <div class="erows" id="erows"></div><div class="emore" id="emore"></div>`;
     let q = '', shown = 40;
     const draw = () => {
@@ -100,15 +103,15 @@ const Editor = (() => {
         <label class="ef"><span>التاريخ</span><input id="fD" type="date" value="${esc(D.date)}"></label>
         <label class="ef"><span>نص قصير <small>اختياري</small></span><textarea id="fX" rows="3" placeholder="مثال: احتفلت الأسرة يوم الأربعاء في قاعة عبية نجد… (اسم اليوم والقاعة يظهران على غلاف المجلة)">${esc(D.text)}</textarea></label>
         <div class="edrop" id="drop" tabindex="0" role="button" aria-label="إضافة صور">
-          ${svg('cam', 34)}<b>أسقط الصور هنا</b><span>أو اضغط لاختيارها من جهازك</span>
+          ${svg('cam', 34)}<b>${TOUCH ? 'اضغط لإضافة الصور' : 'أسقط الصور هنا'}</b><span>${TOUCH ? 'من ألبوم جوالك أو الكاميرا' : 'أو اضغط لاختيارها من جهازك'}</span>
           <input id="fF" type="file" accept="image/*,.heic,.heif" multiple hidden>
         </div>
         <div class="eprog" id="eprog" hidden><div class="ebarp"><i id="pbar"></i></div><span id="ptxt"></span></div>
         <div class="efails" id="efails" hidden></div>
-        <p class="ehint" id="ehint" hidden>اضغط أي صورة لتكون الغلاف، واسحبها لتغيير ترتيبها.</p>
+        <p class="ehint" id="ehint" hidden>${TOUCH ? 'اضغط صورة لتكون الغلاف، ولتغيير الترتيب اضغط عليها مطولاً ثم اسحبها.' : 'اضغط أي صورة لتكون الغلاف، واسحبها لتغيير ترتيبها.'}</p>
         <div class="ethumbs" id="ethumbs"></div>
       </div>
-      <aside class="epv"><div class="epvh"><b>معاينة المجلة</b><small id="epvc"></small></div>
+      <aside class="epv"><div class="epvh"><b>معاينة المجلة</b><small id="epvc"></small><button type="button" class="epvt" id="epvT" aria-expanded="false" aria-controls="epvb">عرض</button></div>
         <div class="epvb" id="epvb"><div class="epve" id="epve">${svg('mag', 40)}<span>أضف صوراً وتظهر المجلة هنا</span></div></div></aside>
     </div>
     <div class="epub"><span id="esaved"></span>${edit ? `<a class="ebtn" href="post.html?id=${D.postId}" target="_blank" rel="noopener">عرض على الموقع</a>` : ''}${edit ? '<button class="ebtn danger ghost" id="eDel">حذف</button>' : ''}<button class="ebtn big gold" id="ePub">${esc(verb(edit ? 'حفظ ونشر' : 'نشر'))}</button></div>`;
@@ -241,6 +244,7 @@ const Editor = (() => {
     document.body.classList.add('editing');
     view().innerHTML = editorHtml();
     drawThumbs();
+    $('#epvT').onclick = e => {const o = e.target.closest('.epv').classList.toggle('open'); e.target.setAttribute('aria-expanded', o); e.target.textContent = o ? 'إخفاء' : 'عرض'; if (o) preview();};
     const bind = (id, k) => {$(id).oninput = e => {D[k] = e.target.value; touch();};};
     bind('#fT', 'title'); bind('#fD', 'date'); bind('#fX', 'text');
     $('#fT').addEventListener('input', () => {$('#fErr').hidden = true;});
@@ -549,8 +553,8 @@ const Editor = (() => {
     D = null; pending = total = 0;
     document.body.classList.remove('editing');
     closeModal(); scrollTo(0, 0);
-    side(a === 'new' || a === 'edit' || a === 'draft' ? lastList.slice(1) : a === 'mag' ? 'mags' : a);
-    if (a === 'news' || a === 'covers') listView(a);
+    side(a === 'new' || a === 'edit' || a === 'draft' ? lastList.slice(1).split('/')[0] : a === 'mag' ? 'mags' : a);
+    if (a === 'news' || a === 'covers') listView(a, b);
     else if (a === 'new') openNew(b === 'occ');
     else if (a === 'edit') openEdit(+b);
     else if (a === 'draft') {const m = await Draft.load(); m ? restoreDraft(m) : location.replace('#');}

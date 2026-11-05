@@ -128,3 +128,31 @@ body.editing .adash{width:auto}
   .emags{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .alist a{grid-template-columns:minmax(0,1fr)}
 }
+
+/* الجوال: الوصول للمناسبات وتعديلها بسهولة */
+.adtabs,.epvt{display:none}
+.efilt{display:flex;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.efilt a{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 15px;border-radius:999px;border:1px solid rgba(50,39,129,.16);background:#fff;color:var(--navy-d);font-size:14.5px;font-weight:800}
+.efilt a small{font-size:12px;font-weight:700;opacity:.65}
+.efilt a[aria-current]{background:var(--navy-d);border-color:var(--navy-d);color:#fff}
+@media (max-width:1023px){
+  .adtabs{position:fixed;inset:auto 0 0;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:#1A1448;box-shadow:0 -6px 20px rgba(20,16,48,.22)}
+  .adtabs a,.adtabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;border:0;background:none;color:#cfc9e8;font:700 12px Cairo,sans-serif;cursor:pointer}
+  .adtabs [aria-current]{color:#f3d48a}
+  .adtabs .adadd svg{box-sizing:content-box;padding:9px;margin-top:-20px;border-radius:50%;background:linear-gradient(135deg,#f6dc8c,#c9970f);color:#3a2a05;box-shadow:0 4px 12px rgba(20,16,48,.35)}
+  .adtabs .adadd{color:#f3d48a}
+  body.editing .adtabs{display:none}
+  body:not(.editing) .work{margin-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .epvt{display:inline-flex;align-items:center;min-height:44px;margin-inline-start:auto;padding:0 16px;border-radius:999px;border:1px solid rgba(50,39,129,.2);background:#fff;color:var(--navy-d);font:800 14px Cairo,sans-serif;cursor:pointer}
+  .epvh{display:flex;align-items:center;gap:8px}
+  .epv:not(.open) .epvb{display:none}
+  .ethumbs{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .eth .ex{width:36px;height:36px}
+  .edrop{min-height:0;padding:20px 14px}
+  .ef input,.ef textarea{font-size:16px}
+  .epub{gap:8px;flex-wrap:wrap;justify-content:stretch}
+  .epub .ebtn{min-height:48px;flex:1 1 0;justify-content:center;white-space:nowrap}
+  .epub #ePub{flex:1 1 100%;order:-1;min-height:54px}
+  .erow{min-height:76px}
+  .esearch{width:100%}
+}
