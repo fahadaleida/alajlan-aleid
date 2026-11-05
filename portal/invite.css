@@ -122,3 +122,17 @@ dialog .row .btn{flex:1;white-space:nowrap}
   .tools{gap:10px}
   .navbar .btn{flex:1;min-width:0;padding:13px 10px}
 }
+
+/* تكبير التصميم */
+#zoom{width:min(980px,100vw - 24px);max-width:none;max-height:100dvh;padding:12px 14px 14px;border:0;border-radius:18px;background:#fff;box-shadow:0 24px 64px rgba(20,16,48,.5)}
+#zoom[open]{display:flex;flex-direction:column;align-items:center;gap:10px}
+#zoom::backdrop{background:rgba(20,16,48,.78)}
+.zbar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.zbar b{font-size:18px;font-weight:800;color:var(--navy,#322781)}
+.zbody{width:100%;min-height:0;display:flex;align-items:center;justify-content:center;gap:10px}
+#zoomCv{display:block;min-width:0;max-width:calc(100% - 112px);max-height:calc(100dvh - 170px);width:auto;height:auto;border-radius:8px;box-shadow:0 6px 20px rgba(20,16,48,.3)}
+.zarrow{flex:none;width:46px;height:46px;border:1px solid rgba(50,39,129,.2);border-radius:50%;background:#fff;color:var(--navy,#322781);font-size:28px;line-height:1;cursor:pointer}
+#zoomPick{min-width:220px}
+.des canvas{cursor:zoom-in}
+.stage .cv{cursor:zoom-in}
+@media (max-width:640px){.zbody{position:relative}#zoomCv{max-width:100%}.zarrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;font-size:22px;background:rgba(255,255,255,.9)}#zoomPrev{right:4px}#zoomNext{left:4px}#zoom{padding:10px}}

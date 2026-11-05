@@ -49,7 +49,17 @@ function buildOcc(){$('#occGrid').innerHTML=ORDER.map(id=>{const o=OCC[id];retur
 $('#occGrid').addEventListener('click',e=>{const b=e.target.closest('[data-occ]');if(!b)return;S.occ=b.dataset.occ;save();go(2);});
 function buildGallery(){const o=OCC[S.occ],sel=curDesign();$('#v2h').textContent='اختر تصميم '+o.name;
   $('#desGrid').innerHTML=LIST[S.occ].map(d=>`<button class="des${d[0]===sel?' on':''}" data-d="${d[0]}"><canvas data-d="${d[0]}"></canvas><strong>${d[1]}</strong><small>${d[2]}</small></button>`).join('');syncSeg();}
-$('#desGrid').addEventListener('click',e=>{const b=e.target.closest('.des');if(!b)return;cur().design=b.dataset.d;save();$$('.des').forEach(x=>x.classList.toggle('on',x===b));syncNav();});
+const pickDes=d=>{cur().design=d;save();$$('.des').forEach(x=>x.classList.toggle('on',x.dataset.d===d));syncNav();};
+$('#desGrid').addEventListener('click',e=>{const b=e.target.closest('.des');if(!b)return;pickDes(b.dataset.d);zoomShow(b.dataset.d);});
+// تكبير التصميم: يرسم بالمقاس الكامل، وتنقل بين التصاميم بالأسهم
+const zm=$('#zoom'),zc=$('#zoomCv');let zd=null;
+function zoomShow(d){zd=d;const[W,H]=X.SIZES[S.size];zc.width=W;zc.height=H;zc.getContext('2d').clearRect(0,0,W,H);window.occRender(zc.getContext('2d'),{id:S.occ,st:cur(),size:S.size,foot:S.foot,design:d});
+  const t=$$('.des').find(x=>x.dataset.d===d);$('#zoomName').textContent=t?t.querySelector('strong').textContent:'';$('#zoomPrev').hidden=$('#zoomNext').hidden=$('#zoomPick').hidden=!t;if(!zm.open)zm.showModal();}
+const zoomMove=n=>{const l=$$('.des'),i=l.findIndex(x=>x.dataset.d===zd);if(i<0)return;const b=l[(i+n+l.length)%l.length];pickDes(b.dataset.d);zoomShow(b.dataset.d);};
+$('#zoomNext').addEventListener('click',()=>zoomMove(1));$('#zoomPrev').addEventListener('click',()=>zoomMove(-1));$('#zoomClose').addEventListener('click',()=>zm.close());
+$('#zoomPick').addEventListener('click',()=>{zm.close();go(3);});
+zm.addEventListener('click',e=>{if(e.target===zm)zm.close();});
+zm.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')zoomMove(1);if(e.key==='ArrowRight')zoomMove(-1);});
 
 // ===== الخطوة ٣: الحقول =====
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -86,7 +96,7 @@ function buildPhotos(){const box=$('#photos');if(!box)return;box.innerHTML='';co
     d.querySelector('[data-del]').addEventListener('click',()=>{st.photos.splice(i,1);save();buildPhotos();reqDraw();});box.appendChild(d);});
   if(list.length<max){const a=document.createElement('label');a.className='addph';a.innerHTML=`＋ أضف صورة<input type="file" accept="image/*">`;a.querySelector('input').addEventListener('change',e=>pickFile(e.target,src=>{st.photos.push({src,role:'',name:'',note:'',z:1,x:0,y:0});save();buildPhotos();reqDraw();}));box.appendChild(a);}
   const h=document.createElement('p');h.className='hint';h.textContent=max===1?'الصورة تطلع في إطار مربع، وهذي المناسبة تكتمل بدون صورة أيضاً.':`الصور تطلع في إطارات مربعة، وتقدر تضيف حتى ${max===3?'٣ صور':max}. التصميم يكتمل بدونها أيضاً. كبّر الصورة ثم حرّكها لتضبط مكان الوجه.`;box.appendChild(h);}
-$('#stage').addEventListener('click',e=>{if(e.target===cv&&matchMedia('(max-width:980px)').matches)$('#stage').classList.toggle('big');});
+$('#stage').addEventListener('click',e=>{if(e.target!==cv)return;if(matchMedia('(max-width:980px)').matches)$('#stage').classList.toggle('big');else zoomShow(curDesign());});
 
 // ===== الخطوات =====
 const NEXT={1:'التالي: التصميم',2:'التالي: البيانات',3:'التالي: التحميل',4:'⬇ تحميل الصورة'};

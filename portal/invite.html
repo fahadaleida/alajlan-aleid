@@ -8,7 +8,7 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=El+Messiri:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="invite.css?v=1">
+<link rel="stylesheet" href="invite.css?v=3">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body data-step="1">
@@ -59,12 +59,15 @@
 </main>
 <div class="navbar"><div class="in"><button class="btn ghost" id="back">رجوع</button><button class="btn gold next" id="next"></button></div></div>
 <div class="toast" id="toast"></div>
+<dialog id="zoom" aria-label="تكبير التصميم"><div class="zbar"><b id="zoomName"></b><button class="btn ghost" id="zoomClose">إغلاق</button></div>
+  <div class="zbody"><button class="zarrow" id="zoomPrev" aria-label="التصميم السابق">›</button><canvas id="zoomCv"></canvas><button class="zarrow" id="zoomNext" aria-label="التصميم التالي">‹</button></div>
+  <button class="btn gold" id="zoomPick">اختيار هذا التصميم</button></dialog>
 <dialog id="warn"><h3>فيه بيانات ناقصة</h3><p>هذي الحقول لسا فاضية وبتطلع في الصورة كنص مؤقت:</p><ul id="warnList"></ul>
   <div class="row"><button class="btn gold" id="warnFix">أكمل البيانات</button><button class="btn ghost" id="warnGo">تحميل كما هو</button></div></dialog>
 
 <script src="invite-engine.js?v=1"></script>
 <script src="invite-occasions.js?v=1"></script>
 <script src="invite-designs.js?v=1"></script>
-<script src="invite-app.js?v=1"></script>
+<script src="invite-app.js?v=2"></script>
 </body>
 </html>
