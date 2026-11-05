@@ -24,7 +24,7 @@
 <section style="padding-top:44px">
   <div class="wrap" id="body"></div>
 </section>
-<script src="common.js?v=202611021830"></script>
+<script src="common.js?v=202611051200"></script>
 <script src="rockets.js?v=202611021830"></script>
 <script>
 (async () => {
@@ -60,7 +60,7 @@
     },
     magazines() {
       set('مجلة الأسرة', 'أعداد مجلة أسرة العجلان والعيد للتحميل والقراءة');
-      B.innerHTML = `<div class="shelf">${site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b>${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)} · ${esc(m.size)}</span><br><em>${ic('dl', 15)} تحميل</em></div></a>`).join('')}</div>
+      B.innerHTML = `<div class="shelf">${site.magazines.map(m => `<a class="mag rv" href="${esc(m.u)}" target="_blank" rel="noopener"><span>مجلة الأسرة</span><b>${ar(m.n)}</b><div style="position:relative"><span>${esc(m.date)}${m.size ? ' · ' + esc(m.size) : ''}</span><br><em>${ic('dl', 15)} تحميل</em></div></a>`).join('')}</div>
         <div class="more"><a class="btn ghost" href="news.html?q=مجلة">أخبار المجلة</a></div>`;
     },
     film() {

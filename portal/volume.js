@@ -4,7 +4,7 @@
   const Q = new URLSearchParams(location.search);
   const cat = Q.get('c') || '', q = (Q.get('q') || '').trim(), yr = Q.get('y') || '';
   const stage = $('#stage'), zone = $('#zone'), shift = $('#shift'), bookEl = $('#book');
-  const [posts, aidx] = await Promise.all([loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611031800').then(r => r.json()).catch(() => ({a: {}}))]);
+  const [posts, aidx] = await Promise.all([loadJSON('data/posts.json'), loadJSON('data/albums/index.json').catch(() => ({a: {}}))]);
   const albums = aidx.a || {};
   const CATS = [['', 'الكل'], ['أخبار الاسرة', 'الأخبار'], ['دعوات الأسرة', 'الدعوات'], ['مناسبات الاسرة', 'المناسبات']];
   const LBL = {'': 'أخبار ومناسبات ودعوات الأسرة', 'أخبار الاسرة': 'أخبار الأسرة', 'دعوات الأسرة': 'دعوات الأسرة', 'مناسبات الاسرة': 'مناسبات الأسرة وتغطياتها'};
@@ -54,7 +54,7 @@
   const mos = []; const seen = new Set();
   for (const p of [...L.filter(p => albums[p.id]), ...L]) {
     if (mos.length >= 8) break; const a = albums[p.id];
-    const u = a ? (/^https?:/.test(a[0]) ? a[0] : aidx.base + a[0]) : p.i;
+    const u = a ? (/^(https?:|img\/)/.test(a[0]) ? a[0] : aidx.base + a[0]) : p.i;
     if (u && !/phonto/i.test(u) && !seen.has(u)) {seen.add(u); mos.push(u);}
   }
   const tiles = Array.from({length: 9}, (_, k) => k === 4 ? '<i class="vmc"><img src="img/logo-mark.png" alt=""></i>' : (u => u ? `<i class="vmt"><img data-src="${esc(u)}" alt=""></i>` : '<i class="vmt e"></i>')(mos[k < 4 ? k : k - 1]));

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611040130">
 <link rel="stylesheet" href="admin.css?v=202611050200">
+<link rel="stylesheet" href="admin-editor.css?v=202611051200">
 </head>
 <body class="far adminp">
 <div id="scene" aria-hidden="true"></div><div class="towerfg" aria-hidden="true"></div>
@@ -35,42 +36,51 @@
     <div><small>أسرة العجلان والعيد</small><h1>لوحة التحكم</h1></div>
     <button id="out" type="button">تسجيل الخروج</button>
   </header>
-  <section class="astats" id="stats" aria-label="أرقام الموقع"></section>
-  <h2>الوصول السريع</h2>
-  <nav class="alinks" id="links" aria-label="الوصول السريع"></nav>
-  <h2>آخر ما نُشر</h2>
-  <div class="alist" id="latest"></div>
+  <div id="homeV">
+    <div class="enote" id="econn" hidden><span>النشر غير مربوط بعد، فاللوحة للعرض فقط. اربطه مرة واحدة وتنشر من أي جهاز.</span><a class="ebtn gold" href="#connect">ربط النشر</a></div>
+    <div class="enote" id="edraft" hidden></div>
+    <nav class="etiles" id="tiles" aria-label="إدارة المحتوى"></nav>
+    <section class="astats" id="stats" aria-label="أرقام الموقع"></section>
+    <h2>الوصول السريع</h2>
+    <nav class="alinks" id="links" aria-label="الوصول السريع"></nav>
+    <h2>آخر ما نُشر</h2>
+    <div class="alist" id="latest"></div>
+  </div>
+  <div id="view" hidden></div>
 </main>
 
-<script src="common.js?v=202611022230"></script>
+<script src="common.js?v=202611051200"></script>
 <script src="rockets.js?v=202611031900"></script>
+<script src="admin-gh.js?v=202611051200"></script>
+<script src="admin-photos.js?v=202611051200"></script>
+<script src="admin-editor.js?v=202611051200"></script>
 <script>
 (() => {
-  // الدخول يتحقق في المتصفح لأن الموقع ثابت بدون خادم، فلا تُحفظ هنا أي بيانات سرية
+  // الدخول يتحقق في المتصفح لأن الموقع ثابت بدون خادم. هذه البصمة احتياطية لأول مرة، وبعد الربط المرجع هو data/admin-key.json
   const AUTH = {user: 'fahad', salt: 'S9IQbdpIDSmmIXEIQTu4Qg==', iter: 200000, hash: 'q6jUDtOz1YxlZesfxh403ua3Z/0NEV46f+Uis0mo8EQ='};
-  const KEY = 'ajlan-admin';
-  const b64 = u => btoa(String.fromCharCode(...new Uint8Array(u)));
-  const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-  const store = {get: () => {try {return sessionStorage.getItem(KEY);} catch {return null;}}, set: v => {try {v ? sessionStorage.setItem(KEY, v) : sessionStorage.removeItem(KEY);} catch {}}};
-
-  const derive = async (u, p) => {
-    const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(`${u}:${p}`), 'PBKDF2', false, ['deriveBits']);
-    return b64(await crypto.subtle.deriveBits({name: 'PBKDF2', hash: 'SHA-256', salt: unb64(AUTH.salt), iterations: AUTH.iter}, k, 256));
-  };
+  const ready = Vault.init(AUTH);
 
   const LINKS = [
     ['مصمم الدعوات', 'invite.html', 'mail'], ['الأخبار والمناسبات', 'news.html', 'news'], ['مجلات التغطيات', 'coverages.html', 'film'],
     ['مكتبة المجلات', 'magazines.html', 'mag'], ['شجرة العائلة', TREE_URL, 'tree'], ['الصفحة الرئيسية', 'index.html', 'home'],
   ];
+  const TILES = [['الأخبار والمناسبات', '#news', 'news', 'أضف خبراً أو عدّله'], ['مجلات التغطيات', '#covers', 'film', 'الصور تصير مجلة تلقائياً'],
+    ['مكتبة المجلات', '#mags', 'mag', 'أعداد مجلة الأسرة'], ['الصفحة الرئيسية', '#home', 'home', 'نصوص الرئيسية'], ['الحساب والربط', '#account', 'people', 'النشر وكلمة المرور']];
+  const S = Editor.S;
 
-  async function openDash() {
-    $('#login').hidden = true; $('#dash').hidden = false; document.body.classList.add('indash');
-    $('#links').innerHTML = LINKS.map(([t, u, i]) => `<a href="${u}">${svg(i, 22)}<span>${t}</span></a>`).join('');
-    const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), loadJSON('data/albums/index.json')]);
-    const cats = c => posts.filter(p => p.c === c).length;
+  function drawDash() {
+    const {posts, idx, site} = S, cats = c => posts.filter(p => p.c === c).length;
+    $('#econn').hidden = GH.connected;
     $('#stats').innerHTML = [['كل المنشورات', posts.length], ['الأخبار', cats('أخبار الاسرة')], ['الدعوات', cats('دعوات الأسرة')], ['مجلات التغطيات', Object.keys(idx.a).length], ['أعداد المجلة', site.magazines.length]]
       .map(([t, n]) => `<div><b>${ar(n)}</b><span>${t}</span></div>`).join('');
     $('#latest').innerHTML = posts.slice(0, 6).map(p => `<a href="post.html?id=${p.id}"><time>${fmtDate(p.d)}</time><b>${esc(p.t)}</b><em>${esc(catName(p.c))}</em></a>`).join('');
+  }
+  async function openDash() {
+    $('#login').hidden = true; $('#dash').hidden = false; document.body.classList.add('indash');
+    $('#links').innerHTML = LINKS.map(([t, u, i]) => `<a href="${u}">${svg(i, 22)}<span>${t}</span></a>`).join('');
+    $('#tiles').innerHTML = TILES.map(([t, u, i, d]) => `<a href="${u}">${svg(i, 28)}<b>${t}</b><small>${d}</small></a>`).join('');
+    [S.site, S.posts, S.idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), loadJSON('data/albums/index.json')]);
+    S.refresh = drawDash; drawDash(); Editor.start();
   }
 
   $('#eye').onclick = e => {const i = $('#pass'), s = i.type === 'password'; i.type = s ? 'text' : 'password'; e.target.textContent = s ? 'إخفاء' : 'إظهار';};
@@ -78,13 +88,12 @@
     e.preventDefault();
     const go = $('#go'), err = $('#err'), u = $('#user').value.trim();
     go.disabled = true; go.textContent = 'جارٍ التحقق…'; err.hidden = true;
-    const h = await derive(u, $('#pass').value);
-    if (u === AUTH.user && h === AUTH.hash) {store.set(h); $('#pass').value = ''; openDash();}
+    await ready;
+    if (await Vault.login(u, $('#pass').value)) {$('#pass').value = ''; openDash();}
     else {err.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة'; err.hidden = false; $('#pass').value = ''; $('#pass').focus();}
     go.disabled = false; go.textContent = 'تسجيل الدخول';
   };
-  $('#out').onclick = () => {store.set(null); location.reload();};
-  if (store.get() === AUTH.hash) openDash();
+  $('#out').onclick = () => {location.hash = ''; location.reload();};
   startRockets();
 })();
 </script>

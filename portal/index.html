@@ -20,7 +20,7 @@
   <div class="hgrid">
     <!-- سجل الأسرة -->
     <section class="log glass-panel" aria-labelledby="logT" style="padding-top:32px">
-      <div class="log-h"><div><small>يوميات الأسرة</small><h2 id="logT">سجلّ الأسرة</h2></div><a href="news.html">كل الأخبار <span>←</span></a></div>
+      <div class="log-h"><div><small id="logK">يوميات الأسرة</small><h2 id="logT">سجلّ الأسرة</h2></div><a href="news.html">كل الأخبار <span>←</span></a></div>
       <div><div class="seg" id="seg"><span class="puck" id="puck"></span></div></div>
       <div class="log-b">
         <div class="idx" id="idx"></div>
@@ -48,7 +48,7 @@
   <div class="breath"></div>
 </main>
 
-<script src="common.js?v=202611021830"></script>
+<script src="common.js?v=202611051200"></script>
 <script>/* الجوال: الشجرة لحالها أول، وبعدين سجل الأسرة يرتفع ويصير صفحة كاملة */if(matchMedia('(max-width:1023px)').matches){const up=()=>document.body.classList.add('logup');setTimeout(up,2200);addEventListener('scroll',up,{once:true,passive:true});addEventListener('touchmove',up,{once:true,passive:true});}</script>
 <script src="rockets.js?v=202611031900"></script>
 <script>
@@ -92,6 +92,10 @@ const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله و
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
   buildChrome(site);
+  // نصوص الرئيسية من لوحة التحكم (site.home)، والنص المكتوب في الصفحة هو الافتراضي
+  const HM = site.home || {};
+  if (HM.kicker) $('#logK').textContent = HM.kicker;
+  if (HM.title) $('#logT').textContent = HM.title;
   // ===== سجل الأسرة =====
   const cats = [['', 'الكل'], ['أخبار الاسرة', 'أخبار'], ['دعوات الأسرة', 'دعوات'], ['مناسبات الاسرة', 'مناسبات']];
   const seg = $('#seg');
@@ -131,6 +135,7 @@ const clean = x => x.replace(/^\s*السلام عليكم ورحمة الله و
   // ===== وصول سريع =====
   const Q = [['tribe', 'قبيلة هذيل', 'الأصل والنسب', 'page.html?p=hudhayl'], ['vision', 'الرؤية والرسالة', 'ما نسعى إليه', 'page.html?p=vision'], ['mag', 'المجلات', 'أعداد مجلة الأسرة', 'magazines.html'],
     ['film', 'الفيلم الوثائقي', 'قصة الأسرة مصوّرة', 'page.html?p=film'], ['fund', 'صندوق العائلة', 'الحسابات والمساهمة', 'page.html?p=fund'], ['sms', 'جوال العائلة', 'اشترك برسائل الأسرة', 'page.html?p=sms']];
+  (HM.quick || []).forEach((q, n) => {if (Q[n]) {Q[n][1] = q[0] || Q[n][1]; Q[n][2] = q[1] || Q[n][2];}});
   $('#quick').innerHTML = Q.map(([k, t, d, h]) => `<a class="qa" href="${h}"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></i><b>${t}</b><small>${d}</small></a>`).join('');
 })();
 

@@ -36,7 +36,7 @@
   <nav class="ps-np" id="np" aria-label="التنقل بين الأخبار"></nav>
   <section class="ps-rel" id="rel" hidden><h2>أخبار ذات صلة</h2><div class="news-grid" id="relG"></div></section>
 </main>
-<script src="common.js?v=202611021830"></script>
+<script src="common.js?v=202611051200"></script>
 <script>
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);
@@ -71,10 +71,12 @@
 
   // ===== الصور: أكبر نسخة متاحة للعارض، ونسخة خفيفة واضحة للألبوم =====
   const ext = u => (u.match(/\.\w+$/) || [''])[0];
-  const key = u => (u || '').split('?')[0].split('/').pop().replace(/\.\w+$/, '').replace(/-(\d+x\d+|large|medium|thumbnail)$/, '').replace(/-scaled$/, '');
+  const key = u => (u || '').split('?')[0].split('/').pop().replace(/\.\w+$/, '').replace(/-(\d+x\d+|large|medium|thumbnail|sm)$/, '').replace(/-scaled$/, '');
   const sizes = raw => {
     const u = raw.split('?')[0], e = ext(u);
     let m;
+    // صور المحرر: img/posts/<id>/<key>.jpg ومعها نسخة خفيفة ‎-sm
+    if ((m = u.match(/^(img\/posts\/.*?)(-sm)?\.jpg$/))) return {full: [m[1] + '.jpg'], th: [m[1] + '-sm.jpg', m[1] + '.jpg']};
     // ‎-scaled = نسخة ٢٥٦٠ (الأصل ضخم جداً)، وللألبوم نسخة ١٠٢٤ المتولدة من ووردبريس
     if ((m = u.match(/^(.*)-scaled(\.\w+)$/))) return {full: [u], th: [m[1] + '-1024x683' + e, m[1] + '-683x1024' + e, u]};
     // ‎-large/-medium: الأصل بدون اللاحقة متوفر (أقل من ٢٥٦٠)
@@ -328,7 +330,7 @@
     function mountMag() {
       const box = $('#pmag .ps-table');
       const fr = document.createElement('iframe');
-      fr.title = 'مجلة المناسبة'; fr.src = `album.html?id=${id}&embed=1&v=202611030130`; fr.setAttribute('allow', 'fullscreen');
+      fr.title = 'مجلة المناسبة'; fr.src = `album.html?id=${id}&embed=1&v=202611051200`; fr.setAttribute('allow', 'fullscreen');
       fr.onload = () => box.classList.add('on');
       box.appendChild(fr);
       const size = () => {const w = box.clientWidth, wide = w >= 700;

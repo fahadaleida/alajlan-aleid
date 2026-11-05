@@ -12,6 +12,8 @@
   const m = mags.find(x => x.n === n);
   $('#issue').innerHTML = mags.map(x => `<option value="${x.n}"${x.n === n ? ' selected' : ''}>العدد ${ar(x.n)}</option>`).join('');
   $('#issue').onchange = e => {location.href = `reader.html?n=${e.target.value}`;};
+  // عدد برابط خارجي فقط (بدون صفحات مقلّبة): نفتح الرابط مباشرة
+  if (m && !man && m.u) return location.replace(m.u);
   if (!m || !man || !window.St) return miss();
 
   const N = man.count, R = man.w / man.h, pad = i => String(i).padStart(3, '0');

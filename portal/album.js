@@ -5,18 +5,24 @@
   const Q = new URLSearchParams(location.search), id = +Q.get('id');
   const EMBED = Q.get('embed') === '1' && window.parent !== window;
   if (EMBED) document.body.classList.add('embed');
+  // معاينة المحرر (admin.html): نفس المجلة بالضبط، لكن البيانات من ذاكرة الصفحة الأم بدل الملفات
+  const PV = EMBED && Q.get('preview') === '1' ? await new Promise(res => {
+    addEventListener('message', e => {if (e.origin === location.origin && e.data && e.data.albumPreview) res(e.data.albumPreview);});
+    parent.postMessage({album: 'ready'}, location.origin);
+  }) : null;
+  if (PV) document.body.classList.add('preview');
   const stage = $('#stage'), zone = $('#zone'), shift = $('#shift'), bookEl = $('#book');
   const miss = () => {$('#intro').remove(); $('#miss').hidden = false; document.body.classList.add('nomag');};
   const COVS = 'news.html?c=' + encodeURIComponent('مناسبات الاسرة');
   let posts;
-  try {posts = await loadJSON('data/posts.json');} catch (e) {return miss();}
+  try {posts = PV ? [PV.post] : await loadJSON('data/posts.json');} catch (e) {return miss();}
   const pi = posts.findIndex(p => p.id === id);
   if (pi < 0 || !window.St) return miss();
   const p = posts[pi];
   $('#bBack').href = `post.html?id=${id}`;
-  const [bundle, man] = await Promise.all([
+  const [bundle, man] = PV ? [{[id]: {h: PV.h}}, PV.man] : await Promise.all([
     loadJSON(`data/posts/${Math.floor(pi / 50)}.json`).catch(() => ({})),
-    fetch(`data/albums/${id}.json?v=1`).then(r => r.ok ? r.json() : null).catch(() => null)]);
+    loadJSON(`data/albums/${id}.json`).catch(() => null)]);
   const f = bundle[id] || {h: ''};
 
   // ===== النص والمعلومات =====
@@ -360,7 +366,7 @@
   bookEl.addEventListener('pointerup', e => {
     if (!down) return; const d = Math.hypot(e.clientX - down.x, e.clientY - down.y), dt = Date.now() - down.t; down = null;
     if (d > 8 || dt > 600 || pf.getState() !== 'read') return;
-    const a = e.target.closest('a[href]'); if (a) {location.href = a.href; return;}
+    const a = e.target.closest('a[href]'); if (a) {if (!PV) location.href = a.href; return;}
     const fg = e.target.closest('figure.ph'); if (!fg) return;
     if (EMBED) parent.postMessage({album: 'photo', key: photos[+fg.dataset.n].k, n: +fg.dataset.n}, '*'); else lopen(+fg.dataset.n);
   }, true);

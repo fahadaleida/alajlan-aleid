@@ -36,11 +36,11 @@
     <div class="pager" id="pager"></div>
   </div>
 </section>
-<script src="common.js?v=202611031600"></script>
+<script src="common.js?v=202611051200"></script>
 <script src="rockets.js?v=202611021830"></script>
 <script>
 (async () => {
-  const [site, posts, aidx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611040000').then(r => r.json()).catch(() => ({a: {}}))]);
+  const [site, posts, aidx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), loadJSON('data/albums/index.json').catch(() => ({a: {}}))]);
   const albums = aidx.a || {};
   $('#grid').addEventListener('click', e => {const c = e.target.closest('[data-album]'); if (c) {e.preventDefault(); location.href = `album.html?id=${c.dataset.album}`;}});
   buildChrome(site);

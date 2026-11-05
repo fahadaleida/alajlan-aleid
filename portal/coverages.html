@@ -58,12 +58,12 @@
   </div>
 </div>
 <main class="cvg"><div class="wrap" id="list"></div></main>
-<script src="common.js?v=202611022230"></script>
+<script src="common.js?v=202611051200"></script>
 <script>
 (async () => {
-  const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), fetch('data/albums/index.json?v=202611040000').then(r => r.json()).catch(() => ({a: {}}))]);
+  const [site, posts, idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), loadJSON('data/albums/index.json').catch(() => ({a: {}}))]);
   buildChrome(site);
-  const L = posts.filter(p => p.c === 'مناسبات الاسرة' || idx.a[p.id]);
+  const L = posts.filter(p => p.c === 'مناسبات الاسرة' || (idx.a[p.id] && idx.a[p.id][2] >= 6));
   const short = t => {
     let s = t.replace(/ﮪ/g, 'هـ').replace(/^تغطية\s+/, '');
     let m = s.match(/^(?:حفل\s+)?(زواج|زفاف)\s+(.+?)(?:\s+(?:على|علي)\s+كريمة.*)?$/);
@@ -77,7 +77,7 @@
   const years = [...new Set(L.map(p => p.d.slice(0, 4)))];
   $('#list').innerHTML = years.map(y => {const G = L.filter(p => p.d.startsWith(y));
     return `<h2 class="cvg-year">${ar(+y)}<small>${ar(G.length)} تغطية</small><i></i></h2><div class="shelf">${G.map(p => {
-      const a = idx.a[p.id], T = short(p.t), img = a ? (/^https?:/.test(a[0]) ? a[0] : idx.base + a[0]) : p.i;
+      const a = idx.a[p.id], T = short(p.t), img = a ? (/^(https?:|img\/)/.test(a[0]) ? a[0] : idx.base + a[0]) : p.i;
       return `<a class="mz" href="album.html?id=${p.id}"><span class="mz-cv"><img data-src="${esc(img)}" alt="" decoding="async">
         <span class="mz-m"><small>عدد خاص · ${fmtDate(p.d)}</small><b><img src="img/logo-mark.png" alt="">أسرة العجلان <em>والعيد</em></b></span>
         

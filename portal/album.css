@@ -191,3 +191,6 @@ body.embed .efs:hover{background:var(--navy);color:#fff}
 body.embed .hint{max-width:300px}
 @media (max-width:899px){body.embed .stage{grid-template-columns:minmax(0,1fr);padding:10px 4px 14px}body.embed .efs span{display:none}body.embed .efs{padding:0 10px}}
 @media (max-width:639px){body.embed .ctrl{gap:10px}body.embed .cnt{min-width:0}}
+/* معاينة المحرر: المجلة فقط بدون أزرار تخرج من الصفحة */
+body.preview .efs,body.preview .hint{display:none}
+body.preview a{pointer-events:none}
