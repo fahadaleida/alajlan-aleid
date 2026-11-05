@@ -162,8 +162,10 @@ const Panel = (() => {
   const chain = (T, p) => {const o = [], seen = new Set(); while (p && !seen.has(p.id)) {seen.add(p.id); o.push(p); p = T.by.get(p.father);} return o;};
   const nasab = (T, p, n = 99) => chain(T, p).slice(0, n).map((x, i, a) => i ? `${a[i - 1].gender === 'f' ? 'بنت' : 'بن'} ${x.name}` : x.name).join(' ');
   const pack = list => JSON.stringify(list);
+  const treeTabs = on => `<nav class="mtabs" aria-label="أقسام الشجرة"><a href="#tree"${on ? '' : ' class="on" aria-current="page"'}>الأسماء</a><a href="#tree/men"${on ? ' class="on" aria-current="page"' : ''}>صور الرجال</a></nav>`;
   function treeSearch() {
     view().innerHTML = `${head('شجرة العائلة', '', 'ابحث عن الاسم، ثم صحّحه أو أضف له ابناً أو بنتاً')}
+      ${treeTabs(0)}
       <div class="etop"><label class="esearch">${svg('search', 18)}<input id="tq" type="search" placeholder="مثال: فهد بن سعد بن علي" aria-label="بحث في الشجرة"></label><a class="ebtn big" href="${TREE_URL}" target="_blank" rel="noopener">عرض الشجرة</a></div>
       <div class="erows" id="trows"><p class="eempty">جارٍ تحميل الأسماء…</p></div>`;
     tree().then(T => {
@@ -197,7 +199,7 @@ const Panel = (() => {
           ${father ? `<p class="tline">${p.gender === 'f' ? 'والدها' : 'والده'}: <a href="#tree/${father.id}">${esc(nasab(t, father, 3))}</a></p>` : ''}
           ${locked ? '<p class="estate">هذا الاسم من جذع الشجرة الثابت، ولا يُعدَّل من اللوحة.</p>' : `<form id="nf" class="pstack"><label class="ef"><span>تصحيح الاسم</span><input id="nN" value="${esc(p.name)}" maxlength="40"></label><p class="eerr" id="nE" hidden></p><button class="ebtn gold" type="submit">${esc(verb('حفظ الاسم'))}</button>
             <small class="phint">التصحيح يظهر في البحث والبطاقات وصفحة النسب. الاسم المرسوم على صورة الشجرة نفسها لا يتغير.</small></form>`}
-          <div class="eacts start"><a class="ebtn" href="../v7/nasab.html?id=${id}" target="_blank" rel="noopener">عرض النسب على الموقع</a>${canDel ? '<button class="ebtn danger ghost" id="pDel">حذف هذا الاسم</button>' : ''}</div>
+          <div class="eacts start"><a class="ebtn" href="../v7/nasab.html?id=${id}" target="_blank" rel="noopener">عرض النسب على الموقع</a>${Store.genderOf(p) === 'm' ? `<a class="ebtn" href="#tree/men/${id}">صورته</a>` : ''}${canDel ? '<button class="ebtn danger ghost" id="pDel">حذف هذا الاسم</button>' : ''}</div>
         </section>
         <section class="pcard"><h3>${p.gender === 'f' ? 'أبناؤها' : 'الأبناء والبنات'} ${kids.length ? `(${ar(kids.length)})` : ''}</h3>
           <div class="tkids">${kids.map(k => `<a href="#tree/${k.id}" class="${k.gender === 'f' ? 'f' : ''}">${esc(k.name)}</a>`).join('') || '<p class="phint">لا يوجد أبناء مسجلون.</p>'}</div>
@@ -226,11 +228,14 @@ const Panel = (() => {
     };
     if ($('#pDel')) $('#pDel').onclick = async () => {
       if (!await confirmBox('حذف هذا الاسم؟', nasab(t, p, 4), 'نعم، احذف')) return;
-      try {await saveTree(l => {l.splice(l.findIndex(x => x.id === id), 1);}, 'تم الحذف', p.father);}
+      try {
+        await saveTree(l => {l.splice(l.findIndex(x => x.id === id), 1);}, 'تم الحذف', p.father);
+        Store.menRemove(id).catch(() => {});   // لو له صورة لا تبقى بدون صاحب
+      }
       catch (x) {closeModal(); modal(`<h3>لم يتم الحذف</h3><p>${esc(say(x))}</p><div class="eacts"><button class="ebtn" onclick="document.getElementById('emodal').hidden=true">إغلاق</button></div>`);}
     };
   }
-  R.tree = id => id ? personView(id) : treeSearch();
+  R.tree = (id, sub) => id === 'men' ? Men.show(sub) : id ? personView(id) : treeSearch();
 
   // ===== مصمم الدعوات =====
   R.invite = () => {view().innerHTML = `${head('مصمم الدعوات', '', 'صمّم بطاقة دعوة ونزّلها')}<section class="pcard pmid">${svg('mail', 34)}<p>مصمم الدعوات صفحة مستقلة، وربطه باللوحة يأتي لاحقاً.</p><a class="ebtn big gold" href="invite.html" target="_blank" rel="noopener">فتح مصمم الدعوات</a></section>`;};
@@ -263,7 +268,8 @@ const Panel = (() => {
       const note = () => {$('#dmN').textContent = Store.changes ? 'التعديلات التي جرّبتها محفوظة في هذا المتصفح فقط.' : 'لا توجد تعديلات تجريبية الآن.'; $('#dmR').hidden = !Store.changes;};
       note();
       $('#dmR').onclick = async () => {
-        if (!await confirmBox('مسح تعديلات العرض؟', 'يرجع كل شيء كما هو على الموقع.', 'نعم، امسح')) return;
+        const men = Object.keys(await Store.menList()).length;
+        if (!await confirmBox('مسح تعديلات العرض؟', `يرجع كل شيء كما هو على الموقع.${men ? ` وتُمسح معها ${ar(men)} من صور الرجال.` : ''}`, 'نعم، امسح')) return;
         await Store.reset(); location.hash = ''; location.reload();
       };
     } else {
@@ -287,5 +293,5 @@ const Panel = (() => {
       $('#mtitle').textContent = NAV.find(n => n[0] === key)[1];
     };
   }
-  return {build};
+  return {build, tree, chain, nasab, treeTabs};
 })();

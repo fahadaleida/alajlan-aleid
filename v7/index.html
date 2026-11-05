@@ -605,6 +605,7 @@ const SEED=[
   {id:23,name:'لينا',gender:'f',father:19,pos:[615,7155],r:36,via:[[815,7205,12],[770,7192,12],[720,7178,10],[670,7165,10],[635,7158,8]],w:8},
 ];
 const AGES=false;   // الأعمار مخفية بطلب فهد (true يرجّعها)
+const SELF_PHOTO=false;   // الصور يضيفها المشرف فقط من «صور الرجال» في لوحة التحكم، فأزرار الكاميرا مخفية عن الزوار (true يرجّعها)
 const PW=7387,PH=10554,TILE=512,AJLAN_ID=9,DEFAULT_ID=19,KEY='ajlan-aleid-v7';
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 let people=(()=>{try{const s=store.get(KEY);if(s){const o=JSON.parse(s);for(const p of SEED)if(!o[p.id])o[p.id]=structuredClone(p);return o;}}catch(e){}return Object.fromEntries(SEED.map(p=>[p.id,structuredClone(p)]))})();
@@ -1529,7 +1530,7 @@ function ftNode(g,o,badges){const p=o.p,Lb=o.L;
     g.fillStyle='#fff8e6';g.beginPath();g.arc(o.x,o.y,o.r,0,7);g.fill();g.fillStyle='#7a5208';g.textAlign='center';g.textBaseline='middle';g.direction='ltr';fitText(g,'+'+ar(o.n),o.r*1.6,o.r*.95,'Lalezar');g.fillText('+'+ar(o.n),o.x,o.y+o.r*.08);g.restore();return;}
   if(p.gender==='f'){shapeFlower(g,o.x,o.y,o.r*1.05,0);if(!Lb.rib)nameIn(g,p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');}
   else{const hk=kidsOf(p.id).length,has=portrait(g,p,o.x,o.y,o.r,hk?'#123d1e':'#5cb85c',hk?Math.max(2.5,o.r*.1):Math.max(2,o.r*.07));
-    if(!has||PHOTO_MODE){const bx=o.x+o.r*.74,by=o.y-o.r*.74;photoBadge(g,bx,by,o.br,PHOTO_MODE);badges.push({id:p.id,x:bx,y:by,r:o.br+3,photo:true});}}
+    if(SELF_PHOTO&&(!has||PHOTO_MODE)){const bx=o.x+o.r*.74,by=o.y-o.r*.74;photoBadge(g,bx,by,o.br,PHOTO_MODE);badges.push({id:p.id,x:bx,y:by,r:o.br+3,photo:true});}}
   if(o.gm){const t='+'+ar(o.gm),fs=Math.max(12,o.br*1.15);g.save();g.font=`${fs}px Lalezar`;const w=g.measureText(t).width+fs*.7,h=fs*1.3,bx=o.x-o.r*.74,by=o.y-o.r*.74;   // أحفاد منطويين
     g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=5;g.fillStyle='#fff8e6';g.beginPath();g.roundRect(bx-w/2,by-h/2,w,h,h/2);g.fill();g.shadowColor='transparent';g.lineWidth=1.5;g.strokeStyle='#b8861c';g.stroke();badges.push({id:p.id,x:bx,y:by,r:Math.max(w,h)/2+4,gm:true});
     g.fillStyle='#7a5208';g.textAlign='center';g.textBaseline='middle';g.direction='ltr';g.fillText(t,bx,by+fs*.08);g.restore();}
@@ -1563,7 +1564,7 @@ function paintFamilyTree(g,L,B,t,now,part='all'){
   br.forEach(b=>{const a0=b.who.kind==='kid'?1.5:2.1;ftLimb(g,b,bp(a0,a0+.6));});
   // الجد والأب: لوحة ذهبية، صورته يسارها، والكلمة يمينها
   for(const[o,t0]of[[gN,.35],[fN,.6]]){if(!o||t<t0)continue;g.save();g.globalAlpha=clamp01((t-t0)*3);ftPlaque(g,o,'',0);tag(g,o.cap,o.capX,o.y,'#3a2416',1,cs);
-    if(t>.7){const has=portrait(g,o.p,o.px,o.y,o.pr,'#e8bd3c',Math.max(2.5,o.pr*.1));if(!has||PHOTO_MODE){const br2=Math.max(9,o.pr*.34);photoBadge(g,o.px+o.pr*.74,o.y-o.pr*.74,br2,PHOTO_MODE);badges.push({id:o.p.id,x:o.px+o.pr*.74,y:o.y-o.pr*.74,r:br2+4,photo:true});}}g.restore();}
+    if(t>.7){const has=portrait(g,o.p,o.px,o.y,o.pr,'#e8bd3c',Math.max(2.5,o.pr*.1));if(SELF_PHOTO&&(!has||PHOTO_MODE)){const br2=Math.max(9,o.pr*.34);photoBadge(g,o.px+o.pr*.74,o.y-o.pr*.74,br2,PHOTO_MODE);badges.push({id:o.p.id,x:o.px+o.pr*.74,y:o.y-o.pr*.74,r:br2+4,photo:true});}}g.restore();}
   const P=(o,a,f)=>pop(g,o,a,now,f),nk=kidN.length,ng=gkN.length;
   kidN.forEach((o,i)=>P(o,seg(t,2+i*Math.min(.06,.6/nk),2.4+i*Math.min(.06,.6/nk)),()=>ftNode(g,o,badges)));
   gkN.forEach((o,i)=>P(o,seg(t,2.6+i*Math.min(.05,1.2/ng),3+i*Math.min(.05,1.2/ng)),()=>ftNode(g,o,badges)));
@@ -1571,7 +1572,7 @@ function paintFamilyTree(g,L,B,t,now,part='all'){
   if(t>1.4){const m=B.p,f=L.mfs,y0=cy+meN.r+14;if(m.gender!=='f'&&photoImg(m)){nameRibbon(g,m.name,cx,y0+f*.62,f,'#9b6b06',ageShort(m));if(!ageShort(m))ageLine(g,m,cx,y0+f*1.25+3+f*.6,f*.8,badges);}
     else ageLine(g,m,cx,y0+f*.6,f*.8,badges);}}
   if(part!=='static'){P0(meN,seg(t,1.1,1.6),()=>drawMedal(g,B.p,meN.x,meN.y,meN.r,now));
-    if(t>1.4&&B.p.gender!=='f'&&(!photoImg(B.p)||PHOTO_MODE)){const r=meN.r*.3*(PHOTO_MODE?1.2:1),bx=meN.x+meN.r*.75,by=meN.y-meN.r*.75;photoBadge(g,bx,by,r,PHOTO_MODE);badges.push({id:B.p.id,x:bx,y:by,r:r+5,photo:true});}}
+    if(SELF_PHOTO&&t>1.4&&B.p.gender!=='f'&&(!photoImg(B.p)||PHOTO_MODE)){const r=meN.r*.3*(PHOTO_MODE?1.2:1),bx=meN.x+meN.r*.75,by=meN.y-meN.r*.75;photoBadge(g,bx,by,r,PHOTO_MODE);badges.push({id:B.p.id,x:bx,y:by,r:r+5,photo:true});}}
   function P0(o,a,f){pop(g,o,a,now,f);}
   return[...badges,...(part==='me'?[meN]:part==='static'?L.all.filter(o=>o!==meN):L.all).map(o=>({id:o.km?-o.p.id:o.p.id,x:o.x,y:o.y,r:o.kind==='plaque'?o.r*1.8:o.kind==='me'?o.r+6:o.r*1.08}))];
 }
@@ -1614,17 +1615,17 @@ function paintCardTree(cv){const id=+cv.dataset.ft,L=cardLayout(id),{B,kidN,meN,
   kidN.forEach(o=>limb({x:500,y:meN.y-meN.r*.6},o,16,7));
   // الأشخاص
   const man=(o,big)=>{const hk=kidsOf(o.p.id).length;portrait(g,o.p,o.x,o.y,o.r,big?'#e8bd3c':hk?'#123d1e':'#5cb85c',big?8:hk?6:4);let fs=Math.max(L.N?34:24,o.r*.42);if(o.mw){FTM.font=`${fs}px Lalezar`;fs=Math.min(fs,fs*o.mw/(FTM.measureText(o.p.name).width+fs*.9));}nameRibbon(g,o.p.name,o.x,o.y+o.r+fs*.55,fs,big?'#9b6b06':hk?'#123d1e':'#2e7d32');agePill(g,o.p,o.x,o.y+o.r+fs*1.75,Math.max(L.N?32:20,o.r*.34),hits);
-    if(!photoImg(o.p)||PHOTO_MODE){const bx=o.x+o.r*.72,by=o.y-o.r*.72,br=Math.max(16,o.r*.28);photoBadge(g,bx,by,br,PHOTO_MODE);hits.push({id:o.p.id,x:bx,y:by,r:br+4,photo:true});}};
+    if(SELF_PHOTO&&(!photoImg(o.p)||PHOTO_MODE)){const bx=o.x+o.r*.72,by=o.y-o.r*.72,br=Math.max(16,o.r*.28);photoBadge(g,bx,by,br,PHOTO_MODE);hits.push({id:o.p.id,x:bx,y:by,r:br+4,photo:true});}};
   const girl=o=>{shapeFlower(g,o.x,o.y,o.r*1.05,0);nameIn(g,o.p.name,o.x,o.y,o.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,o.p,o.x,o.y+o.r+(L.N?34:30),Math.max(L.N?32:20,o.r*.34),hits);};
   [...kidN,...sibN].forEach(o=>o.p.gender==='f'?girl(o):man(o,false));
   if(L.showSib){g.save();g.font=`800 ${L.N?34:26}px Tajawal`;g.textAlign='center';g.direction='rtl';const st=B.p.gender==='f'?'إخوانها وأخواتها':'إخوانه وأخواته',sy=sibN[0].y-sibN[0].r-(L.N?26:22);g.lineJoin='round';g.lineWidth=L.N?7:5;g.strokeStyle='rgba(40,22,8,.75)';g.strokeText(st,500,sy);g.fillStyle='#fff4dc';g.fillText(st,500,sy);g.restore();}
   if(kidN.length){g.save();g.translate(500,22);g.scale(1.7,1.7);ribbon(g,`${B.p.gender==='f'?'عيالها':'عيال '+B.p.name} · ${ar(kidN.length)}`,0,0,1);g.restore();}
   if(B.p.gender==='f'){shapeFlower(g,meN.x,meN.y,meN.r,0);nameIn(g,B.p.name,meN.x,meN.y,meN.r*.86,'#fff','rgba(120,20,60,.55)');agePill(g,B.p,meN.x,meN.y+meN.r+30,L.N?32:26,hits);}
   else{drawMedal(g,B.p,meN.x,meN.y,meN.r,0);nameRibbon(g,B.p.name,meN.x,meN.y+meN.r+26,36,'#9b6b06');agePill(g,B.p,meN.x,meN.y+meN.r+80,L.N?32:26,hits);
-    if(!photoImg(B.p)||PHOTO_MODE){photoBadge(g,meN.x+meN.r*.72,meN.y-meN.r*.72,22,PHOTO_MODE);hits.push({id:B.p.id,x:meN.x+meN.r*.72,y:meN.y-meN.r*.72,r:26,photo:true});}}
+    if(SELF_PHOTO&&(!photoImg(B.p)||PHOTO_MODE)){photoBadge(g,meN.x+meN.r*.72,meN.y-meN.r*.72,22,PHOTO_MODE);hits.push({id:B.p.id,x:meN.x+meN.r*.72,y:meN.y-meN.r*.72,r:26,photo:true});}}
   // الأب والجد: لوحة بالنص، صورة يمين، والعمر يسار
   for(const[o,cap]of[[fN,B.p.gender==='f'?'أبوها':'أبوه'],[gN,B.p.gender==='f'?'جدّها':'جدّه']]){if(!o)continue;const rx=o.r*2.4;ftPlaque(g,{...o},'',0);
-    portrait(g,o.p,o.x+rx+70,o.y,46,'#e8bd3c',5);if(!photoImg(o.p)||PHOTO_MODE){photoBadge(g,o.x+rx+104,o.y-34,15,PHOTO_MODE);hits.push({id:o.p.id,x:o.x+rx+104,y:o.y-34,r:19,photo:true});}
+    portrait(g,o.p,o.x+rx+70,o.y,46,'#e8bd3c',5);if(SELF_PHOTO&&(!photoImg(o.p)||PHOTO_MODE)){photoBadge(g,o.x+rx+104,o.y-34,15,PHOTO_MODE);hits.push({id:o.p.id,x:o.x+rx+104,y:o.y-34,r:19,photo:true});}
     agePill(g,o.p,o.x-rx-80,o.y+20,L.N?32:22,hits);g.save();g.font=`800 ${L.N?32:22}px Tajawal`;g.fillStyle='#7c6a50';g.textAlign='center';g.direction='rtl';g.fillText(cap,o.x-rx-80,o.y-18);g.restore();}
   cv._hits=[...hits,...[...kidN,...sibN,meN,fN,gN].filter(Boolean).map(o=>({id:o.p.id,x:o.x,y:o.y,r:o.kind==='plaque'?o.r*2.2:o.r}))];
   if([...kidN,...sibN,meN,fN,gN].filter(Boolean).some(o=>o.p.photo&&!photoImg(o.p))&&(cv._tries=(cv._tries||0)+1)<8)setTimeout(()=>cv.isConnected&&paintCardTree(cv),250);
@@ -2249,7 +2250,7 @@ function renderCard(id){
     <div class="nas">${fullNasab(id)} ${familyOf(id)}</div>
     <div class="badges"><span class="badge">${familyOf(id)}</span><span class="badge">الجيل ${ar(c.length)} من الهذلي</span>
       ${p.pos?'':'<span class="badge warn">مضاف بعد الطبعة</span>'}${p.verify?'<span class="badge warn">يحتاج تأكيد</span>':''}</div>
-    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px">${inF?'<button class="btn gold" data-act="pull">🌳 مكانه في الشجرة الكبيرة</button>':'<button class="btn gold" data-act="family">🌳 شجرة العائلة</button>'}<button class="btn" data-act="journey">✨ رحلة النسب</button><button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button></div></div>
+    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px">${inF?'<button class="btn gold" data-act="pull">🌳 مكانه في الشجرة الكبيرة</button>':'<button class="btn gold" data-act="family">🌳 شجرة العائلة</button>'}<button class="btn" data-act="journey">✨ رحلة النسب</button>${SELF_PHOTO?`<button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button>`:''}</div></div>
     ${isF?'':`<div class="stats"><div><b>${cnt(ks.length)}</b><span>العيال</span></div><div><b>${cnt(grand)}</b><span>الأحفاد</span></div><div><b>${cnt(descCount(id))}</b><span>كل الذرية</span></div></div>`}
     ${age?`<div class="row"><span>العمر</span><span>${age}</span></div>`:''}
     ${f?`<div class="row"><span>${isF?'أبوها':'أبوه'}</span><span><a href="#" data-go="${f.id}">${fullNasab(f.id,2)}</a></span></div>`:''}
@@ -2258,7 +2259,7 @@ function renderCard(id){
     ${p.notes?`<div class="sec"><h4>ملاحظات</h4><div class="notes"></div></div>`:''}
     <div class="sec"><h4>سلسلة النسب</h4>${nasabChain(id)}</div>
     <div class="actions">
-      ${isF?'':`<button class="btn gold" data-act="photo">📷 ${p.photo?'غيّر الصورة':'أضف صورتك'}</button>`}
+      ${isF||!SELF_PHOTO?'':`<button class="btn gold" data-act="photo">📷 ${p.photo?'غيّر الصورة':'أضف صورتك'}</button>`}
       ${isF?'':`<button class="btn dark" data-act="add">+ أضف ابن أو بنت</button>`}
       <button class="btn" data-act="edit">تعديل</button>
       <button class="btn" data-act="share">🔗 مشاركة</button>
@@ -2551,6 +2552,11 @@ if(QS.includes('testpull'))setInterval(()=>{if(RUN&&RUN.pullShown&&!pulled)pullB
 fetch('people_all.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;const list=Array.isArray(j)?j:(j.people||Object.values(j));let n=0;
   for(const q of list){if(!q||q.id==null||q.id<1000)continue;const o=people[q.id];   // بيانات البوستر من الملف دايم أحدث (تصحيح الأسماء يوصل للكل)، والصور والإضافات المحفوظة تبقى
     if(o){let ch=0;for(const k of ['name','gender','father','pos','r','kind','gen','title'])if(q[k]!==undefined&&JSON.stringify(o[k])!==JSON.stringify(q[k])){o[k]=q[k];ch=1;}n+=ch;continue;}people[q.id]={...q,_ext:true};n++;}if(n){KIDX=null;onReindex();dirty=true;console.log('people_all',n);}}).catch(()=>{})
+  // صور الرجال الرسمية من لوحة التحكم: photos/index.json فيه رقم الشخص ونسخة صورته، والرقم يتغير مع الصورة فلا تبقى القديمة في الكاش
+  .then(()=>fetch('photos/index.json',{cache:'no-cache'})).then(r=>r&&r.ok?r.json():null).then(m=>{if(!m)return;
+    for(const p of Object.values(people))if(typeof p.photo==='string'&&p.photo.startsWith('photos/')&&!m[p.id])delete p.photo;
+    for(const id in m){const p=people[id];if(p&&p.gender==='m')p.photo=`photos/${id}.jpg?v=${m[id]}`;}
+    if(BL)BL.ftl=null;renderCard(selected);dirty=true;}).catch(()=>{})
   // مسار كل اسم على خشب الطبعة (tools/build_via.py): الضوء يمشي على الغصن لين يوصل الاسم
   .then(()=>fetch('via.json',{cache:'no-cache'})).then(r=>r&&r.ok?r.json():null).then(v=>{if(!v)return;for(const id in v){const p=people[id],a=v[id];if(p&&p.pos&&a.length){p.via=a;p.w=a[a.length-1][2];}}}).catch(()=>{});
 if(QS.includes('demoages')){const B={19:1405,26:1375,22:1435,23:1438,27:1400,28:1409,24:1345,13:1310};for(const[id,y]of Object.entries(B))if(people[id]){people[id].birth=y;people[id].cal='h';}if(people[13])people[13].death=1392;if(people[24])people[24].death=1420;}

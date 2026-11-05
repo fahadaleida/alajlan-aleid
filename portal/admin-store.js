@@ -10,6 +10,9 @@ const Store = (() => {
     return {rev, text, list, json: async p => {const t = await text(p); return t == null ? null : JSON.parse(t);}};
   };
   const pub = (p, o) => fetch(p, o).then(r => r.ok ? r.text() : null);
+  // صور الرجال: الرجل المؤكد فقط. شكل الوردة في الطبعة علامة البنت، ولو خالف الجنس المكتوب يصير غير محدد ولا نخمّن. نفس القاعدة في api/portrait.php
+  const genderOf = p => {const g = p && p.gender, k = p && p.kind; return g === 'm' && k !== 'rose' ? 'm' : g === 'f' && (k === 'rose' || !k) ? 'f' : '?';};
+  const PEOPLE = '../v7/people_all.json', NOT_MAN = 'الصور للرجال والأبناء فقط، وهذا الاسم لا تُحفظ له صورة.';
 
   // ===== الخادم =====
   const CHUNK = 600 * 1024;   // بعض الخوادم ترفض الطلب فوق ١ ميجا، فالحفظ الكبير يُرسل على دفعات ثم يُطبَّق مرة واحدة
@@ -64,6 +67,13 @@ const Store = (() => {
       const f = new FormData(); Object.entries(to).forEach(([k, v]) => f.append(k, v)); f.append('file', blob, 'photo');
       return (await api('upload.php', {method: 'POST', form: f})).path;
     },
+    menList: async () => JSON.parse(await pub(`../v7/photos/index.json?t=${Date.now()}`, {cache: 'no-store'}) || '{}'),
+    async menSave(id, blob) {
+      const f = new FormData(); f.append('op', 'save'); f.append('id', id); f.append('file', blob, 'photo.jpg');
+      return (await api('portrait.php', {method: 'POST', form: f})).ver;
+    },
+    async menRemove(id) {const f = new FormData(); f.append('op', 'remove'); f.append('id', id); await api('portrait.php', {method: 'POST', form: f});},
+    menUrl: (id, ver) => `../v7/photos/${id}.jpg?v=${ver}`,
     changePassword: async (cur, next) => {
       try {await api('password.php', {method: 'POST', json: {cur, next}}); return true;}
       catch (e) {if (e.code === 'wrong') return false; throw e;}
@@ -141,6 +151,23 @@ const Store = (() => {
       urls.set(path, URL.createObjectURL(blob)); flag(true);
       return path;
     },
+    async menList() {return Object.fromEntries([...urls.keys()].map(k => (k.match(/^men\/(\d+)\.jpg$/) || [])[1]).filter(Boolean).map(id => [id, 'local']));},
+    async menSave(id, blob) {
+      const list = await (await demo.snapshot()).json(PEOPLE), p = list.find(x => x.id === id);
+      if (genderOf(p) !== 'm') throw new StoreFail(p ? 403 : 404, NOT_MAN);   // نفس رفض الخادم
+      const path = `men/${id}.jpg`, old = urls.get(path);
+      try {await tx('blobs', 'readwrite', s => {s.put(blob, path);});} catch (e) {throw full(e);}
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});   // نطلب من المتصفح ألا يمسحها من نفسه
+      urls.set(path, URL.createObjectURL(blob)); if (old) URL.revokeObjectURL(old);
+      flag(true);
+      return 'local';
+    },
+    async menRemove(id) {
+      const path = `men/${id}.jpg`;
+      await tx('blobs', 'readwrite', s => {s.delete(path);});
+      if (urls.has(path)) {URL.revokeObjectURL(urls.get(path)); urls.delete(path);}
+    },
+    menUrl: id => urls.get(`men/${id}.jpg`) || '',
     changePassword: async () => {throw new StoreFail(-1, 'في نسخة العرض كلمة المرور ثابتة. تتغير من هنا بعد نقل الموقع إلى الدومين.');},
     async disk() {
       const e = navigator.storage && navigator.storage.estimate ? await navigator.storage.estimate().catch(() => ({})) : {};
@@ -175,6 +202,7 @@ const Store = (() => {
     snapshot: () => A.snapshot(), reserve: () => A.reserve(), upload: (to, b) => A.upload(to, b),
     changePassword: (c, n) => A.changePassword(c, n), disk: () => A.disk(), setQuota: g => A.setQuota(g),
     src: u => A.src(u), reset: () => A.reset(),
+    genderOf, menList: () => A.menList(), menSave: (id, b) => A.menSave(id, b), menRemove: id => A.menRemove(id), menUrl: (id, v) => A.menUrl(id, v),
     // build(snap) يبني التغيير فوق آخر نسخة ويرجّع {files: {مسار: نص أو null للحذف}}. لو تغيّر الموقع في الأثناء نعيد البناء من جديد
     async commit(build) {
       let last;
