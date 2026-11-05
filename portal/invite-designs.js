@@ -183,8 +183,12 @@ window.OCC_DESIGNS={
  news:[['flash','العاجل','عنوان عريض',nws.flash],['press','الصحيفة','تصميم جريدة',nws.press],['picture','الصورة أولاً','صورة ثم الخبر',nws.picture],['rail','الشريط الجانبي','شريط جانبي بالرقعة',nws.rail]]
 };
 // يرسم تصميم على سياق معطى؛ scale=1 للتحميل وأقل للمصغرات
-window.occRender=function(ctx,o){const{id,st,size,foot:ft,scale=1,quick=false,design}=o,D=window.OCC_DATA,occ=D.OCC[id],[W,H]=X.SIZES[size],list=window.OCC_DESIGNS[id],ds=list.find(d=>d[0]===design)||list[0];
-  const palId=st.pal&&occ.pals.includes(st.pal)?st.pal:(occ.genderPal?occ.genderPal[st.gender]:occ.pals[0]),pal=X.PAL[palId],v=D.vals(id,st,ft),doc=occ.doc(v,st);doc.social=ft&&ft.social||'';doc.site=ft&&ft.site||'';
-  const n=occ.maxPhotos(st,v),P=(st.photos||[]).filter(p=>p.src).slice(0,n).map(p=>occ.caps?p:{...p,role:'',name:'',note:''});
-  const rep={over:[],sc:9};X.begin(ctx,quick,rep);ctx.save();ctx.setTransform(scale,0,0,scale,0,0);ds[3]({W,H,sq:H===W,st:H>1500,T:pal[pal.main],D:pal.D,L:pal.L,doc,P,pal:palId});ctx.restore();return rep;};
+window.occRender=function(ctx,o){const{id,st,size,foot:ft,scale=1,quick=false,design}=o,D=window.OCC_DATA,occ=D.OCC[id],[W,H]=X.SIZES[size],list=window.OCC_DESIGNS[id],ds=list.find(d=>d[0]===design)||list[0],pro=!!ds[4];
+  const palId=st.pal&&occ.pals.includes(st.pal)?st.pal:(occ.genderPal?occ.genderPal[st.gender]:occ.pals[0]),pal=X.PAL[palId],v=D.vals(id,st,ft),doc=occ.doc(v,st);doc.social=ft&&ft.social||'';doc.site=ft&&ft.site||'';doc.bar=ft?[String(ft.social||'').replace(/^@/,''),ft.snap,ft.tg]:[];
+  const n=pro&&occ.proPhotos&&!occ.photoToggle?occ.proPhotos:occ.maxPhotos(st,v),P=(st.photos||[]).filter(p=>p.src).slice(0,n).map(p=>occ.caps||pro?p:{...p,role:'',name:'',note:''});
+  const rep={over:[],sc:9,pages:1},rem=occ.remind&&st.rem&&st.rem.when?st.rem:null,rh=rem?window.OCC_PRO.ribbonH(size):0;X.begin(ctx,quick,rep);ctx.save();ctx.setTransform(scale,0,0,scale,0,0);
+  // التذكير شريط مستقل فوق التصميم، والتصميم يترسم تحته في المساحة الباقية
+  ctx.save();if(rh){ctx.translate(0,rh);ctx.beginPath();ctx.rect(0,0,W,H-rh);ctx.clip();}
+  ds[3]({W,H:H-rh,sq:H===W,st:H>1500,T:pal[pal.main],D:pal.D,L:pal.L,doc,P,pal:palId,lay:st.lay,page:o.page??st.page??0,rep});ctx.restore();
+  if(rh)window.OCC_PRO.ribbon(W,rh,pal,rem);ctx.restore();return rep;};
 })();

@@ -8,7 +8,7 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=El+Messiri:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="invite.css?v=3">
+<link rel="stylesheet" href="invite.css?v=5">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body data-step="1">
@@ -44,6 +44,7 @@
   <section class="work" id="work" hidden>
     <div class="stage" id="stage">
       <canvas class="cv" id="cv" aria-label="معاينة التصميم"></canvas>
+      <div class="pager" id="pager" hidden></div>
       <div class="tapnote">اضغط على المعاينة لتكبيرها</div>
     </div>
     <div class="pane" id="p3"></div>
@@ -65,9 +66,10 @@
 <dialog id="warn"><h3>فيه بيانات ناقصة</h3><p>هذي الحقول لسا فاضية وبتطلع في الصورة كنص مؤقت:</p><ul id="warnList"></ul>
   <div class="row"><button class="btn gold" id="warnFix">أكمل البيانات</button><button class="btn ghost" id="warnGo">تحميل كما هو</button></div></dialog>
 
-<script src="invite-engine.js?v=1"></script>
-<script src="invite-occasions.js?v=1"></script>
-<script src="invite-designs.js?v=1"></script>
-<script src="invite-app.js?v=2"></script>
+<script src="invite-engine.js?v=2"></script>
+<script src="invite-occasions.js?v=2"></script>
+<script src="invite-designs.js?v=2"></script>
+<script src="invite-pro.js?v=1"></script>
+<script src="invite-app.js?v=3"></script>
 </body>
 </html>
