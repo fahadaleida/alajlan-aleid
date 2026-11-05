@@ -4,9 +4,11 @@ body.adminp{background:#2A2148;min-height:100vh;min-height:100svh;overflow-x:hid
 .atree{position:fixed;z-index:-1;pointer-events:none}
 .atree img{display:block;width:100%;height:auto;position:relative}
 .atree .soil{position:absolute;left:50%;transform:translateX(-50%)}
+.atree canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:.9}
 @media (min-width:1024px){
   .atree{width:var(--ftw);height:var(--fth);left:var(--ftl);top:calc(100vh - 1441 * var(--S) + 1215 * var(--S) - .9716 * var(--fth))}
   .atree img:first-child{height:var(--fth);width:auto;filter:saturate(.7) sepia(.22) brightness(.86) contrast(.9) blur(.25px) drop-shadow(0 0 10px rgba(255,170,90,.18))}
+  .atree img#treeImg.pulse{filter:saturate(.8) sepia(.2) brightness(1) contrast(.9) drop-shadow(0 0 10px rgba(255,190,110,.55))}
   .atree .soil{width:calc(var(--fth) * 1700 / 2342);bottom:calc(var(--fth) * -180 / 2342);filter:saturate(.7) brightness(.8) blur(.3px)}
   body.adminp .astage{width:var(--ftl);margin-left:0;margin-right:auto}
   .adash{margin-left:32px;margin-right:auto;width:min(980px,calc(var(--ftl) - 48px))}

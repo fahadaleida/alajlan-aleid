@@ -11,11 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611040130">
-<link rel="stylesheet" href="admin.css?v=202611050100">
+<link rel="stylesheet" href="admin.css?v=202611050200">
 </head>
 <body class="far adminp">
 <div id="scene" aria-hidden="true"></div><div class="towerfg" aria-hidden="true"></div>
-<div class="atree" aria-hidden="true"><img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt=""><img class="soil" src="img/soil.webp?v=2" alt=""></div>
+<div class="atree" aria-hidden="true"><img id="treeImg" src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt=""><img class="soil" src="img/soil.webp?v=2" alt=""><canvas id="rockets"></canvas></div>
 
 <main class="astage" id="login">
   <form class="acard" id="form" autocomplete="on">
@@ -43,6 +43,7 @@
 </main>
 
 <script src="common.js?v=202611022230"></script>
+<script src="rockets.js?v=202611031900"></script>
 <script>
 (() => {
   // الدخول يتحقق في المتصفح لأن الموقع ثابت بدون خادم، فلا تُحفظ هنا أي بيانات سرية
@@ -84,6 +85,7 @@
   };
   $('#out').onclick = () => {store.set(null); location.reload();};
   if (store.get() === AUTH.hash) openDash();
+  startRockets();
 })();
 </script>
 </body>
