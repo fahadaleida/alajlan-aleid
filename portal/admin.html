@@ -11,8 +11,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=202611021830">
 <link rel="stylesheet" href="home.css?v=202611040130">
-<link rel="stylesheet" href="admin.css?v=202611050200">
-<link rel="stylesheet" href="admin-editor.css?v=202611051200">
+<link rel="stylesheet" href="admin.css?v=202611051800">
+<link rel="stylesheet" href="admin-editor.css?v=202611051800">
+<link rel="stylesheet" href="admin-panel.css?v=202611051800">
 </head>
 <body class="far adminp">
 <div id="scene" aria-hidden="true"></div><div class="towerfg" aria-hidden="true"></div>
@@ -30,71 +31,54 @@
   </form>
 </main>
 
-<main class="adash" id="dash" hidden>
-  <header class="ahead">
-    <img src="img/logo-mark.png" alt="">
-    <div><small>أسرة العجلان والعيد</small><h1>لوحة التحكم</h1></div>
-    <button id="out" type="button">تسجيل الخروج</button>
-  </header>
-  <div id="homeV">
-    <div class="enote" id="econn" hidden><span>النشر غير مربوط بعد، فاللوحة للعرض فقط. اربطه مرة واحدة وتنشر من أي جهاز.</span><a class="ebtn gold" href="#connect">ربط النشر</a></div>
-    <div class="enote" id="edraft" hidden></div>
-    <nav class="etiles" id="tiles" aria-label="إدارة المحتوى"></nav>
-    <section class="astats" id="stats" aria-label="أرقام الموقع"></section>
-    <h2>الوصول السريع</h2>
-    <nav class="alinks" id="links" aria-label="الوصول السريع"></nav>
-    <h2>آخر ما نُشر</h2>
-    <div class="alist" id="latest"></div>
-  </div>
-  <div id="view" hidden></div>
-</main>
+<div class="shell" id="dash" hidden>
+  <header class="mtop"><button id="burger" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="side"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><b id="mtitle">الرئيسية</b><img src="img/logo-mark.png" alt=""></header>
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="side" id="side">
+    <div class="sbrand"><img src="img/logo-mark.png" alt=""><div><small>أسرة العجلان والعيد</small><b>لوحة التحكم</b></div></div>
+    <nav id="snav" aria-label="أقسام اللوحة"></nav>
+    <div class="sfoot"><a href="index.html" target="_blank" rel="noopener">عرض الموقع</a><button id="out" type="button">تسجيل الخروج</button></div>
+  </aside>
+  <section class="work">
+    <p class="demotag" id="demoTag" hidden>نسخة عرض: التعديلات لا تُنشر للناس حتى ننقل الموقع للدومين</p>
+    <main id="view"></main>
+  </section>
+</div>
 
-<script src="common.js?v=202611051200"></script>
+<script src="common.js?v=202611051800"></script>
 <script src="rockets.js?v=202611031900"></script>
-<script src="admin-gh.js?v=202611051200"></script>
-<script src="admin-photos.js?v=202611051200"></script>
-<script src="admin-editor.js?v=202611051200"></script>
+<script src="admin-store.js?v=202611051800"></script>
+<script src="admin-photos.js?v=202611051800"></script>
+<script src="admin-editor.js?v=202611051800"></script>
+<script src="admin-sections.js?v=202611051800"></script>
 <script>
 (() => {
-  // الدخول يتحقق في المتصفح لأن الموقع ثابت بدون خادم. هذه البصمة احتياطية لأول مرة، وبعد الربط المرجع هو data/admin-key.json
+  // بصمة كلمة مرور نسخة العرض فقط. على الخادم الدخول يتحقق في الخادم ولا تُستخدم هذه البصمة
   const AUTH = {user: 'fahad', salt: 'S9IQbdpIDSmmIXEIQTu4Qg==', iter: 200000, hash: 'q6jUDtOz1YxlZesfxh403ua3Z/0NEV46f+Uis0mo8EQ='};
-  const ready = Vault.init(AUTH);
+  const ready = Store.init(AUTH), S = Editor.S, err = t => {$('#err').textContent = t; $('#err').hidden = false;};
 
-  const LINKS = [
-    ['مصمم الدعوات', 'invite.html', 'mail'], ['الأخبار والمناسبات', 'news.html', 'news'], ['مجلات التغطيات', 'coverages.html', 'film'],
-    ['مكتبة المجلات', 'magazines.html', 'mag'], ['شجرة العائلة', TREE_URL, 'tree'], ['الصفحة الرئيسية', 'index.html', 'home'],
-  ];
-  const TILES = [['الأخبار والمناسبات', '#news', 'news', 'أضف خبراً أو عدّله'], ['مجلات التغطيات', '#covers', 'film', 'الصور تصير مجلة تلقائياً'],
-    ['مكتبة المجلات', '#mags', 'mag', 'أعداد مجلة الأسرة'], ['الصفحة الرئيسية', '#home', 'home', 'نصوص الرئيسية'], ['الحساب والربط', '#account', 'people', 'النشر وكلمة المرور']];
-  const S = Editor.S;
-
-  function drawDash() {
-    const {posts, idx, site} = S, cats = c => posts.filter(p => p.c === c).length;
-    $('#econn').hidden = GH.connected;
-    $('#stats').innerHTML = [['كل المنشورات', posts.length], ['الأخبار', cats('أخبار الاسرة')], ['الدعوات', cats('دعوات الأسرة')], ['مجلات التغطيات', Object.keys(idx.a).length], ['أعداد المجلة', site.magazines.length]]
-      .map(([t, n]) => `<div><b>${ar(n)}</b><span>${t}</span></div>`).join('');
-    $('#latest').innerHTML = posts.slice(0, 6).map(p => `<a href="post.html?id=${p.id}"><time>${fmtDate(p.d)}</time><b>${esc(p.t)}</b><em>${esc(catName(p.c))}</em></a>`).join('');
-  }
   async function openDash() {
     $('#login').hidden = true; $('#dash').hidden = false; document.body.classList.add('indash');
-    $('#links').innerHTML = LINKS.map(([t, u, i]) => `<a href="${u}">${svg(i, 22)}<span>${t}</span></a>`).join('');
-    $('#tiles').innerHTML = TILES.map(([t, u, i, d]) => `<a href="${u}">${svg(i, 28)}<b>${t}</b><small>${d}</small></a>`).join('');
-    [S.site, S.posts, S.idx] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json'), loadJSON('data/albums/index.json')]);
-    S.refresh = drawDash; drawDash(); Editor.start();
+    [S.site, S.posts, S.idx] = await Promise.all(['data/site.json', 'data/posts.json', 'data/albums/index.json'].map(async p => (await Store.snapshot()).json(p)));
+    Editor.start(Panel.build());
   }
-
   $('#eye').onclick = e => {const i = $('#pass'), s = i.type === 'password'; i.type = s ? 'text' : 'password'; e.target.textContent = s ? 'إخفاء' : 'إظهار';};
   $('#form').onsubmit = async e => {
     e.preventDefault();
-    const go = $('#go'), err = $('#err'), u = $('#user').value.trim();
-    go.disabled = true; go.textContent = 'جارٍ التحقق…'; err.hidden = true;
+    const go = $('#go'), u = $('#user').value.trim();
+    go.disabled = true; go.textContent = 'جارٍ التحقق…'; $('#err').hidden = true;
     await ready;
-    if (await Vault.login(u, $('#pass').value)) {$('#pass').value = ''; openDash();}
-    else {err.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة'; err.hidden = false; $('#pass').value = ''; $('#pass').focus();}
+    try {
+      if (Store.mode === 'down') err('الخادم لا يجيب الآن. حاول بعد قليل.');
+      else if (!Store.configured) err('الموقع لم يُجهَّز بعد. افتح صفحة الإعداد api/setup.php أولاً.');
+      else if (await Store.login(u, $('#pass').value)) {$('#pass').value = ''; go.disabled = false; go.textContent = 'تسجيل الدخول'; return openDash();}
+      else {err('اسم المستخدم أو كلمة المرور غير صحيحة'); $('#pass').value = ''; $('#pass').focus();}
+    } catch (x) {err(x.note || 'تعذّر الدخول الآن. حاول بعد قليل.');}
     go.disabled = false; go.textContent = 'تسجيل الدخول';
   };
-  $('#out').onclick = () => {location.hash = ''; location.reload();};
+  $('#out').onclick = async () => {await Store.logout(); location.hash = ''; location.reload();};
   startRockets();
+  ready.then(async () => {if (Store.mode !== 'down' && Store.configured && await Store.resume()) openDash();});
 })();
 </script>
 </body>

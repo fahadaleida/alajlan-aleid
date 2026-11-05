@@ -1,7 +1,7 @@
 // تجهيز الصور في المتصفح: طابور بعمّال في الخلفية حتى لا تتجمد الصفحة، مع احترام اتجاه الكاميرا (EXIF)
 // الناتج لكل صورة: نسخة كاملة (١٦٠٠) ونسخة خفيفة (٧٦٨)، وبصمة من محتوى الملف الأصلي تكشف التكرار
 const Photos = (() => {
-  const FULL = 1600, SM = 768, Q = .82, SM_Q = .8, TARGET = 300 * 1024;   // ميزانية الموقع: حوالي ٢٥٠ك.ب للصورة
+  const FULL = 1600, SM = 768, Q = .82, SM_Q = .8, TARGET = 300 * 1024;   // حوالي ٢٥٠ك.ب للصورة
   // جوهر المعالجة: نفس الدالة تعمل في العامل وفي الصفحة (make = إنشاء لوحة، out = تحويلها إلى ملف)
   const core = `
     const fitIn = (w, h, L) => {const s = Math.min(1, L / Math.max(w, h)); return [Math.max(1, Math.round(w * s)), Math.max(1, Math.round(h * s))];};
@@ -94,11 +94,12 @@ const Photos = (() => {
     if (!pumping) {pumping = true; pump();}
   };
 
-  // غلاف عدد المجلة: الموقع يطلب cover.webp، وSafari القديم لا يكتب webp فيُحفظ JPEG بنفس الاسم والمتصفحات تعرضه عادي
+  // غلاف عدد المجلة: الموقع يطلب cover.webp، والمتصفح الذي لا يكتب webp يرسل JPEG ويُحفظ بنفس الاسم، والمتصفحات تعرضه عادي
   async function magCover(file) {
     const im = await loadImg(file), s = Math.min(1, 840 / im.naturalWidth), w = Math.round(im.naturalWidth * s), h = Math.round(im.naturalHeight * s);
     const c = mainMake(w, h), g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(im, 0, 0, w, h);
-    return mainOut(c, .82, 'image/webp');
+    const b = await mainOut(c, .82, 'image/webp');
+    return b.type === 'image/webp' ? b : mainOut(c, .82, 'image/jpeg');
   }
   const base64 = b => new Promise((res, rej) => {const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(b);});
   return {add, magCover, base64, isHeic};

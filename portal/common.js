@@ -1,4 +1,6 @@
 // المشترك بين صفحات البوابة: القائمة، درج الجوال، التذييل، وتحميل البيانات
+// من جرّب لوحة التحكم في نسخة العرض يرى تعديلاته في متصفحه هو فقط. بقية الزوار لا يصلهم هذا الملف
+try {if (localStorage.getItem('ajlan-demo') === '1' && !/admin\.html$/.test(location.pathname)) document.write('<script src="demo-view.js?v=202611051800"><\/script>');} catch (e) {}
 const $ = (s, r = document) => r.querySelector(s);
 const ar = n => Math.round(n).toLocaleString('ar-SA', {useGrouping: false});
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
