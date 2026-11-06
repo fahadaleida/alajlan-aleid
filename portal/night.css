@@ -1,0 +1,61 @@
+/* الوضع الليلي للبوابة. الصورة الليلية ما تنحمّل إلا مع .sky-n */
+.skybtn{flex:none;width:40px;height:40px;display:inline-grid;place-items:center;padding:0;border-radius:50%;border:1px solid rgba(50,39,129,.22);background:rgba(255,255,255,.55);color:#322781;cursor:pointer;transition:background .25s,color .25s,transform .25s}
+.skybtn:hover{transform:rotate(-12deg) scale(1.06);background:#fff}
+.skybtn:focus-visible{outline:2px solid #e3b66b;outline-offset:2px}
+
+#scene::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1s ease;background:center bottom/cover no-repeat}
+.towerfg::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1s ease;background:center bottom/cover no-repeat}
+.sky-n #scene::before{background-image:url(img/bg-night.jpg?v=2)}
+.sky-n .towerfg::before{background-image:url(img/tower-cut-night.webp?v=2)}
+@media (max-width:639px){.sky-n #scene::before{background-image:url(img/bg-night-portrait.jpg?v=2)}}
+[data-sky=night] #scene::before,[data-sky=night] .towerfg::before{opacity:1}
+[data-sky=night] #scene::after,[data-sky=night] body.scened #scene::after,[data-sky=night] body.far .towerfg::after{background:linear-gradient(180deg,rgba(6,9,26,.12),rgba(6,9,26,.26))}
+.sky-go body *{transition:background-color 1s ease,color 1s ease,border-color 1s ease,box-shadow 1s ease}
+@media (prefers-reduced-motion:reduce){#scene::before,.towerfg::before{transition:none}.sky-go body *{transition:none}.skybtn{transition:none}}
+
+[data-sky=night]{--bg:#0e1230;--bg2:#151a3b;--surface:#1a2045;--line:rgba(255,255,255,.13);--line2:rgba(255,255,255,.2);--text:#eef0f8;--muted:#b9bfd6;--gold-soft:rgba(227,182,107,.16);--gold-d:#e3b66b;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);--shadow-h:0 2px 4px rgba(0,0,0,.35),0 22px 50px rgba(0,0,0,.5);color-scheme:dark}
+[data-sky=night] body{background:#0a0e26}
+[data-sky=night] .skybtn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#f3d9a4}
+[data-sky=night] .skybtn:hover{background:rgba(255,255,255,.18)}
+@media (max-width:1023px){.nav .skybtn{position:absolute;inset-inline-start:66px;top:50%;margin-top:-18px;width:36px;height:36px}}
+
+/* الرأس والقوائم */
+[data-sky=night] .nav,[data-sky=night] body.home .nav,[data-sky=night] body.home .nav.solid{background:linear-gradient(180deg,rgba(14,18,48,.82),rgba(14,18,48,.62));border-bottom-color:rgba(227,182,107,.22)}
+[data-sky=night] body.home .nav::before{opacity:.08}
+[data-sky=night] .menu a,[data-sky=night] .dd-b{color:#eef0f8}
+[data-sky=night] .menu a:hover,[data-sky=night] .menu a[aria-current],[data-sky=night] .dd-b:hover{color:#f3d9a4}
+[data-sky=night] .dd-m{background:#171c40;border-color:rgba(255,255,255,.14)}
+[data-sky=night] .dd-m a{color:#eef0f8}
+[data-sky=night] .bname b:last-child{color:#dfe3ff}
+[data-sky=night] .bname b:first-child{color:#e3b66b}
+[data-sky=night] .burger{background:rgba(255,255,255,.1);color:#eef0f8;border-color:rgba(255,255,255,.2)}
+[data-sky=night] .drawer .sheet{background:#141938}
+[data-sky=night] .drawer a,[data-sky=night] .drawer h5{color:#eef0f8}
+[data-sky=night] body.home .tree-btn,[data-sky=night] .tree-btn{background:rgba(227,182,107,.16);color:#f3d9a4;border:1px solid rgba(227,182,107,.4);box-shadow:none}
+
+/* الشجرة: أخف ضوءاً مع توهج قمري */
+[data-sky=night] .htree .st img#treeImg,[data-sky=night] .orbit .otree img#treeImg,[data-sky=night] .vista .vtree img{filter:brightness(.74) saturate(.9) drop-shadow(0 0 16px rgba(160,180,255,.28))}
+[data-sky=night] .soilimg{filter:brightness(.42) saturate(.7)!important}
+
+/* اللوحات */
+[data-sky=night] .glass-panel,[data-sky=night] .log.glass-panel,[data-sky=night] .tinfo.glass-panel{background:rgba(14,18,46,.74);border-color:rgba(255,255,255,.13);box-shadow:0 24px 64px rgba(0,0,0,.45)}
+[data-sky=night] .ps-read{background:rgba(16,20,50,.9)}
+[data-sky=night] .ps-btn.ps-magbtn{background:rgba(227,182,107,.14);color:#f3d9a4}
+[data-sky=night] .ps-btn.ps-magbtn svg{color:#f3d9a4}
+[data-sky=night] select,[data-sky=night] select option{background-color:#171c40;color:#eef0f8}
+[data-sky=night] .hint{color:#c1c6dc}
+[data-sky=night] .shelfpg,[data-sky=night] .newsmag,[data-sky=night] .ps{--ink:#eef0f8;--gold-d:#e3b66b;--paper:rgba(16,20,50,.9)}
+[data-sky=night] .rbar,[data-sky=night] body.fs .rbar{background:rgba(14,18,48,.82);border-bottom-color:rgba(227,182,107,.22)}
+[data-sky=night] .rbar .bname b:last-child{color:#dfe3ff}
+
+/* صفحات القراءة: الأشرطة فقط، وأوراق المجلة تبقى كما هي */
+[data-sky=night]{--glass:linear-gradient(180deg,rgba(18,23,56,.86),rgba(14,18,48,.78));--glass-solid:rgba(16,20,50,.92);--gline:rgba(255,255,255,.14)}
+[data-sky=night] .rbar,[data-sky=night] .rfoot,[data-sky=night] .vq,[data-sky=night] .vbar{--ink:#eef0f8;--gold-d:#e3b66b}
+[data-sky=night] .amb{display:none}
+[data-sky=night] .rback{color:#eef0f8}
+[data-sky=night] .rbar .ib{color:#eef0f8}
+[data-sky=night] .rbar .ib.dl{color:#fff}
+
+/* النهار: تغميق خفيف فقط حتى يبان خضار الخلفية، والنص على لوحاته */
+body #scene::after,body.home:not(.mags) #scene::after,body.scened #scene::after,body.far .towerfg::after{background:linear-gradient(180deg,rgba(20,16,48,.07) 0%,rgba(20,16,48,.08) 60%,rgba(20,16,48,.14) 100%)}
+[data-sky=night] body #scene::after,[data-sky=night] body.home:not(.mags) #scene::after,[data-sky=night] body.scened #scene::after,[data-sky=night] body.far .towerfg::after{background:linear-gradient(180deg,rgba(6,9,26,.10),rgba(6,9,26,.2))}

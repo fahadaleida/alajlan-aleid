@@ -1,8 +1,8 @@
 /* الصفحة الرئيسية «الديرة عند الغروب» — حسب portal/تصميم-الرئيسية.md */
 body.home{background:#2A2148}
-#scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg?v=3) center bottom/cover no-repeat}
+#scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg?v=6) center bottom/cover no-repeat}
 #scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.10) 0%,rgba(20,16,48,.18) 45%,rgba(20,16,48,.55) 80%,rgba(20,16,48,.78) 100%)}
-@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=3);background-position:50% 78%}}
+@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=6);background-position:50% 78%}}
 .glass-panel{background:rgba(251,250,247,.88);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.6);box-shadow:0 24px 64px rgba(20,16,48,.28)}
 .hwrap{width:min(1280px,100% - 32px);margin-inline:auto}
 
@@ -140,7 +140,7 @@ body.home .tree-btn{background:rgba(50,39,129,.88);backdrop-filter:blur(6px);box
 
 /* ===== نافذة الديرة: المشهد ظاهر كامل بلا غطاء، والشجرة في الساحة بين الجبل والبرج ===== */
 .vista{position:relative;margin-top:28px;border-radius:26px;overflow:hidden;aspect-ratio:2.25/1;box-shadow:0 30px 60px -20px rgba(20,16,48,.55),0 0 0 1px rgba(255,255,255,.35)}
-.vista .vbg{position:absolute;inset:0;background:url(img/bg-scene.jpg?v=3) center 18%/100% auto no-repeat}
+.vista .vbg{position:absolute;inset:0;background:url(img/bg-scene.jpg?v=6) center 18%/100% auto no-repeat}
 .vista .vbg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,16,48,.45) 0%,transparent 26%)}
 /* الشجرة: قاعدتها على أرض الساحة (١١٪ من الأسفل) وبين الجبل (٣٦٪) والبرج (٧٧٪) */
 .vista .vtree{position:absolute;left:57%;bottom:9.5%;height:64%;transform:translateX(-50%);aspect-ratio:1790/2342}
@@ -167,14 +167,14 @@ body.home:not(.mags) #scene{filter:blur(16px) brightness(.72) saturate(1.15);tra
 .vista .vbg{background-size:cover;background-position:center 50%}
 .vista .vtree{left:56%;bottom:15%;height:62%}
 @media (max-width:639px){.vista .vbg{background-size:auto 100%;background-position:52% 0}.vista .vtree{left:50%;bottom:17%;height:50%}}
-@media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg?v=3);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
+@media (max-width:639px){.vista .vbg{background-image:url(img/bg-scene-portrait.jpg?v=6);background-size:100% auto;background-position:center 100%}.vista .vtree{left:47%;bottom:16%;height:50%}}
 /* الخلفية كاملة وواضحة في الرئيسية بعد (بطلب فهد) */
 body.home:not(.mags) #scene{filter:none;transform:none}
 /* نافذة الديرة على الخلفية الجديدة (١٦:٩): الجبل والشمس يسار، والبرج يمين، والأرض عند ٨٣٪ */
 .vista{aspect-ratio:16/9}
-.vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}
+.vista .vbg{background-image:url(img/bg-scene.jpg?v=6);background-size:cover;background-position:center}
 .vista .vtree{left:64%;bottom:15%;height:60%}
-@media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg?v=3);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}
+@media (max-width:639px){.vista{aspect-ratio:4/3}.vista .vbg{background-image:url(img/bg-scene.jpg?v=6);background-size:cover;background-position:center}.vista .vtree{left:63%;bottom:15%;height:58%}}
 
 /* الصفحات الداخلية بنفس فكرة الرئيسية */
 .hgrid.inner{padding-top:0;align-items:start}
@@ -270,7 +270,7 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
   body.home:not(.mags) .hgrid>.htree{left:auto;right:max(0px,calc((100vw - 1280px)/2 - 20px));width:480px;--sh:min(720px,calc(100vh - var(--nav) - 50px))}
 }
 @media (max-width:1023px){body.home:not(.mags) .hgrid{grid-template-areas:"tree" "news";grid-template-columns:1fr;padding-top:calc(var(--nav) + 16px)}}
-@media (max-width:639px){body.home:not(.mags) #scene{background-image:url(img/bg-home-portrait.jpg?v=202611030100);background-position:50% 30%}}
+@media (max-width:639px){body.home:not(.mags) #scene{background-image:url(img/bg-home-portrait.jpg?v=6);background-position:50% 30%}}
 /* الجوال: ترتيب أهدأ للرئيسية */
 @media (max-width:639px){
   body.home:not(.mags) .htree .st{--th:330px;height:380px}
@@ -301,9 +301,9 @@ body.home:not(.mags) .hgrid{grid-template-areas:"tree news";grid-template-column
     --ftcx:calc((100vw - 2560 * var(--S)) / 2 + 1985 * var(--S));--ftl:calc(var(--ftcx) - var(--ftw) / 2);
     --fhl:calc((100vw - min(1280px, 100vw - 32px)) / 2)}
   /* المرقب مقصوص فوق الشجرة بنفس حساب الخلفية بالضبط */
-  body.far .towerfg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;background:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
+  body.far .towerfg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;background:url(img/tower-cut.webp?v=2) center bottom/cover no-repeat}
   body.far .towerfg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.10) 0%,rgba(20,16,48,.18) 45%,rgba(20,16,48,.55) 80%,rgba(20,16,48,.78) 100%);
-    -webkit-mask:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat;mask:url(img/tower-cut.webp?v=1) center bottom/cover no-repeat}
+    -webkit-mask:url(img/tower-cut.webp?v=2) center bottom/cover no-repeat;mask:url(img/tower-cut.webp?v=2) center bottom/cover no-repeat}
   /* الشجرة: صغيرة وبعيدة، قاعدتها على الأرض البعيدة (y=١٢١٥ من ١٤٤١) ونصف تاجها الأيمن ورا المرقب */
   body.home.far:not(.mags) .hgrid>.htree{position:fixed;z-index:-1;right:auto;bottom:auto;transform:none;margin:0;width:var(--ftw);
     left:var(--ftl);top:calc(100vh - 1441 * var(--S) + 1215 * var(--S) - .9716 * var(--fth))}
@@ -337,3 +337,7 @@ body.home.far:not(.mags) .hgrid>.htree .tlink{display:none}
   body.mags.far .hgrid.inner>.htree .st canvas{opacity:.9}
   body.mags.far .hgrid.inner>.htree .tlink{position:absolute;top:calc(100% + 14px);bottom:auto;left:50%;transform:translateX(-62%);z-index:3;font-size:11.5px;padding:4px 11px}
 }
+
+/* أرض خضراء زي موقع الشجرة: تغميق أخف أسفل الرئيسية حتى يبان الخضار، والجوال على نفس الخلفية */
+body.home:not(.mags) #scene::after{background:linear-gradient(180deg,rgba(20,16,48,.10) 0%,rgba(20,16,48,.12) 60%,rgba(20,16,48,.24) 100%)}
+@media (max-width:639px){body.home:not(.mags) #scene{background-image:url(img/bg-scene-portrait.jpg?v=6);background-position:50% 100%}}

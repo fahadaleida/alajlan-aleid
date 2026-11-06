@@ -14,7 +14,7 @@ body.adminp{background:#2A2148;min-height:100vh;min-height:100svh;overflow-x:hid
   .adash{margin-left:32px;margin-right:auto;width:min(980px,calc(var(--ftl) - 48px))}
 }
 @media (max-width:1023px){
-  #scene{background-image:url(img/bg-home-portrait.jpg?v=202611030100);background-position:50% 30%}
+  #scene{background-image:url(img/bg-home-portrait.jpg?v=6);background-position:50% 30%}
   .atree{width:min(44vw,240px);left:0;right:0;margin-inline:auto;top:18px}
   .atree .soil{width:95%;bottom:-7%}
   body.adminp .astage{align-items:flex-end;padding-top:min(62vw,320px);padding-bottom:16px}

@@ -85,7 +85,7 @@ img{display:block;max-width:100%}
 
 /* بطاقة الشجرة الصغيرة مع الصواريخ */
 .tree-card{position:relative;overflow:hidden;border-radius:var(--r);min-height:540px;box-shadow:var(--shadow-h);isolation:isolate;display:flex;flex-direction:column}
-.tree-card .bg{position:absolute;inset:0;background:url(img/bg-scene-portrait.jpg?v=3) center bottom/cover;z-index:-2}
+.tree-card .bg{position:absolute;inset:0;background:url(img/bg-scene-portrait.jpg?v=6) center bottom/cover;z-index:-2}
 .tree-card .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,40,.55) 0%,rgba(20,14,40,0) 40%,rgba(20,14,40,.1) 70%,rgba(20,14,40,.7) 100%)}
 .tree-card .head{padding:20px 22px 0;color:#fff;text-align:center}
 .tree-card .head h2{font-size:26px;font-weight:800}
@@ -249,7 +249,7 @@ footer .flogo{height:56px;margin:0 auto 14px;background:#fff;border-radius:12px;
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.slide img{transition:none}}
 
 /* رأس الصفحات الداخلية: المشهد بارتفاع قصير */
-.sub-hero{position:relative;margin-top:var(--nav);padding:56px 0 46px;text-align:center;color:#fff;background:url(img/bg-scene.jpg?v=3) center 62%/cover;isolation:isolate}
+.sub-hero{position:relative;margin-top:var(--nav);padding:56px 0 46px;text-align:center;color:#fff;background:url(img/bg-scene.jpg?v=6) center 62%/cover;isolation:isolate}
 .sub-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(30,23,87,.55),rgba(30,23,87,.35) 60%,rgba(248,245,239,.0)),linear-gradient(0deg,rgba(20,14,40,.35),transparent 50%)}
 .sub-hero h1{font-size:clamp(32px,4.6vw,52px);font-weight:800;text-shadow:0 4px 18px rgba(0,0,0,.45)}
 .sub-hero p{opacity:.95;text-shadow:0 2px 10px rgba(0,0,0,.5)}
@@ -317,9 +317,9 @@ footer .socials svg{width:17px;height:17px}
 
 /* ===== الخلفية الكاملة (الجبل والبرج والغروب) في كل الصفحات ===== */
 body.scened{background:#2A2148}
-body.scened #scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg?v=3) center bottom/cover no-repeat}
+body.scened #scene{position:fixed;inset:0;z-index:-2;background:url(img/bg-scene.jpg?v=6) center bottom/cover no-repeat}
 body.scened #scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,48,.18) 0%,rgba(20,16,48,.22) 45%,rgba(20,16,48,.5) 80%,rgba(20,16,48,.7) 100%)}
-@media (max-width:639px){body.scened #scene{background-image:url(img/bg-scene-portrait.jpg?v=3);background-position:50% 100%}}
+@media (max-width:639px){body.scened #scene{background-image:url(img/bg-scene-portrait.jpg?v=6);background-position:50% 100%}}
 body.scened .sub-hero,body.scened .page-top{background:none;border:0}
 body.scened .sub-hero::before{display:none}
 body.scened .page-top h1,body.scened .sub-hero h1{color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.55)}

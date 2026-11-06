@@ -2,6 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script>try{if(/[?&]bg=poster/.test(location.search)||(localStorage.getItem('ajlan-bg')==='poster'&&!/[?&]bg=scene/.test(location.search)))window.SKY_OFF=1;}catch(e){}</script>
+<script src="../portal/night.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>شجرة العجلان والعيد</title>
 <link rel="icon" type="image/png" href="bg/logo.png">
@@ -32,6 +34,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .top{position:fixed;top:0;inset-inline:0;padding:12px 16px;display:flex;gap:12px;align-items:center;z-index:20;pointer-events:none}
 .top>*{pointer-events:auto}
 .search{flex:1;max-width:360px;margin-inline:auto;position:relative;transition:max-width .35s ease}.search:focus-within{max-width:500px}
+/* البحث جنب القمر من جهة اليسار (القمر عند ٥٣٪ من عرض الخلفية) */
+@media (min-width:761px){.top{justify-content:flex-end}.search{position:fixed;top:calc(9.6vh - 22px);right:51vw;flex:none;margin:0;width:min(360px,calc(49vw - 240px));max-width:none;pointer-events:auto;transition:width .35s ease}.search:focus-within{max-width:none;width:min(440px,calc(49vw - 240px))}}
 .sbox{display:flex;align-items:center;background:rgba(28,20,12,.38);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border:1px solid rgba(243,210,122,.55);border-radius:999px;box-shadow:0 6px 22px rgba(20,10,0,.25),inset 0 1px 0 rgba(255,240,200,.18);transition:background .3s,border-color .3s}
 .sbox:focus-within{border-color:var(--gold2);background:rgba(28,20,12,.6)}
 .sbox input{flex:1;min-width:0;border:0;background:transparent;padding:8px 6px 8px 16px;font:500 15px Tajawal,sans-serif;color:#fff4dc;outline:none;text-align:center}
@@ -101,6 +105,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn.danger{color:#c0392b}
 .phf h4 small{font-weight:500;opacity:.7}.phr{display:flex;gap:8px}.phr input{flex:1;min-width:0;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:inherit;font:600 16px Tajawal,sans-serif}.phf p{margin:6px 0 0;font-size:13px;line-height:1.6;opacity:.75}
 .notes{white-space:pre-wrap;font-size:14px;border:1px solid var(--line);border-radius:12px;padding:10px}
+.swr{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700}.swr input{position:absolute;opacity:0;width:0;height:0}.swr i{flex:none;width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;transition:background .2s}.swr i::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}.swr input:checked+i{background:#1f9d57}.swr input:checked+i::after{transform:translateX(-18px)}.swr input:focus-visible+i{outline:2px solid var(--gold);outline-offset:2px}
+.ctb{position:relative;border-color:#2aa866;color:#17794a}.ctb svg{color:#17794a}button.btn.ctb{display:inline-flex;align-items:center;gap:6px}
+@keyframes ctPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.35)}60%{box-shadow:0 0 0 8px rgba(37,211,102,0)}}.ctb{animation:ctPulse 2.8s ease-out infinite}
+#ctMenu{position:fixed;z-index:8500;direction:rtl;min-width:176px;padding:8px;border-radius:16px;background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:0 16px 40px rgba(20,12,4,.32);opacity:0;transform:scale(.9) translateY(4px);transition:opacity .16s,transform .16s;font-family:Tajawal,system-ui,sans-serif}#ctMenu.on{opacity:1;transform:none}
+#ctMenu small{display:block;text-align:center;font-weight:700;color:var(--muted);padding:2px 0 6px}#ctMenu a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:11px;font-weight:800;color:inherit;text-decoration:none}#ctMenu a:hover{background:color-mix(in srgb,var(--gold2) 22%,transparent)}#ctMenu a.wa{color:#17794a}
+@media (prefers-reduced-motion:reduce){.ctb{animation:none}#ctMenu{transition:none}}
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#3a2416;color:#fff;padding:8px 18px;border-radius:99px;z-index:30;display:none;white-space:nowrap}
 .toast.show{display:block}
 dialog{border:0;border-radius:20px;padding:0;width:min(450px,calc(100vw - 32px));background:var(--panel);color:var(--ink)}
@@ -482,6 +492,8 @@ form.dlg input,form.dlg select,form.dlg textarea{padding:9px 12px;border-radius:
 @media (max-width:760px){.portalnav{display:none}}
 body.famv .portalnav{display:none}
 </style>
+<link rel="stylesheet" href="night-auto.css?v=1">
+<link rel="stylesheet" href="night.css?v=1">
 </head>
 <body>
 <div class="splash" id="splash"><div class="spc"><img src="bg/logo.png" alt=""><h1>شجرة العجلان والعيد</h1><p>من الهذلي إليك · الطبعة الثالثة</p><i class="spb"><b></b></i></div></div>
@@ -501,7 +513,7 @@ body.famv .portalnav{display:none}
     </div>
     <div class="results" id="results"></div>
   </div>
-  <button class="round" id="famBtn" title="العوائل">👪</button><button class="round" id="toolsBtn" title="الإعدادات">⚙️</button>
+  <span id="skyHost"></span><button class="round" id="gateBtn" title="حسابي">👤</button>
 </div>
 <div class="toast" id="toast"></div>
 <div class="ctrl">
@@ -543,6 +555,7 @@ body.famv .portalnav{display:none}
   </form>
 </dialog>
 <input type="file" id="photoFile" accept="image/*" hidden>
+<script src="gate.js?v=3" data-modal></script>
 
 
 <script>
@@ -606,14 +619,14 @@ const SEED=[
   {id:23,name:'لينا',gender:'f',father:19,pos:[615,7155],r:36,via:[[815,7205,12],[770,7192,12],[720,7178,10],[670,7165,10],[635,7158,8]],w:8},
 ];
 const AGES=false;   // الأعمار مخفية بطلب فهد (true يرجّعها)
-const SELF_PHOTO=true;   // زر «أضف صورتك» والكاميرات ظاهرة للزوار، والصورة تنحفظ في جهاز الزائر حتى يتفعّل الخادم (false يخفيها)
+let SELF_PHOTO=false;   // زر «أضف صورتك» والكاميرات لعضو مقبول فقط، ويتفعل في unmaskPhotos
 const PW=7387,PH=10554,TILE=512,AJLAN_ID=9,DEFAULT_ID=19,KEY='ajlan-aleid-v7';
-const PHKEY='ajlan-phone';   // جوال صاحب الجهاز، اختياري، ولا ينرفع لأي مكان حتى تتفعّل حسابات الأسرة
-const normPhone=v=>String(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[\s-]/g,'');
-const okPhone=v=>/^(05\d{8}|\+?\d{9,15})$/.test(v);
+try{localStorage.removeItem('ajlan-phone');}catch(e){}   // خانة الجوال القديمة: الرقم صار من حساب العضو
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 let people=(()=>{try{const s=store.get(KEY);if(s){const o=JSON.parse(s);for(const p of SEED)if(!o[p.id])o[p.id]=structuredClone(p);return o;}}catch(e){}return Object.fromEntries(SEED.map(p=>[p.id,structuredClone(p)]))})();
-function save(){KIDX=null;const own=Object.fromEntries(Object.entries(people).filter(([k,p])=>!p._ext));if(!store.set(KEY,JSON.stringify(own)))(typeof toast==='function'?toast('تعذر الحفظ في المتصفح، مساحة الصور ممتلئة',4000):alert('تعذر الحفظ'));}
+// الصور مخفية حتى تأكيد العضوية: الزائر لا تُحمَّل له صورة، والمخفي يبقى محفوظاً في جهازه
+const PHOTO_STASH={};for(const p of Object.values(people))if(p.photo){PHOTO_STASH[p.id]=p.photo;delete p.photo;}
+function save(){KIDX=null;const own=Object.fromEntries(Object.entries(people).filter(([k,p])=>!p._ext).map(([k,p])=>[k,PHOTO_STASH[k]?{...p,photo:PHOTO_STASH[k]}:p]));if(!store.set(KEY,JSON.stringify(own)))(typeof toast==='function'?toast('تعذر الحفظ في المتصفح، مساحة الصور ممتلئة',4000):alert('تعذر الحفظ'));}
 // تصحيح: سعد ابن علي(24) وراجح(25) أخوه
 if(people[26]){const sd=SEED.find(p=>p.id===26);if(people[26].father===25||JSON.stringify(people[26].via)!==JSON.stringify(sd.via)){people[26].father=24;people[26].via=structuredClone(sd.via);save();}}
 // مسارات الأغصان من الطبعة دايم من SEED حتى لو المتصفح حافظ نسخة قديمة
@@ -747,7 +760,7 @@ layout(location=0) in vec2 aQ;uniform vec4 uRect;uniform vec2 uUVS;out vec2 vUV;
 void main(){vUV=aQ*(uUVS.x>0.?uUVS:vec2(1));vW=uRect.xy+aQ*uRect.zw;gl_Position=proj(vW);}`;
 const FS_POSTER=`#version 300 es
 precision highp float;in vec2 vUV;in vec2 vW;out vec4 o;
-uniform sampler2D uTex,uMask,uField,uCrown,uNode,uLit;uniform float uMaskA,uRelight,uBg,uCut,uGlow,uVeil,uLitK;uniform vec2 uPW;${GLSL_DIM}
+uniform sampler2D uTex,uMask,uField,uCrown,uNode,uLit;uniform float uMaskA,uRelight,uBg,uCut,uGlow,uVeil,uLitK,uNight;uniform vec2 uPW;${GLSL_DIM}
 void main(){
   vec4 tx=texture(uTex,vUV);vec3 col=clamp(tx.rgb+(tx.rgb-textureLod(uTex,vUV,log2(max(1.,length(fwidth(vUV*vec2(textureSize(uTex,0)))))) +1.).rgb)*.55,0.,1.);vec2 uv=vW/uPW;   // حدّة: توضيح الأسماء المطبوعة
   if(uBg>0.){o=vec4(fx(col,0.,0.)*mix(1.,.93,smoothstep(0.,1.,abs(vW.x/uPW.x-.5)*.8)),tx.a);return;}
@@ -763,7 +776,7 @@ void main(){
     // قاعدة الجذع: كلمة «الهذلي» كاملة مع عشبها بحافة ناعمة (قناع التاج أضيق من الكلمة)
     vec2 bq=abs(vec2((vW.x-3640.)/700.,(vW.y-10330.)/250.));float bz=(1.-smoothstep(.74,1.,pow(pow(bq.x,4.)+pow(bq.y,4.),.25)))*(1.-smoothstep(10470.,10554.,vW.y));
     a=max(a,bz);col=mix(col,col*vec3(1.06,.93,.66),bz*(1.-cr*.5)*smoothstep(.02,.15,col.g-col.r)*.55);col*=1.+.16*max(bz,cr*(1.-smoothstep(300.,520.,abs(vW.x-3690.)))*smoothstep(9050.,9300.,vW.y));
-    float lk=uLitK*texture(uLit,uv).a;col=mix(col,vec3(dot(col,vec3(.3,.59,.11))),.85*lk)*(1.-.72*lk);   // إضاءة فرع: الباقي يطفى (رمادي غامق)
+    {float wd=(1.-smoothstep(.06,.34,dot(col,vec3(.3,.59,.11))))*uNight;col=col*mix(vec3(1.),vec3(.80,.82,.90),uNight)+wd*vec3(.30,.19,.09);}float lk=uLitK*texture(uLit,uv).a;col=mix(col,vec3(dot(col,vec3(.3,.59,.11))),.85*lk)*(1.-.72*lk);   // إضاءة فرع: الباقي يطفى (رمادي غامق)
     vec4 mb=textureLod(uMask,uv,3.5);float wb=mix(mb.r,mb.a,uMaskA),gl2=cr*clamp(max(textureLod(uNode,uv,4.).r*.7,wb),0.,1.)*uGlow*(1.-.85*lk);
     vec3 gold=vec3(1.,.84,.5);float A=a+gl2*(1.-a);vec3 C=(col*a+gold*gl2*(1.-a))/max(A,1e-3);
     // ستارة داكنة ناعمة خلف التاج: تفصل الدوائر والأسماء عن سماء الغروب الساطعة
@@ -813,9 +826,9 @@ void main(){float q=abs(vA)/.5,aw=fwidth(q);float al=1.-smoothstep(1.-aw,1.+aw,q
 const VS_FS=`#version 300 es
 layout(location=0) in vec2 aQ;out vec2 vUV;void main(){vUV=aQ;gl_Position=vec4(aQ*2.-1.,0,1);}`;
 const FS_SCENE=`#version 300 es
-precision highp float;in vec2 vUV;out vec4 o;uniform sampler2D uT;uniform float uSA,uVA;uniform vec2 uOff;uniform vec4 uSh;
+precision highp float;in vec2 vUV;out vec4 o;uniform sampler2D uT,uTN;uniform float uSA,uVA,uMix;uniform vec2 uOff;uniform vec4 uSh;
 void main(){vec2 uv=vUV;if(uVA>uSA){float k=uSA/uVA;uv.y=.5+(uv.y-.5)*k;}else{float k=uVA/uSA;uv.x=.5+(uv.x-.5)*k;}
-  uv+=uOff;uv=clamp(uv,0.,1.);vec3 c=texture(uT,vec2(uv.x,1.-uv.y)).rgb;vec2 q=vUV-.5;c*=1.-.25*dot(q,q);if(uSh.z>0.){vec2 d=(vUV-uSh.xy)/uSh.zw;c*=1.-.6*exp(-dot(d,d)*2.2);}o=vec4(c,1);}`;
+  uv+=uOff;uv=clamp(uv,0.,1.);vec2 tv=vec2(uv.x,1.-uv.y);vec3 c=mix(texture(uT,tv).rgb,texture(uTN,tv).rgb,uMix);vec2 q=vUV-.5;c*=1.-.25*dot(q,q);if(uSh.z>0.){vec2 d=(vUV-uSh.xy)/uSh.zw;c*=1.-.6*exp(-dot(d,d)*2.2);}o=vec4(c,1);}`;
 const FS_DOWN=`#version 300 es
 precision highp float;in vec2 vUV;out vec4 o;uniform sampler2D uT;uniform vec2 uPx;
 void main(){o=.25*(texture(uT,vUV+uPx*vec2(-1,-1))+texture(uT,vUV+uPx*vec2(1,-1))+texture(uT,vUV+uPx*vec2(-1,1))+texture(uT,vUV+uPx*vec2(1,1)));}`;
@@ -868,7 +881,7 @@ function initGL(){
     const upRep=(img,fmt)=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);try{gl.texImage2D(gl.TEXTURE_2D,0,fmt,fmt,gl.UNSIGNED_BYTE,img);}catch(e){return null;}gl.generateMipmap(gl.TEXTURE_2D);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.MIRRORED_REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return{tex:t,w:img.naturalWidth,h:img.naturalHeight};};
     // الخلفية: v7/bg/bg-scene.jpg (بانوراما المعلمين، يفضّل 3840×1600، تُعرض بملء الشاشة) و v7/bg/crown-mask.png (قناع قص الشجرة)
-    if(!POSTERBG)loadImg(innerHeight>innerWidth*1.15?'bg/bg-tree-portrait.jpg?v=3':'bg/bg-scene.jpg?v=5',i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G.scene=t;G.sceneA=i.naturalWidth/i.naturalHeight;}});
+    if(!POSTERBG){G.skyLoad=k=>{if(G['sky'+k]||G['skyWait'+k])return;G['skyWait'+k]=1;const tall=innerHeight>innerWidth*1.15;loadImg(k==='N'?(tall?'bg/bg-night-portrait.jpg?v=2':'bg/bg-night.jpg?v=2'):(tall?'bg/bg-tree-portrait.jpg?v=4':'bg/bg-scene.jpg?v=6'),i=>{if(!gl)return;const t=up(i,gl.RGB);if(t){G['sky'+k]=t;G.scene=G.scene||t;G.sceneA=G.sceneA||i.naturalWidth/i.naturalHeight;dirty=true;}});};G.skyLoad(SKYT?'N':'D');}
     if(!POSTERBG)loadImg('bg/node-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.node=t;});
     if(!POSTERBG)loadImg(MOBILE?'bg/cut-mask.png?v=1':'bg/crown-mask.png',i=>{if(!gl)return;const t=up(i,gl.LUMINANCE);if(t)G.crown=t;});
     try{initStageGL();}catch(e){console.warn('stage off:',e);G.bb=null;}
@@ -938,9 +951,9 @@ function renderGL(now,R){
   bindTex(P,'uMask',1,G.mask);bindTex(P,'uField',2,G.field);
   gl.bindVertexArray(G.quad);
   // الخلفية الممتدة (سماء + بحيرة وعشب) خلف الطبعة — ملفات قابلة للاستبدال في v7/bg
-  if(G.scene){const S=G.sceneP;gl.useProgram(S.p);bindTex(S,'uT',0,G.scene);gl.uniform1f(S.u.uSA,G.sceneA);gl.uniform1f(S.u.uVA,VW/VH);if(PORT()){fitView();const va=VW/VH;gl.uniform2f(S.u.uOff,0,-SCN_DY/VH*(va>G.sceneA?G.sceneA/va:1));}/*الجوال: المشهد ثابت، ويرتفع بس إذا شريط التبويب غطى الأرض*/else gl.uniform2f(S.u.uOff,(cam.x/PW-.5)*-.02,(cam.y/PH-.5)*.015);{const a=w2s(3700,10520),b=w2s(4700,10520);const rx=Math.abs(b.x-a.x)/VW;gl.uniform4f(S.u.uSh,a.x/VW,1-a.y/VH,rx,rx*VW/VH*.16);}gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  if(G.scene){const S=G.sceneP;gl.useProgram(S.p);const sN=G.skyN||G.skyD,sD=G.skyD||G.skyN;bindTex(S,'uT',0,sD);bindTex(S,'uTN',7,sN);gl.uniform1f(S.u.uMix,G.skyN&&G.skyD?SKYM:G.skyN?1:0);gl.uniform1f(S.u.uSA,G.sceneA);gl.uniform1f(S.u.uVA,VW/VH);if(PORT()){fitView();const va=VW/VH;gl.uniform2f(S.u.uOff,0,-SCN_DY/VH*(va>G.sceneA?G.sceneA/va:1));}/*الجوال: المشهد ثابت، ويرتفع بس إذا شريط التبويب غطى الأرض*/else gl.uniform2f(S.u.uOff,(cam.x/PW-.5)*-.02,(cam.y/PH-.5)*.015);{const a=w2s(3700,10520),b=w2s(4700,10520);const rx=Math.abs(b.x-a.x)/VW;gl.uniform4f(S.u.uSh,a.x/VW,1-a.y/VH,rx,rx*VW/VH*.16);}gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     gl.useProgram(P.p);}
-  const CUT=!!(G.crown&&G.scene&&G.node);gl.uniform1f(P.u.uCut,CUT?1:0);if(CUT){bindTex(P,'uCrown',3,G.crown);bindTex(P,'uNode',4,G.node);const fs=fitView().s;gl.uniform1f(P.u.uGlow,.12+.18*clamp01((cam.s-fs*1.5)/(fs*2.5)));gl.uniform1f(P.u.uVeil,RUN||MOBILE?0:.3+.15*clamp01((cam.s-fs*1.5)/(fs*3)));
+  const CUT=!!(G.crown&&G.scene&&G.node);gl.uniform1f(P.u.uNight,SKYM);gl.uniform1f(P.u.uCut,CUT?1:0);if(CUT){bindTex(P,'uCrown',3,G.crown);bindTex(P,'uNode',4,G.node);const fs=fitView().s;gl.uniform1f(P.u.uGlow,.12+.18*clamp01((cam.s-fs*1.5)/(fs*2.5)));gl.uniform1f(P.u.uVeil,RUN||MOBILE?0:.3+.15*clamp01((cam.s-fs*1.5)/(fs*3)));
     const L=RUN?null:litState(performance.now());if(L&&!L.D.tex){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,L.D.dim);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);L.D.tex=t;}
     bindTex(P,'uLit',5,L?L.D.tex:G.mask);gl.uniform1f(P.u.uLitK,L?L.dk:0);}if(CUT){gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);}
   if(false&&(G.bgSky||G.bgGround)){gl.uniform1f(P.u.uBg,1);const X0=-4*PW,X1=5*PW;
@@ -1016,8 +1029,12 @@ function resize(){
   if(gl){glResize();}else{glowCv.width=Math.ceil(VW*DPR/2);glowCv.height=Math.ceil(VH*DPR/2);dimCv.width=Math.ceil(VW/2);dimCv.height=Math.ceil(VH/2);}
   dirty=true;
 }
+// الوضع الليلي: SKYT الهدف و SKYM الذوبان الحالي بين خلفية النهار والليل
+let SKYT=window.Sky&&!window.SKY_OFF&&Sky.get()==='night'?1:0,SKYM=SKYT,skyLast=0;
+addEventListener('skychange',e=>{SKYT=e.detail==='night'?1:0;if(G&&G.skyLoad)G.skyLoad(SKYT?'N':'D');if(matchMedia('(prefers-reduced-motion:reduce)').matches)SKYM=SKYT;dirty=true;});
 function frame(now){
   requestAnimationFrame(frame);
+  if(SKYM!==SKYT&&G&&(SKYT?G.skyN:G.skyD)){const d=Math.min(.05,(now-skyLast)/1000)||.016;SKYM=SKYT>SKYM?Math.min(1,SKYM+d):Math.max(0,SKYM-d);dirty=true;}skyLast=now;
   const dt=Math.min(.05,(now-lastT)/1000||0);lastT=now;
   const busy=stepCamera(now)|stepRun(now,dt)|(sparks.length>0)|(!!RUN)|stepInertia(dt)|litBusy(now),anim=busy|(!!HOV||!!SEL||PHOV>=0);
   if(!dirty&&!anim)return;if(MOBILE&&!dirty&&!busy&&now-LDR<32)return;LDR=now;dirty=false;   // الجوال: نبض التحديد فقط = ٣٠ إطار
@@ -1190,7 +1207,7 @@ function renderOverlay(now,dt){
   const g=octx;g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,VW,VH);
   // التراب تحت الجذع: الشجرة مغروسة في الأرض (نفس صورة البوابة، وفيها فتحة للجذع فتبان «الهذلي»)، ويختفي في رحلة النسب لأن الكاميرا مايلة
   SOILA+=((!BL&&!RUN?1:0)-SOILA)*Math.min(1,(dt||.016)*6);if(Math.abs((!BL&&!RUN?1:0)-SOILA)>.01)dirty=true;   // يختفي بنعومة
-  if(!POSTERBG&&SOILA>.01&&SOIL.complete&&SOIL.naturalWidth){const a=w2s(292,9587),b=w2s(7095,11274);g.save();g.globalAlpha=SOILA;g.shadowColor='rgba(24,10,20,.5)';g.shadowBlur=8;g.shadowOffsetY=5;g.drawImage(SOIL,a.x,a.y,b.x-a.x,b.y-a.y);g.restore();}
+  if(!POSTERBG&&SOILA>.01&&SOIL.complete&&SOIL.naturalWidth){const a=w2s(292,9587),b=w2s(7095,11274);g.save();g.globalAlpha=SOILA;if(SKYM>0)g.filter=`brightness(${1-.55*SKYM})`;g.shadowColor='rgba(24,10,20,.5)';g.shadowBlur=8;g.shadowOffsetY=5;g.drawImage(SOIL,a.x,a.y,b.x-a.x,b.y-a.y);g.restore();}
   // المضافين بعد الطبعة
   for(const p of Object.values(people)){if(p.pos||!people[p.father])continue;if(BL&&((BL.id===p.id||p.father===BL.id)||gl)&&BL.t>.05)continue;
     const m=posOf(p.id),s=w2s(m.x,m.y),r=Math.max(7,46*s.k);
@@ -1935,7 +1952,7 @@ function famItem(p){const n=desc(p.id),ks=kidsOf(p.id).filter(k=>k.gender!=='f'&
     :`<div class="leafrow"><button data-fgo="${p.id}">${p.name}</button><small>${n?ar(n):''}</small></div>`;}
 function openFamPanel(){const el=$('#fampanel');if(el.classList.toggle('show')){const root=people[7]?kidsOf(7):[];
     el.querySelector('.ftree').innerHTML=root.map(p=>`<div class="fb" style="--c:${BR[p.id]?BR[p.id].col:'90,70,40'}">${famItem(p)}</div>`).join('');}}
-$('#famBtn').onclick=openFamPanel;
+
 $('#fampanel').addEventListener('toggle',e=>{const d=e.target;if(d.tagName==='DETAILS'&&d.open){const box=d.querySelector('.fk');if(!box.innerHTML)box.innerHTML=kidsOf(+d.dataset.fid).filter(k=>k.gender!=='f').map(famItem).join('');}},true);
 $('#fampanel').addEventListener('click',e=>{const b=e.target.closest('[data-fgo]');if(b){e.preventDefault();browseSelect(+b.dataset.fgo);if(VW<=760)$('#fampanel').classList.remove('show');}
   if(e.target.closest('.fx'))$('#fampanel').classList.remove('show');});
@@ -2159,10 +2176,6 @@ function buildDecor(){buildTitle();DECO.meds=MEDS.map(buildMedal);}
 const LOGO=new Image();LOGO.onload=()=>{dirty=true;};LOGO.src='bg/logo.png';
 function drawDecor(g){if(!gl||BL||(RUN&&!RUN.done&&RUN.mode!=='poster'&&cam.pitch>.1))return;if(!DECO.title)buildDecor();g.save();g.setTransform(DPR,0,0,DPR,0,0);
   const put=(cv,x0,y0,x1,y1)=>{const a=w2s(x0,y0),b=w2s(x1,y1);if(a.behind||b.behind)return;g.drawImage(cv,a.x,a.y,b.x-a.x,b.y-a.y);};
-  const TT=!POSTERBG&&VW>760;   // الجوال: العنوان في الشريط العلوي، والصورة نظيفة
-  if(TT)put(DECO.title,300,120,7087,1300);
-  // شعار العائلة على جانبي العنوان
-  if(TT&&LOGO.complete&&LOGO.naturalWidth){const h=820,w=h*LOGO.naturalWidth/LOGO.naturalHeight;for(const cx of[3693-3200,3693+3200])put(LOGO,cx-w/2,690-h/2,cx+w/2,690+h/2);}
   drawTrunk(g);g.restore();}
 // ألواح الجذع الذهبية: فوق ألواح الطبعة نفسها (نفس المكان والمقاس، مقاسة من الصورة)، تكبر شوي من بعيد عشان تنقرا، وتغطي اللوح المطبوع بالكامل عند التقريب
 const TPL=[[7,'علي',3696,9260,229,132,'الجد الجامع'],[6,'فهد',3690,9487,173,57],[5,'سليمان',3692,9633,196,58],[4,'محمد',3692,9773,221,58,'قاضي ثرمداء'],[3,'عيد',3694,9919,243,61],[2,'المطرفي',3695,10065,283,61]];
@@ -2240,6 +2253,25 @@ function miniTree(id){
   else if(!fe)o+=`<text x="${cx}" y="${yK+20}" text-anchor="middle" font-size="11" fill="#7c6a50">ما فيه عيال مسجلين</text>`;
   return o+'</svg>';
 }
+// زر التواصل: يظهر لعضو مقبول على بطاقة رجل أظهر رقمه، والرقم يُطلب عند الضغط ولا يُحفظ
+let SHARED=new Set();
+const canCall=id=>GATE.can()&&id!==GATE.pid&&people[id]&&people[id].gender==='m'&&SHARED.has(id);
+const WA_SVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+function closeContact(){const m=document.getElementById('ctMenu');if(!m)return;m.classList.remove('on');setTimeout(()=>m.remove(),160);}
+async function openContact(id,btn){
+  closeContact();let ph;btn.disabled=true;
+  try{ph=await GATE.contact(id);}catch(x){btn.disabled=false;toast(x.message||'الرقم غير متاح');return;}
+  btn.disabled=false;const p=people[id],i=ph.replace(/^0/,'966'),msg=`السلام عليكم ${p.name}، معك ${GATE.name} من موقع شجرة العجلان والعيد.`;
+  const m=document.createElement('div');m.id='ctMenu';m.setAttribute('role','menu');
+  m.innerHTML=`<small dir="ltr">${ph}</small><a role="menuitem" href="tel:+${i}">${SV(IC.call,20)}اتصال</a><a role="menuitem" class="wa" target="_blank" rel="noopener" href="https://wa.me/${i}?text=${encodeURIComponent(msg)}">${WA_SVG}واتساب</a>`;
+  document.body.appendChild(m);
+  const r=btn.getBoundingClientRect(),w=m.offsetWidth,h=m.offsetHeight,x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),up=r.bottom+h+12>innerHeight;
+  m.style.left=x+'px';m.style.top=Math.max(8,Math.min(innerHeight-h-8,up?r.top-h-8:r.bottom+8))+'px';m.style.transformOrigin=up?'50% 100%':'50% 0';
+  requestAnimationFrame(()=>m.classList.add('on'));
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#ctMenu,[data-act="contact"]'))closeContact();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeContact();});
+addEventListener('gateshare',()=>{if(selected===GATE.pid)renderCard(selected);});
 function renderCard(id){
   const p=people[id],c=chain(id),ks=kidsOf(id),isF=p.gender==='f',f=people[p.father];
   const grand=ks.filter(k=>k.gender==='m').reduce((s,k)=>s+kidsOf(k.id).length,0);
@@ -2247,14 +2279,14 @@ function renderCard(id){
   const chips=l=>`<div class="chips">${l.map(k=>`<button class="chip ${k.gender}" data-go="${k.id}">${k.name}</button>`).join('')}</div>`;
   $('#card').innerHTML=`
     <div class="peekbar"><span class="grab"></span><div class="ph1">${avatar(p)}<div class="pt"><b>${p.name}${id===meId()?'<em>أنا</em>':''}</b><small>${nasabTail(id)}</small><span class="pg2">الجيل ${ar(c.length)} · ${familyOf(id)}${ageShort(p)?' · '+ageShort(p):''}</span></div><button class="pclose" data-act="pclose" aria-label="إغلاق">${SV(IC.x,16)}</button></div>
-      <div class="pacts">${inF?`<button class="pa gold" data-act="pull">${SV(IC.tree,19)}في الشجرة</button>`:`<button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button>`}<button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button></div></div>
+      <div class="pacts">${inF?`<button class="pa gold" data-act="pull">${SV(IC.tree,19)}في الشجرة</button>`:`<button class="pa gold" data-act="family">${SV(IC.tree,19)}شجرة العائلة</button>`}<button class="pa" data-act="journey">${SV(IC.spark,19)}رحلة النسب</button><button class="pa" data-act="share">${SV(IC.share,19)}مشاركة</button>${canCall(id)?`<button class="pa ctb" data-act="contact">${SV(IC.call,19)}تواصل</button>`:''}</div></div>
     <button class="x" data-act="close" title="إغلاق">×</button>
     <div class="medal ${p.gender}">${p.photo&&!isF?`<img src="${p.photo}" alt="${p.name}">`:(isF?'🌸':ini(p.name))}</div>
     <h3>${p.name}</h3>${p.title?`<div class="ttl">${p.title}</div>`:''}
     <div class="nas">${fullNasab(id)} ${familyOf(id)}</div>
     <div class="badges"><span class="badge">${familyOf(id)}</span><span class="badge">الجيل ${ar(c.length)} من الهذلي</span>
       ${p.pos?'':'<span class="badge warn">مضاف بعد الطبعة</span>'}${p.verify?'<span class="badge warn">يحتاج تأكيد</span>':''}</div>
-    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px">${inF?'<button class="btn gold" data-act="pull">🌳 مكانه في الشجرة الكبيرة</button>':'<button class="btn gold" data-act="family">🌳 شجرة العائلة</button>'}<button class="btn" data-act="journey">✨ رحلة النسب</button>${SELF_PHOTO?`<button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button>`:''}</div></div>
+    <div class="sec"><h4>${isF?'شجرتها':'شجرة '+p.name} المختصرة</h4>${cardTreeHTML(id)}<div class="actions" style="justify-content:center;margin-top:6px">${inF?'<button class="btn gold" data-act="pull">🌳 مكانه في الشجرة الكبيرة</button>':'<button class="btn gold" data-act="family">🌳 شجرة العائلة</button>'}<button class="btn" data-act="journey">✨ رحلة النسب</button>${SELF_PHOTO?`<button class="btn ${PHOTO_MODE?'gold':''}" data-act="photomode">📷 أضف صور العائلة</button>`:''}${canCall(id)?`<button class="btn ctb" data-act="contact">${SV(IC.call,16)}تواصل</button>`:''}</div></div>
     ${isF?'':`<div class="stats"><div><b>${cnt(ks.length)}</b><span>العيال</span></div><div><b>${cnt(grand)}</b><span>الأحفاد</span></div><div><b>${cnt(descCount(id))}</b><span>كل الذرية</span></div></div>`}
     ${age?`<div class="row"><span>العمر</span><span>${age}</span></div>`:''}
     ${f?`<div class="row"><span>${isF?'أبوها':'أبوه'}</span><span><a href="#" data-go="${f.id}">${fullNasab(f.id,2)}</a></span></div>`:''}
@@ -2262,7 +2294,7 @@ function renderCard(id){
     ${sibs.length?`<div class="sec"><h4>${isF?'إخوانها وأخواتها':'إخوانه وأخواته'}</h4>${chips(sibs)}</div>`:''}
     ${p.notes?`<div class="sec"><h4>ملاحظات</h4><div class="notes"></div></div>`:''}
     <div class="sec"><h4>سلسلة النسب</h4>${nasabChain(id)}</div>
-    ${id===meId()&&!isF?`<div class="sec phf"><h4>رقم جوالك <small>(اختياري)</small></h4><div class="phr"><input id="myPhone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" maxlength="16" placeholder="05xxxxxxxx" aria-label="رقم جوالك، اختياري"><button class="btn gold" data-act="savephone">حفظ</button></div><p>يُحفظ في جهازك فقط الآن، ولا يراه أحد. سيظهر لأفراد الأسرة بعد تسجيل الدخول عند تفعيل حسابات الأسرة.</p></div>`:''}
+    ${id===GATE.pid&&!isF&&GATE.can()?`<div class="sec phf"><h4>التواصل معك</h4><label class="swr"><input id="shareMe" type="checkbox"${GATE.share?' checked':''}><i></i><span>إظهار رقمي لأفراد الأسرة</span></label><p>يظهر زر اتصال وواتساب في بطاقتك للأعضاء المقبولين فقط، والزوار ما يشوفونه.${GATE.mode==='demo'?' نسخة عرض: هذا في هذا المتصفح فقط.':''}</p></div>`:''}
     <div class="actions">
       ${isF||!SELF_PHOTO?'':`<button class="btn gold" data-act="photo">📷 ${p.photo?'غيّر الصورة':'أضف صورتك'}</button>`}
       ${isF?'':`<button class="btn dark" data-act="add">+ أضف ابن أو بنت</button>`}
@@ -2272,7 +2304,7 @@ function renderCard(id){
       ${id>37&&!ks.length?`<button class="btn danger" data-act="del">حذف</button>`:''}
     </div>`;
   if(p.notes)$('#card .notes').textContent=p.notes;
-  if($('#myPhone'))$('#myPhone').value=store.get(PHKEY)||'';
+  if($('#shareMe'))$('#shareMe').onchange=async e=>{const t=e.target,on=t.checked;t.disabled=true;try{await GATE.setShare(on);toast(on?'رقمك ظاهر لأفراد الأسرة':'تم إخفاء رقمك');}catch(x){t.checked=!on;toast(x.message);}t.disabled=false;};
   $('#card').querySelectorAll('canvas.ftc').forEach(c=>requestAnimationFrame(()=>paintCardTree(c)));
 }
 $('#card').addEventListener('click',async e=>{
@@ -2286,7 +2318,7 @@ $('#card').addEventListener('click',async e=>{
   if(a==='family'){openFamily(selected);return;}
   if(a==='pull'){pullBack();return;}
   if(a==='photo')openPhotoFor(selected);
-  if(a==='savephone'){const v=normPhone($('#myPhone').value);if(v&&!okPhone(v)){toast('رقم الجوال غير صحيح');return;}if(v)store.set(PHKEY,v);else{try{localStorage.removeItem(PHKEY);}catch(e){}}$('#myPhone').value=v;toast(v?'تم حفظ رقمك في جهازك':'تم حذف الرقم');}
+  if(a==='contact'){openContact(selected,e.target.closest('[data-act]'));return;}
   if(a==='photomode'){PHOTO_MODE=!PHOTO_MODE;renderCard(selected);toast(PHOTO_MODE?'اضغط 📷 على أي رجل في الشجرة لإضافة صورته':'تم');}
   if(a==='copynasab'){const t=fullNasab(selected)+' '+familyOf(selected);try{await navigator.clipboard.writeText(t);toast('تم نسخ النسب ✓');}catch(err){toast(t,5000);}}
   if(a==='share'){const url=location.href.split('#')[0]+'#'+selected;
@@ -2354,7 +2386,7 @@ $('#photoFile').addEventListener('change',async e=>{const file=e.target.files[0]
   if(BL)BL.ftl=null;renderCard(selected);dirty=true;e.target.value='';});
 let photoTarget=null,PHOTO_MODE=false;
 function openPhotoFor(id){photoTarget=id;$('#photoFile').click();}
-$('#toolsBtn').onclick=()=>$('#toolsDlg').showModal();
+
 $('#exportBtn').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(people,null,1)],{type:'application/json'}));a.download='شجرة-العجلان-والعيد.json';a.click();};
 $('#importFile').onchange=async e=>{try{people=JSON.parse(await e.target.files[0].text());save();$('#toolsDlg').close();select(DEFAULT_ID);}catch(err){alert('الملف غير صالح');}};
 $('#resetBtn').onclick=()=>{if(confirm('بترجع البيانات الأصلية وتنحذف أي إضافات. متأكد؟')){people=Object.fromEntries(SEED.map(p=>[p.id,structuredClone(p)]));save();$('#toolsDlg').close();select(DEFAULT_ID);}};
@@ -2402,12 +2434,13 @@ const IC={tree:'<path d="M12 21.5v-7"/><path d="M12 14.5c-4.6 0-7.2-2.5-7.2-5.5a
  more:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
  back:'<path d="m9 5 7 7-7 7"/>',x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
  share:'<path d="M12 3.5v11M7.8 7.6 12 3.5l4.2 4.1"/><path d="M5.5 11.5V19a1.8 1.8 0 0 0 1.8 1.8h9.4a1.8 1.8 0 0 0 1.8-1.8v-7.5"/>',
+ call:'<path d="M6.6 3.6 9 3.2l1.8 4.3-2 1.6a12 12 0 0 0 6.1 6.1l1.6-2 4.3 1.8-.4 2.4a2.4 2.4 0 0 1-2.5 2A16.6 16.6 0 0 1 4.6 6.1a2.4 2.4 0 0 1 2-2.5Z"/>',
  scroll:'<path d="M8 3.5h10a2 2 0 0 1 2 2V7h-4"/><path d="M16 7v11.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V17h10"/><path d="M8 3.5a2 2 0 0 0-2 2V17"/><path d="M9.5 9h3.5M9.5 12.5h3.5"/>',
  spark:'<path d="M11 3.5l1.9 5.1L18 10.5l-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9Z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7Z"/>',
  chev:'<path d="m15 6-6 6 6 6"/>',install:'<rect x="6" y="2.5" width="12" height="19" rx="2.6"/><path d="M12 7.5v6.5M9.3 11.4 12 14l2.7-2.6"/>',
  people:'<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c.6-3.4 3-5.4 6-5.4s5.4 2 6 5.4M15.5 14.8a5 5 0 0 1 1.5-.2c2.4 0 4.2 1.6 4.7 4.5"/>',
  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>',
- swap:'<path d="M7 4 3 8l4 4M3 8h13.5M17 20l4-4-4-4M21 16H7.5"/>'};
+ swap:'<path d="M7 4 3 8l4 4M3 8h13.5M17 20l4-4-4-4M21 16H7.5"/>',moon:'<path d="M20.4 14.6A8.6 8.6 0 0 1 9.4 3.6a9.9 9.9 0 1 0 11 11z"/>'};
 // شاشة البداية: تختفي لما تجهز صورة الطبعة وأول رسم (أو بعد ٦ ثواني كحد أقصى)
 let RDY=0;function appReady(){if(++RDY<2)return;const s=$('#splash');if(!s||s.classList.contains('out')||QS.includes('holdsplash'))return;s.classList.add('out');setTimeout(()=>s.remove(),700);}
 setTimeout(()=>{RDY=Math.max(RDY,1);appReady();},6000);
@@ -2463,11 +2496,12 @@ function syncLitPill(){const el=$('#litpill');if(!el)return;const on=LIT&&!LIT.o
 $('#litpill button').onclick=()=>{hap();lightBranch(null);};
 // ---- المزيد ----
 let MBADGE=null;let DIP=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();DIP=e;});addEventListener('appinstalled',()=>{DIP=null;toast('تم تثبيت التطبيق ✓');});
+$('#gateBtn').addEventListener('click',()=>GATE.open());
 function buildMore(){if(!MBADGE)MBADGE=[0,1].map(i=>medBadge(i,180));const SN=['«تعلّموا من أنسابكم ما تصلون به أرحامكم»','﴿وجعلناكم شعوبًا وقبائل لتعارفوا﴾'],m=meId(),row=(k,ic,t,s,cl='')=>`<button class="mrow ${cl}" data-m="${k}"><i>${SV(IC[ic],20)}</i><span>${t}<small>${s}</small></span>${SV(IC.chev,18)}</button>`;
   $('#moreB').innerHTML=`<div class="mlab">بوابة الأسرة</div><div class="mgrid">${[['الرئيسية','index.html'],['الأخبار والمناسبات','news.html'],['المجلات','page.html?p=magazines'],['الرؤية والرسالة','page.html?p=vision'],['صندوق العائلة','page.html?p=fund'],['تواصل معنا','page.html?p=contact']].map(([t,h])=>`<a class="mpg" href="../portal/${h}" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:center;text-align:center;min-height:56px;font-weight:700">${t}</a>`).join('')}</div><div class="mmeds">${[0,1].map(i=>`<button class="mmed" data-mi="${i}"><span class="mb" style="background-image:url(${MBADGE[i]})"></span><b>${MEDS[i].cap}</b><small>${SN[i]}</small></button>`).join('')}</div>
   <div class="mlab">صفحات الشجرة</div><div class="mgrid">${PANELS.map((p,i)=>`<button class="mpg" data-pi="${i}"><span class="th pt">${pThumb(i)}</span><b>${p.t}</b></button>`).join('')}</div>
   <div class="mlab">التطبيق</div><div class="mlist">${row('install','install',DIP?'ثبّت التطبيق الآن':'ثبّت التطبيق','على شاشتك الرئيسية مثل أي تطبيق','inst')}<div class="ihelp" id="ihelp"></div>
-  ${row('share','share','مشاركة الموقع','أرسل الشجرة لأهلك وأقاربك')}${row('me','swap','من أنت؟',m?'أنت: '+fullNasab(m,3)+' — اضغط للتغيير':'اختر اسمك لتفتح عائلتك بضغطة')}${row('fam','people','العوائل','تصفّح الأسر حسب الفروع')}${row('tools','gear','الإعدادات','نسخة احتياطية واستيراد')}</div>
+  ${row('share','share','مشاركة الموقع','أرسل الشجرة لأهلك وأقاربك')}${row('me','swap','من أنت؟',m?'أنت: '+fullNasab(m,3)+' — اضغط للتغيير':'اختر اسمك لتفتح عائلتك بضغطة')}${row('acct','people','حسابي','الدخول والتسجيل')}${window.SKY_OFF?'':row('sky','moon',Sky.get()==='night'?'الوضع النهاري':'الوضع الليلي','بدّل بين الغروب والليل')}</div>
   <div class="mfoot"><img src="bg/logo.png" alt="">شجرة العجلان والعيد · الطبعة الثالثة ١٤٤٧هـ</div>`;}
 async function doInstall(){if(DIP){const d=DIP;DIP=null;d.prompt();try{await d.userChoice;}catch(e){}buildMore();return;}const h=$('#ihelp'),ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   h.innerHTML=ios?`<ol><li>اضغط زر المشاركة <span class="ish">${SV(IC.share,16)}</span> في شريط سفاري</li><li>اختر <b>«إضافة إلى الشاشة الرئيسية»</b></li><li>اضغط <b>«إضافة»</b> ويصير التطبيق على شاشتك</li></ol>`
@@ -2477,7 +2511,7 @@ async function shareSite(){const url=location.origin+location.pathname,d={title:
   try{await navigator.clipboard.writeText(url);toast('تم نسخ رابط الموقع ✓');}catch(e){const t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(_){}t.remove();toast(ok?'تم نسخ رابط الموقع ✓':url,ok?2400:6000);}}
 $('#moreB').addEventListener('click',e=>{const mi=e.target.closest('[data-mi]');if(mi){hap();openMedal(+mi.dataset.mi);return;}const pi=e.target.closest('[data-pi]');if(pi){hap();openPanel(+pi.dataset.pi);return;}
   const a=e.target.closest('[data-m]')?.dataset.m;if(!a)return;hap();
-  if(a==='install')doInstall();else if(a==='share')shareSite();else if(a==='me')openSearch(true);
+  if(a==='sky'){Sky.toggle();buildMore();}else if(a==='acct'){closeSheets();GATE.open();}else if(a==='install')doInstall();else if(a==='share')shareSite();else if(a==='me')openSearch(true);
   else if(a==='fam'){closeSheets();if(!$('#fampanel').classList.contains('show'))openFamPanel();}else if(a==='tools'){closeSheets();$('#toolsDlg').showModal();}});
 // ---- التبويبات والشريط العلوي ----
 $('#tabbar').addEventListener('click',e=>{const t=e.target.closest('[data-tab]')?.dataset.tab;if(!t)return;hap();$('#fampanel').classList.remove('show');
@@ -2555,14 +2589,15 @@ measureChrome();
 
 if(QS.includes('testpull'))setInterval(()=>{if(RUN&&RUN.pullShown&&!pulled)pullBack();},500);
 
+function unmaskPhotos(){for(const id in PHOTO_STASH){if(people[id])people[id].photo=PHOTO_STASH[id];delete PHOTO_STASH[id];}SELF_PHOTO=true;if(BL)BL.ftl=null;renderCard(selected);dirty=true;}
 // كل أسماء الطبعة (لو موجود الملف): ندمجهم بأرقام ≥١٠٠٠ بدون ما نخزنهم
 fetch('people_all.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;const list=Array.isArray(j)?j:(j.people||Object.values(j));let n=0;
   for(const q of list){if(!q||q.id==null||q.id<1000)continue;const o=people[q.id];   // بيانات البوستر من الملف دايم أحدث (تصحيح الأسماء يوصل للكل)، والصور والإضافات المحفوظة تبقى
     if(o){let ch=0;for(const k of ['name','gender','father','pos','r','kind','gen','title'])if(q[k]!==undefined&&JSON.stringify(o[k])!==JSON.stringify(q[k])){o[k]=q[k];ch=1;}n+=ch;continue;}people[q.id]={...q,_ext:true};n++;}if(n){KIDX=null;onReindex();dirty=true;console.log('people_all',n);}}).catch(()=>{})
   // صور الرجال الرسمية من لوحة التحكم: photos/index.json فيه رقم الشخص ونسخة صورته، والرقم يتغير مع الصورة فلا تبقى القديمة في الكاش
-  .then(()=>fetch('photos/index.json',{cache:'no-cache'})).then(r=>r&&r.ok?r.json():null).then(m=>{if(!m)return;
-    for(const p of Object.values(people))if(typeof p.photo==='string'&&p.photo.startsWith('photos/')&&!m[p.id])delete p.photo;
-    for(const id in m){const p=people[id];if(p&&p.gender==='m')p.photo=`photos/${id}.jpg?v=${m[id]}`;}
+  .then(()=>GATE.ready).then(()=>{if(!GATE.can())return null;GATE.shared().then(ids=>{SHARED=ids;if(selected!=null&&canCall(selected))renderCard(selected);});const me=people[GATE.pid];if(me&&me.gender==='m'&&!GATE.share)GATE.ask();unmaskPhotos();return GATE.photoIndex();}).then(m=>{if(!m)return;
+    for(const p of Object.values(people))if(typeof p.photo==='string'&&/^(photos\/|\.\.\/portal\/api\/)/.test(p.photo)&&!m[p.id])delete p.photo;
+    for(const id in m){const p=people[id];if(p&&p.gender==='m')p.photo=GATE.photoUrl(id,m[id]);}
     if(BL)BL.ftl=null;renderCard(selected);dirty=true;}).catch(()=>{})
   // مسار كل اسم على خشب الطبعة (tools/build_via.py): الضوء يمشي على الغصن لين يوصل الاسم
   .then(()=>fetch('via.json',{cache:'no-cache'})).then(r=>r&&r.ok?r.json():null).then(v=>{if(!v)return;for(const id in v){const p=people[id],a=v[id];if(p&&p.pos&&a.length){p.via=a;p.w=a[a.length-1][2];}}}).catch(()=>{});

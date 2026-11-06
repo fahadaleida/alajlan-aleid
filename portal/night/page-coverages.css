@@ -1,0 +1,4 @@
+[data-sky=night] .cvg-year i{background:linear-gradient(90deg,transparent,rgba(227,182,107,0.16))}
+[data-sky=night] .shelf{background:linear-gradient(180deg,rgba(22,27,62,0.16),rgba(22,27,62,0.06));border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .mz-t span{color:#d6dbff;background:linear-gradient(180deg,rgba(227,182,107,0.16),rgba(227,182,107,0.16))}
+[data-sky=night] .mz-t i{background:linear-gradient(90deg,transparent,rgba(227,182,107,0.16),transparent)}

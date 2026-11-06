@@ -106,7 +106,7 @@
   if ((pages.length + 1) % 2) pages.push({cls: 'end', html: `<div class="endin"><img src="img/logo-mark.png" alt=""><div class="eorn"><i></i><b></b><i></i></div>
     <p class="ebl">«تعلّموا من أنسابكم ما تصلون به أرحامكم»</p><p class="ent">نهاية ${esc(vTitle)}</p></div>`});
   pages.push({cls: 'cv back', hard: 1, html: `<div class="bkin"><div class="bkpat"></div><img class="bklogo" src="img/logo-mark.png" alt="">
-    <h2><b>أسرة العجلان</b> <b>والعيد</b></h2><div class="bkrule"><i></i><b></b><i></i></div><p class="bkbl">سجل الأسرة</p><p class="bkt">${esc(LBL[cat])}${range ? ' · ' + range : ''}</p>
+    <h2><b>أسرة العجلان</b> <b>والعيــد</b></h2><div class="bkrule"><i></i><b></b><i></i></div><p class="bkbl">سجل الأسرة</p><p class="bkt">${esc(LBL[cat])}${range ? ' · ' + range : ''}</p>
     <div class="bkfoot"><span>alajlanandaleid.com</span><i></i><span>أرشيف أسرة العجلان والعيد</span></div></div>`});
 
   const N = pages.length, P = i => N - i, IX = p => N - p;

@@ -13,8 +13,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 /* ===== المسرح: صورة الغروب نفسها، بعمق ميدان خفيف حتى تبقى الصفحات هي البطل ===== */
-#scene{position:fixed;inset:-24px;z-index:-3;background:url(img/bg-scene.jpg?v=3) center bottom/cover no-repeat;filter:blur(3px) saturate(1.04) brightness(.86);transform:scale(1.02)}
-@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=3);background-position:50% 100%;filter:blur(2px) brightness(.86)}}
+#scene{position:fixed;inset:-24px;z-index:-3;background:url(img/bg-scene.jpg?v=6) center bottom/cover no-repeat;filter:blur(3px) saturate(1.04) brightness(.86);transform:scale(1.02)}
+@media (max-width:639px){#scene{background-image:url(img/bg-scene-portrait.jpg?v=6);background-position:50% 100%;filter:blur(2px) brightness(.86)}}
 .amb{position:fixed;inset:0;z-index:-2;pointer-events:none;
   background:
     radial-gradient(ellipse 52% 58% at 50% 50%,rgba(24,12,22,.36),transparent 74%),

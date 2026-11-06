@@ -1,0 +1,27 @@
+[data-sky=night] .ph{background:rgba(22,27,62,1.00)}
+[data-sky=night] .ph.mat{background:linear-gradient(180deg,rgba(22,27,62,1.00),rgba(22,27,62,1.00))}
+[data-sky=night] .ph:not(:has(img.in)){background:linear-gradient(110deg,rgba(22,27,62,1.00) 30%,rgba(22,27,62,1.00) 50%,rgba(22,27,62,1.00) 70%) 0 0/300% 100%}
+[data-sky=night] .rh span{color:#d6dbff}
+[data-sky=night] .fo{color:#d6dbff}
+[data-sky=night] .fo b{color:#d6dbff}
+[data-sky=night] .fo.dk b{border-color:rgba(255,255,255,0.14)}
+[data-sky=night] .mtop i{background:rgba(227,182,107,0.16)}
+[data-sky=night] .mrule i{background:linear-gradient(90deg,transparent,rgba(227,182,107,0.16))}
+[data-sky=night] .cline span{color:#d6dbff;background:linear-gradient(180deg,rgba(227,182,107,0.16),rgba(227,182,107,0.16))}
+[data-sky=night] .ehead{color:#d6dbff}
+[data-sky=night] .esal{color:#d6dbff}
+[data-sky=night] .ebody p{color:#d6dbff}
+[data-sky=night] .pq{color:#d6dbff}
+[data-sky=night] .efacts dd{color:#d6dbff}
+[data-sky=night] .ebl{color:#d6dbff}
+[data-sky=night] .bkpat{background:repeating-linear-gradient(45deg,rgba(227,182,107,0.16) 0 1px,transparent 1px 5cqw),repeating-linear-gradient(-45deg,rgba(227,182,107,0.16) 0 1px,transparent 1px 5cqw)}
+[data-sky=night] .bkfoot i{background:rgba(227,182,107,0.16)}
+[data-sky=night] .tt{background:rgba(22,27,62,1.00)}
+[data-sky=night] .tt.tx{background:repeating-linear-gradient(180deg,transparent 0 7px,rgba(50,39,129,.14) 7px 9px) 8px 22px/38px 40px no-repeat,linear-gradient(180deg,var(--gold) 0 0) 8px 10px/26px 5px no-repeat,rgba(22,27,62,1.00)}
+[data-sky=night] .lb .zbar{color:#d6dbff}
+[data-sky=night] #lbDl{color:#d6dbff}
+@media (max-width:699px){
+[data-sky=night] .lbst .arr{background:rgba(22,27,62,0.72)}
+}
+[data-sky=night] .shd h3{color:#d6dbff}
+[data-sky=night] .album .pg.--right .sp{background:linear-gradient(270deg,transparent,rgba(40,24,6,.05) 50%,rgba(40,24,6,.16) 85%,rgba(30,16,4,.32)),linear-gradient(90deg,rgba(22,27,62,0.18),transparent 6%)}

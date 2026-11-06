@@ -1,0 +1,51 @@
+[data-sky=night] .glass-panel{background:rgba(22,27,62,0.88);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .hb .bars i{background:rgba(22,27,62,0.72)}
+[data-sky=night] .hb .bars i b{background:rgba(227,182,107,0.16)}
+[data-sky=night] .hb .ar{background:rgba(22,27,62,0.85);color:#d6dbff}
+[data-sky=night] .log-h small{color:#efcf94}
+[data-sky=night] .log-h h2{color:#d6dbff}
+[data-sky=night] .log-h a{color:#efcf94}
+[data-sky=night] .seg{background:rgba(22,27,62,1.00)}
+[data-sky=night] .seg .puck{background:rgba(22,27,62,.86)}
+[data-sky=night] .seg button{color:#d6dbff}
+[data-sky=night] .seg button small{color:#c1c6dc}
+[data-sky=night] .seg button.on{color:#d6dbff}
+[data-sky=night] .row{border-bottom:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .row.on,[data-sky=night] .row:hover,[data-sky=night] .row:focus-visible{background:rgba(22,27,62,.86)}
+[data-sky=night] .row .dt{border-inline-end:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .row .dt b{color:#efcf94}
+[data-sky=night] .row .dt small{color:#c1c6dc}
+[data-sky=night] .row .tx em{color:#c1c6dc}
+[data-sky=night] .row .tx b{color:#d6dbff}
+[data-sky=night] .row.on .tx b,[data-sky=night] .row:hover .tx b{color:#d6dbff}
+[data-sky=night] .pv p{color:#c1c6dc}
+[data-sky=night] .years span{color:#c1c6dc}
+[data-sky=night] .years a{border:1px solid rgba(255,255,255,0.14);color:#d6dbff}
+[data-sky=night] .years a:hover{background:rgba(22,27,62,1.00);color:#d6dbff}
+@media (max-width:1023px){
+[data-sky=night] .row .th{background:rgba(22,27,62,1.00) center/cover}
+[data-sky=night] .log .allm{color:#d6dbff}
+}
+[data-sky=night] .htree .gbar{background:rgba(227,182,107,0.16)}
+[data-sky=night] .tinfo .l1{color:#d6dbff}
+[data-sky=night] .tinfo .l1 b{color:#d6dbff}
+[data-sky=night] .tinfo .live{color:#efcf94}
+[data-sky=night] .qa{background:rgba(22,27,62,0.86);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .qa i{background:rgba(22,27,62,1.00);color:#efcf94}
+[data-sky=night] .qa b{color:#d6dbff}
+[data-sky=night] .qa small{color:#c1c6dc}
+[data-sky=night] .qa:hover{background:rgba(22,27,62,.86)}
+[data-sky=night] .qa:hover i{background:rgba(22,27,62,1.00);color:#d6dbff}
+[data-sky=night] .hb{border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .hb::before{background:linear-gradient(180deg,rgba(227,182,107,0.08),transparent 40%)}
+[data-sky=night] .log.glass-panel,[data-sky=night] .tinfo.glass-panel{background:rgba(22,27,62,0.72);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .row.on,[data-sky=night] .row:hover{background:rgba(22,27,62,0.82)}
+[data-sky=night] .seg{background:rgba(22,27,62,0.75)}
+[data-sky=night] .qa{background:rgba(22,27,62,0.72)}
+[data-sky=night] body.home .nav{background:linear-gradient(180deg,rgba(22,27,62,0.72),rgba(22,27,62,0.72));border-bottom:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] body.home .nav::before{background:linear-gradient(105deg,transparent 30%,rgba(22,27,62,0.28) 45%,transparent 60%)}
+[data-sky=night] body.home .nav.solid{background:rgba(22,27,62,0.86)}
+[data-sky=night] body.home .menu>a,[data-sky=night] body.home .dd-b{color:#d6dbff}
+[data-sky=night] .mound .soil{background:radial-gradient(ellipse at 50% 18%,rgba(227,182,107,0.16) 0%,rgba(227,182,107,0.16) 38%,#9c6a3b 70%,#6e4625 100%)}
+[data-sky=night] .mound .soil::after{background:radial-gradient(circle,#7a5030 1.2px,transparent 1.6px) 0 0/9px 7px,radial-gradient(circle,rgba(227,182,107,0.16) 1px,transparent 1.4px) 4px 3px/11px 8px}
+[data-sky=night] .tlink:hover{color:#d6dbff}

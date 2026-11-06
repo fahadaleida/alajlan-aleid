@@ -1,0 +1,11 @@
+[data-sky=night] .sh-bar{background:linear-gradient(180deg,rgba(22,27,62,0.82),rgba(22,27,62,0.72));border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .sh-tabs button{color:#d6dbff}
+[data-sky=night] .sh-tabs button:hover{background:rgba(22,27,62,0.85)}
+[data-sky=night] .sh-sel select{color:#d6dbff}
+[data-sky=night] .sh-q{background:rgba(22,27,62,0.80)}
+[data-sky=night] .sh-q input{color:#d6dbff}
+[data-sky=night] .sh-alt a{border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .sh-alt a:hover{background:rgba(22,27,62,0.20)}
+[data-sky=night] .sh-year i{background:linear-gradient(90deg,transparent,rgba(227,182,107,0.16))}
+[data-sky=night] .shelf{background:linear-gradient(180deg,rgba(22,27,62,0.16),rgba(22,27,62,0.06));border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .mz-k{color:#d6dbff;background:linear-gradient(180deg,rgba(227,182,107,0.16),rgba(227,182,107,0.16))}

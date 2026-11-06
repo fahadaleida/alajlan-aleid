@@ -48,6 +48,7 @@ body{background:var(--stage);color:#f4ead6;font-family:Tajawal,system-ui,sans-se
   <a id="back" href="index.html"><span class="lg">الرجوع&nbsp;</span>للشجرة</a>
 </div>
 <div class="stage" id="stage"><div class="stage-in"><div class="sheet" id="sheet"></div></div></div>
+<script src="gate.js?v=3"></script>
 <script>
 // ===================================================================
 // القرية: نطلع في سلسلة الآباء، وأول جد موجود في القائمة يحدد القرية
@@ -82,9 +83,11 @@ async function loadPeople(){
   if(people[26]&&people[26].father===25)people[26].father=24;   // نفس التصحيح في index.html
   try{const r=await fetch('people_all.json',{cache:'no-store'});if(r.ok){const j=await r.json(),list=Array.isArray(j)?j:(j.people||Object.values(j));
     for(const q of list){if(!q||q.id==null||q.id<1000||people[q.id])continue;people[q.id]={...q,_ext:true};}}}catch(e){}
-  try{const r=await fetch('photos/index.json',{cache:'no-cache'});if(r.ok){const m=await r.json();   // صور الرجال الرسمية، مثل index.html
-    for(const p of Object.values(people))if(typeof p.photo==='string'&&p.photo.startsWith('photos/')&&!m[p.id])delete p.photo;
-    for(const id in m){const p=people[id];if(p&&p.gender==='m')p.photo=`photos/${id}.jpg?v=${m[id]}`;}}}catch(e){}
+  await GATE.ready;   // الزائر: أسماء فقط، ولا تُحمَّل صورة
+  if(!GATE.can()){for(const p of Object.values(people))delete p.photo;return people;}
+  try{const m=await GATE.photoIndex();if(m){   // صور الرجال الرسمية، مثل index.html
+    for(const p of Object.values(people))if(typeof p.photo==='string'&&/^(photos\/|\.\.\/portal\/api\/)/.test(p.photo)&&!m[p.id])delete p.photo;
+    for(const id in m){const p=people[id];if(p&&p.gender==='m')p.photo=GATE.photoUrl(id,m[id]);}}}catch(e){}
   return people;}
 
 // ===================================================================

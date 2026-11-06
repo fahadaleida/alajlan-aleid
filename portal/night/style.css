@@ -1,0 +1,57 @@
+[data-sky=night] .navy{color:#d6dbff}
+[data-sky=night] .nav{background:rgba(22,27,62,0.92)}
+[data-sky=night] .burger{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] .drawer .sheet{background:rgba(22,27,62,.86)}
+[data-sky=night] .drawer h4{color:#d6dbff}
+[data-sky=night] .slider .arr{background:rgba(22,27,62,0.85);color:#d6dbff}
+[data-sky=night] .slider .arr:hover{background:rgba(22,27,62,.86)}
+[data-sky=night] .dots button{background:rgba(22,27,62,0.72)}
+[data-sky=night] .box-h h2{color:#d6dbff}
+[data-sky=night] .cat{background:rgba(22,27,62,0.92);color:#d6dbff}
+[data-sky=night] .tabs button{background:rgba(22,27,62,.86)}
+[data-sky=night] .btn.ghost{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] .sec-head h2{color:#d6dbff}
+[data-sky=night] .vm h3{color:#d6dbff}
+[data-sky=night] .chain span{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] .fam{background:rgba(22,27,62,.86)}
+[data-sky=night] .fam.main{background:linear-gradient(180deg,rgba(22,27,62,1.00),rgba(22,27,62,1.00))}
+[data-sky=night] .fam h4{color:#d6dbff}
+[data-sky=night] .quotes div{color:#eef0f8}
+[data-sky=night] .fold::after{background:linear-gradient(transparent,rgba(22,27,62,1.00))}
+[data-sky=night] h3.sub{color:#d6dbff}
+[data-sky=night] .trio h3{color:#d6dbff}
+[data-sky=night] .iban button{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] .field input:focus,[data-sky=night] .field textarea:focus,[data-sky=night] .field select:focus{background:rgba(22,27,62,.86)}
+[data-sky=night] .socials a{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] footer .socials a{background:rgba(22,27,62,0.08);border-color:rgba(255,255,255,0.14)}
+[data-sky=night] footer .flogo{background:rgba(22,27,62,.86)}
+[data-sky=night] .page-top{background:linear-gradient(180deg,rgba(22,27,62,1.00),var(--bg))}
+[data-sky=night] .page-top h1{color:#d6dbff}
+[data-sky=night] .ncard{background:rgba(22,27,62,.86)}
+[data-sky=night] .search{background:rgba(22,27,62,.86)}
+[data-sky=night] .pager button{background:rgba(22,27,62,.86)}
+[data-sky=night] .article .content{background:rgba(22,27,62,.86)}
+[data-sky=night] .nav-posts a{background:rgba(22,27,62,.86)}
+[data-sky=night] .nav{background:rgba(22,27,62,0.82)}
+[data-sky=night] .nav.solid{background:rgba(22,27,62,0.94)}
+[data-sky=night] .menu>a,[data-sky=night] .dd-b{color:#d6dbff}
+[data-sky=night] .menu>a:hover,[data-sky=night] .dd-b:hover,[data-sky=night] .menu>a[aria-current]{color:#d6dbff}
+[data-sky=night] .dd-m{background:rgba(22,27,62,0.96);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .dd-m a{color:#d6dbff}
+[data-sky=night] .dd-m a i{color:#efcf94}
+[data-sky=night] .dd-m a:hover{background:rgba(22,27,62,1.00);color:#d6dbff}
+[data-sky=night] .drawer .sheet{background:rgba(22,27,62,1.00)}
+[data-sky=night] .drawer h5{color:#efcf94}
+[data-sky=night] footer .socials a{background:rgba(22,27,62,0.08)}
+[data-sky=night] footer .socials a:hover{background:rgba(227,182,107,0.16)}
+[data-sky=night] .fcopy{border-top:1px solid rgba(255,255,255,0.12)}
+[data-sky=night] .brand .bname b:first-child{color:#efcf94}
+[data-sky=night] .brand .bname b:last-child{color:#d6dbff}
+[data-sky=night] body.scened .card,[data-sky=night] body.scened .fam,[data-sky=night] body.scened .goals li,[data-sky=night] body.scened .ncard,[data-sky=night] body.scened .article .content,[data-sky=night] body.scened .nav-posts a{background:rgba(22,27,62,0.90)}
+[data-sky=night] body.scened .facts li{background:rgba(22,27,62,0.90)}
+[data-sky=night] body.scened .quotes div{background:rgba(22,27,62,0.92)}
+[data-sky=night] body.scened .chain span{background:rgba(22,27,62,0.92)}
+[data-sky=night] body.scened .tabs button,[data-sky=night] body.scened .search,[data-sky=night] body.scened .pager button{background:rgba(22,27,62,0.92)}
+[data-sky=night] body.scened .nav{background:linear-gradient(180deg,rgba(22,27,62,0.72),rgba(22,27,62,0.72));border-bottom:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] body.scened .nav.solid{background:rgba(22,27,62,0.86)}
+[data-sky=night] body.scened .card h3.sub,[data-sky=night] body.scened .card h3{color:#d6dbff}

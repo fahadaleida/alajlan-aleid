@@ -83,7 +83,7 @@ const Editor = (() => {
   // ===== شاشة الخبر =====
   let D = null, saveT = 0, pvT = 0, pvReady = false, pvPage = 1, pending = 0, total = 0, failed = [], uid = 0;
   const sig = () => JSON.stringify([D.photos.map(p => p.key), D.cover]);
-  const metaOf = () => ({postId: D.postId, rid: D.rid, type: D.type, title: D.title, date: D.date, text: D.text, cover: D.cover, orig: D.orig,
+  const metaOf = () => ({postId: D.postId, rid: D.rid, poster: D.poster, type: D.type, title: D.title, date: D.date, text: D.text, cover: D.cover, orig: D.orig,
     photos: D.photos.filter(p => p.key).map(({key, w, h, isNew, ref, name, upF, upS}) => ({key, w, h, isNew, ref, name, upF, upS}))});
   const dirty = () => !D.postId ? !!(D.title || D.text || D.photos.length) : D.title !== D.orig.title || D.date !== D.orig.date || D.type !== D.orig.type || D.text !== D.orig.text || sig() !== D.orig.sig;
   const touch = () => {
@@ -106,12 +106,13 @@ const Editor = (() => {
           ${svg('cam', 34)}<b>${TOUCH ? 'اضغط لإضافة الصور' : 'أسقط الصور هنا'}</b><span>${TOUCH ? 'من ألبوم جوالك أو الكاميرا' : 'أو اضغط لاختيارها من جهازك'}</span>
           <input id="fF" type="file" accept="image/*,.heic,.heif" multiple hidden>
         </div>
+        <a class="ebtn" href="invite.html?from=admin" target="_blank">صمّم صورة للخبر</a>
         <div class="eprog" id="eprog" hidden><div class="ebarp"><i id="pbar"></i></div><span id="ptxt"></span></div>
         <div class="efails" id="efails" hidden></div>
         <p class="ehint" id="ehint" hidden>${TOUCH ? 'اضغط صورة لتكون الغلاف، ولتغيير الترتيب اضغط عليها مطولاً ثم اسحبها.' : 'اضغط أي صورة لتكون الغلاف، واسحبها لتغيير ترتيبها.'}</p>
         <div class="ethumbs" id="ethumbs"></div>
       </div>
-      <aside class="epv"><div class="epvh"><b>معاينة المجلة</b><small id="epvc"></small><button type="button" class="epvt" id="epvT" aria-expanded="false" aria-controls="epvb">عرض</button></div>
+      <aside class="epv"><div class="epvh"><b>${D.poster ? 'معاينة الصورة' : 'معاينة المجلة'}</b><small id="epvc"></small><button type="button" class="epvt" id="epvT" aria-expanded="false" aria-controls="epvb">عرض</button></div>
         <div class="epvb" id="epvb"><div class="epve" id="epve">${svg('mag', 40)}<span>أضف صوراً وتظهر المجلة هنا</span></div></div></aside>
     </div>
     <div class="epub"><span id="esaved"></span>${edit ? `<a class="ebtn" href="post.html?id=${D.postId}" target="_blank" rel="noopener">عرض على الموقع</a>` : ''}${edit ? '<button class="ebtn danger ghost" id="eDel">حذف</button>' : ''}<button class="ebtn big gold" id="ePub">${esc(verb(edit ? 'حفظ ونشر' : 'نشر'))}</button></div>`;
@@ -222,6 +223,12 @@ const Editor = (() => {
     if (!D || !$('#epvb')) return;
     const has = D.photos.some(p => p.key), box = $('#epvb'), empty = $('#epve');
     empty.hidden = has;
+    if (D.poster) {
+      const c = D.photos.find(p => p.key === D.cover) || D.photos.find(p => p.key);
+      box.querySelectorAll('.epvp').forEach(e => e.remove());
+      if (c) box.insertAdjacentHTML('beforeend', `<img class="epvp" src="${esc(c.url)}" alt="" style="display:block;max-width:100%;max-height:100%;margin:auto;object-fit:contain">`);
+      return;
+    }
     let fr = $('#epvf');
     if (!has) {if (fr) fr.remove(); pvReady = false; return;}
     if (!fr) {box.insertAdjacentHTML('beforeend', '<iframe id="epvf" title="معاينة المجلة"></iframe>'); fr = $('#epvf');}
@@ -267,6 +274,26 @@ const Editor = (() => {
   async function openNew(occ) {
     if (await offerDraft()) return;
     D = blank(occ ? 'مناسبة' : 'خبر'); failed = []; mountEditor();
+  }
+  // التصميم القادم من مصمم المناسبات: يدخل المحرر كأي خبر جديد، ويمر بنفس التجهيز والرفع والنشر
+  const cardDb = fn => new Promise((res, rej) => {
+    const r = indexedDB.open('ajlan-card', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('card');
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => {const t = r.result.transaction('card', 'readwrite'), q = fn(t.objectStore('card')); t.oncomplete = () => {r.result.close(); res(q.result);}; t.onerror = t.onabort = () => rej(t.error);};
+  });
+  async function openCard() {
+    const c = await cardDb(s => s.get('next')).catch(() => null);
+    if (!c) return location.replace('#new');
+    if (await offerDraft()) return;
+    D = blank(TYPES.some(t => t[0] === c.type) ? c.type : 'خبر'); D.title = c.title; D.text = c.text; D.poster = true; D.card = c.auto ? c.sig : ''; failed = []; mountEditor();
+    addFiles(c.files.map(f => new File([f.blob], f.name, {type: f.blob.type})));
+    touch(); await cardDb(s => s.delete('next')).catch(() => {});
+    if (!c.auto) return;
+    // النشر المباشر: البطاقة انمسحت قبله، فتحديث الصفحة ما يكرر الخبر
+    const me = D; progress('جارٍ تجهيز البطاقة…');
+    while (pending > 0 && me === D) await new Promise(r => setTimeout(r, 120));
+    closeModal(); if (me === D) publish();
   }
   // نقرأ نص الخبر في مستند معزول، فلا يطلب المتصفح صوره
   const inert = h => new DOMParser().parseFromString(`<div>${h || ''}</div>`, 'text/html').body.firstChild;
@@ -405,7 +432,8 @@ const Editor = (() => {
     Object.assign(files, Repo.write(posts, by, n0));
     const idx = await snap.json('data/albums/index.json') || {base: '', a: {}};
     if (picsChanged) {
-      if (ok.length) {
+      // البطاقة المصممة خبر عادي تظهر صورته كاملة، ولا تتحول إلى مجلة بغلاف فوقها
+      if (ok.length && !E.poster) {
         const doc = albumDoc(id, ok, cov.key, dir);
         files[`data/albums/${id}.json`] = JSON.stringify(doc);
         idx.a[id] = indexEntry(doc);
@@ -415,7 +443,7 @@ const Editor = (() => {
       const keep = new Set(); ok.forEach(p => pathsOf(p).forEach(u => u && keep.add(u)));
       (await snap.list(`img/posts/${id}`)).forEach(path => {if (!keep.has(path)) files[path] = null;});
     }
-    return {files, posts, idx, id, hasMag: ok.length > 0};
+    return {files, posts, idx, id, hasMag: !!idx.a[id]};
   }
   // صورة واحدة في كل طلب، وما ارتفع يبقى مسجلاً في المسودة: إعادة المحاولة تكمل من حيث توقفت
   async function uploadPhotos(E) {
@@ -439,6 +467,14 @@ const Editor = (() => {
     Draft.meta(metaOf());
     if (bad) {const e = lastErr; e.note = e.note || 'توقف رفع الصور قبل أن يكتمل، وما ارتفع منها محفوظ. اضغط «حاول مرة أخرى» وسيكمل من حيث توقف.'; throw e;}
   }
+  // نهاية النشر المباشر: المصمم يتذكره فما ينشر نفس البطاقة مرتين
+  const cardDone = (sig, link, back) => {
+    try {localStorage.setItem('ajlan-card-pub', JSON.stringify({sig, link, demo: Store.demo}));} catch (e) {}
+    const b = modal(`<div class="eok">${svg('check', 30)}</div><h3>${Store.demo ? 'محفوظ في هذا المتصفح فقط' : 'تم نشر الخبر'}</h3>
+      <p>${Store.demo ? 'لا يراه الناس حتى ينتقل الموقع إلى الدومين.' : 'الخبر ظاهر الآن على الموقع.'}</p>
+      <div class="eacts"><a class="ebtn gold" href="${esc(link)}" target="_blank" rel="noopener">افتح الخبر</a><a class="ebtn" href="invite.html#4">رجوع للمصمم</a><button class="ebtn" id="mDone">الأخبار</button></div>`);
+    $('#mDone', b).onclick = () => {closeModal(); location.hash = back;};
+  };
   let busy = false;
   const guard = e => {e.preventDefault(); e.returnValue = '';};
   async function publish() {
@@ -455,7 +491,8 @@ const Editor = (() => {
       S.posts = r.posts; S.idx = r.idx; S.refresh();
       const link = r.hasMag ? `album.html?id=${r.id}` : `post.html?id=${r.id}`, back = E.back;
       D = null;
-      done(wasNew ? 'تم النشر' : 'تم حفظ التعديل', link, r.hasMag ? 'افتح المجلة' : 'افتح الخبر', back);
+      if (E.card) cardDone(E.card, link, back);
+      else done(wasNew ? 'تم النشر' : 'تم حفظ التعديل', link, r.hasMag ? 'افتح المجلة' : 'افتح الخبر', back);
     } catch (e) {
       const b = modal(`<h3>لم يكتمل الحفظ</h3><p>${esc(say(e))}</p><div class="eacts"><button class="ebtn gold" id="mYes">حاول مرة أخرى</button><button class="ebtn" id="mNo">إغلاق</button></div>`);
       $('#mYes', b).onclick = () => {closeModal(); publish();}; $('#mNo', b).onclick = closeModal;
@@ -553,9 +590,10 @@ const Editor = (() => {
     D = null; pending = total = 0;
     document.body.classList.remove('editing');
     closeModal(); scrollTo(0, 0);
-    side(a === 'new' || a === 'edit' || a === 'draft' ? lastList.slice(1).split('/')[0] : a === 'mag' ? 'mags' : a);
+    side(a === 'new' || a === 'card' || a === 'edit' || a === 'draft' ? lastList.slice(1).split('/')[0] : a === 'mag' ? 'mags' : a);
     if (a === 'news' || a === 'covers') listView(a, b);
     else if (a === 'new') openNew(b === 'occ');
+    else if (a === 'card') openCard();
     else if (a === 'edit') openEdit(+b);
     else if (a === 'draft') {const m = await Draft.load(); m ? restoreDraft(m) : location.replace('#');}
     else if (a === 'mags') magsView();

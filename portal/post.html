@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script src="night.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>خبر | أسرة العجلان والعيد</title>
 <meta name="theme-color" content="#1A1448">
@@ -9,9 +10,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://alajlanandaleid.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021830">
-<link rel="stylesheet" href="home.css?v=202611021830">
+<link rel="stylesheet" href="style.css?v=202611061100">
+<link rel="stylesheet" href="home.css?v=202611061100">
 <link rel="stylesheet" href="post.css?v=202611032330">
+<link rel="stylesheet" href="night/style.css?v=202611061100">
+<link rel="stylesheet" href="night/home.css?v=202611061100">
+<link rel="stylesheet" href="night/post.css?v=1">
+<link rel="stylesheet" href="night.css?v=202611061100">
 </head>
 <body class="scened ps">
 <div id="scene" aria-hidden="true"></div>
@@ -36,7 +41,7 @@
   <nav class="ps-np" id="np" aria-label="التنقل بين الأخبار"></nav>
   <section class="ps-rel" id="rel" hidden><h2>أخبار ذات صلة</h2><div class="news-grid" id="relG"></div></section>
 </main>
-<script src="common.js?v=202611051800"></script>
+<script src="common.js?v=202611060930"></script>
 <script>
 (async () => {
   const [site, posts] = await Promise.all([loadJSON('data/site.json'), loadJSON('data/posts.json')]);

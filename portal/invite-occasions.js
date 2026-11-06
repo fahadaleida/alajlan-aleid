@@ -4,7 +4,10 @@
 const gd=(m,f)=>s=>s==='f'?f:m;
 const VERSE_ISTIRJA='إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ';
 const VERSE_NAFS='يَا أَيَّتُهَا النَّفْسُ الْمُطْمَئِنَّةُ ارْجِعِي إِلَى رَبِّكِ رَاضِيَةً مَرْضِيَّةً';
+// أزرار اللقب الجاهزة تحت خانة اللقب، والكتابة اليدوية تبقى متاحة
+const TITLES=gd(['الأخ','الابن','الأب','ابن العم','العم','الدكتور','المهندس','الأستاذ','الشيخ'],['الأخت','الابنة','الأم','ابنة العم','العمة','الدكتورة','المهندسة','الأستاذة']);
 const join=(...a)=>a.filter(Boolean).join(' · ');
+const join2=(...a)=>a.filter(Boolean).join(' ');
 // صيغة حسب النوع والعدد: مفرد، مثنى (٢)، جمع (٣)
 const gp=(m,f,m2,f2,m3,f3)=>s=>({m,f,m2,f2,m3,f3})[s]??m;
 const run=(t,hi)=>t?{t,hi:hi?1:0}:null;
@@ -16,22 +19,23 @@ const NAMES={k:'more',type:'list',label:'أسماء إضافية',add:'＋ إض�
 // الرقم يبقى من اليسار لليمين وما ينكسر داخل نص عربي
 const tel=t=>t.startsWith('«')?t:'\u2066'+t.replace(/ /g,'\u00A0')+'\u2069';
 const OCC={
-wedding:{name:'دعوة زواج',desc:'دعوة أنيقة للفرح',maxPhotos:()=>3,proPhotos:9,caps:1,remind:'الزواج',roles:['العريس','والد العريس','والد العروس'],pals:['navy','petrol','ivory','emerald','night','ruby'],
+wedding:{name:'دعوة زواج',desc:'دعوة أنيقة للفرح',maxPhotos:()=>3,proPhotos:9,caps:1,remind:'الزواج',roles:['والد العريس','العريس','والد العروس'],pals:['navy','petrol','ivory','emerald','night','ruby'],
   fields:[
-    {k:'host1',label:'الداعي الأول',def:'عبدالله بن إبراهيم السعد العجلان',rah:1},
+    {k:'host1',label:'الداعي الأول',ph:'اسم الداعي',req:1,def:'عبدالله بن إبراهيم السعد العجلان',rah:1},
     {k:'host2',label:'الداعي الثاني (اختياري)',def:'عبدالله بن عبدالعزيز الشايع',rah:1},
     {k:'hosts',type:'list',label:'داعون آخرون',add:'＋ إضافة اسم',item:[{k:'t',ph:'اسم الداعي'}],rah:1},
+    {k:'groomPre',label:'لقب العريس',def:'الأخ',opts:TITLES},
     {k:'groom',label:'اسم العريس',def:'عبدالعزيز بن عبدالله العجلان',ph:'اسم العريس',req:1},
     {k:'bride',label:'والد العروس',def:'عبدالله بن عبدالعزيز الشايع',ph:'والد العروس',req:1,rah:1},
     {k:'couples',type:'list',label:'عرسان آخرون في نفس الحفل',add:'＋ إضافة عريس',item:[{k:'groom',ph:'اسم العريس'},{k:'bride',ph:'والد العروس'}]},
-    {k:'day',label:'اليوم',def:'الثلاثاء',half:1},{k:'time',label:'الوقت',def:'مساءً',half:1},
-    {k:'hijri',label:'التاريخ الهجري',def:'٢٣ / ٥ / ١٤٤٨هـ',half:1},{k:'greg',label:'التاريخ الميلادي',def:'٣ / ١١ / ٢٠٢٦م',half:1},
-    {k:'venue',label:'المكان',def:'قاعة سراج'},
+    {k:'day',label:'اليوم',ph:'اليوم',req:1,def:'الثلاثاء',half:1},{k:'time',label:'الوقت',def:'مساءً',half:1,keep:1},
+    {k:'hijri',label:'التاريخ الهجري',ph:'التاريخ الهجري',req:1,def:'٢٣ / ٥ / ١٤٤٨هـ',half:1},{k:'greg',label:'التاريخ الميلادي',ph:'التاريخ الميلادي',req:1,def:'٣ / ١١ / ٢٠٢٦م',half:1},
+    {k:'venue',label:'المكان',ph:'المكان',req:1,def:'قاعة سراج'},
     {k:'map',label:'رابط الموقع على الخريطة (يطلع باركود)',def:'',ltr:1,hint:'https://maps.app.goo.gl/...',grp:'word'},
     {k:'badge',label:'عنوان الدعوة',def:'دعوة زواج',grp:'word'},
     {k:'lead',label:'قبل الداعين',def:'يتشرف أبناء',grp:'word'},
     {k:'body',label:'نص الدعوة',def:'بدعوتكم لحضور حفل الزواج وتناول طعام العشاء بمناسبة زواج',type:'area',grp:'word'},
-    {k:'groomPre',label:'قبل اسم العريس',def:'الأخ',grp:'word',half:1},{k:'bridePre',label:'قبل اسم والد العروس',def:'على كريمة',grp:'word',half:1},
+    {k:'bridePre',label:'قبل اسم والد العروس',def:'على كريمة',grp:'word'},
     {k:'close',label:'الختام',def:'والدعوة عامة لجميع أفراد الأسرة',grp:'word'}],
   photos:[{src:'img/invite/p1.jpg',role:'والد العريس',name:'عبدالله بن إبراهيم العجلان',note:'رحمه الله',z:1,x:0,y:0},
           {src:'img/invite/p3.jpg',role:'العريس',name:'عبدالعزيز بن عبدالله العجلان',note:'',z:1,x:0,y:0},
@@ -46,6 +50,7 @@ wedding:{name:'دعوة زواج',desc:'دعوة أنيقة للفرح',maxPhoto
 
 qiran:{name:'تهنئة عقد قران',desc:'صور العائلتين وتهنئة بالقران',plural:'more',maxPhotos:()=>9,proPhotos:9,caps:1,roles:['العريس','والد العريس','والد العروس'],pals:['olive','emerald','petrol','navy','ruby'],
   fields:[
+    {k:'titleP',label:'لقب العريس',def:'',opts:TITLES},
     {k:'name',label:'اسم العريس',ph:'اسم العريس',req:1},{...NAMES,label:'عرسان آخرون',rah:0},
     {k:'bride',label:'والد العروس',ph:'والد العروس',req:1,rah:1},
     {k:'spouse',label:'اسم القريب بعد الاسم (اختياري)',hint:'مثل زوج ابنة العم: اكتب اسمها هنا',def:''},
@@ -56,17 +61,17 @@ qiran:{name:'تهنئة عقد قران',desc:'صور العائلتين وته�
     {k:'dua',label:'الدعاء',def:gp('بارك الله لهما، وبارك عليهما، وجمع بينهما في خير.','بارك الله لهما، وبارك عليهما، وجمع بينهما في خير.','بارك الله لهم، وبارك عليهم، وجمع بينهم في خير.','بارك الله لهم، وبارك عليهم، وجمع بينهم في خير.','بارك الله لهم، وبارك عليهم، وجمع بينهم في خير.','بارك الله لهم، وبارك عليهم، وجمع بينهم في خير.'),g:1,type:'area',grp:'word'}],
   photos:[],
   doc(v){const N=[v.name,...v.more.map(x=>x.t)];return{head:{k:'bism'},seq:[],facts:[],
-    pro:{head:1,paras:[runs(run(v.congr),run(N[0],1)),...nameLines(N).slice(1),runs(run(v.line)),runs(run(v.bridePre),run(v.bride,1)),v.spouse?runs(run(v.spousePre),run(v.spouse,1)):[],runs(run(v.text),run(v.dua))]}};}},
+    pro:{head:1,paras:[runs(run(v.congr),run(v.titleP),run(N[0],1)),...nameLines(N).slice(1),runs(run(v.line)),runs(run(v.bridePre),run(v.bride,1)),v.spouse?runs(run(v.spousePre),run(v.spouse,1)):[],runs(run(v.text),run(v.dua))]}};}},
 
 promo:{name:'تهنئة ترقية وإنجاز',desc:'ترقية أو منصب أو إنجاز',gender:1,plural:'more',genderLabels:['للرجال','للنساء'],genderTitle:'التهنئة لمن؟',maxPhotos:()=>9,proPhotos:9,caps:1,pals:['ocean','navy','emerald','night','ruby'],
   fields:[
-    {k:'titleP',label:'اللقب (اختياري)',hint:'مثل: الدكتور',def:'',half:1},
+    {k:'titleP',label:'اللقب',def:'',opts:TITLES},
     {k:'name',label:'الاسم',ph:'الاسم',req:1},NAMES,
     {k:'authority',label:'جهة الموافقة',ph:'جهة الموافقة',hint:'مثل: المجلس العلمي بالجامعة',req:1},
     {k:'rank',label:'الرتبة أو المنصب',ph:'الرتبة أو المنصب',req:1},
     {k:'spec',label:'التخصص (اختياري)',def:''},
     {k:'extra',label:'نبذة إضافية (اختياري)',def:'',type:'area'},
-    {k:'congr',label:'التهنئة',def:'تهانينا وألف مبروك',},
+    {k:'congr',label:'التهنئة',def:'تهانينا وألف مبروك',keep:1},
     {k:'intro',label:'بداية الخبر',def:'بفضل الله وتوفيقه، صدرت موافقة',grp:'word'},
     {k:'pre',label:'قبل الاسم',def:gp('على ترقية ابن العم','على ترقية ابنة العم','على ترقية ابني العم','على ترقية ابنتي العم','على ترقية أبناء العم','على ترقية بنات العم'),g:1,grp:'word'},
     {k:'toPre',label:'قبل الرتبة',def:'إلى',grp:'word',half:1},{k:'specPre',label:'قبل التخصص',def:'في تخصص',grp:'word',half:1},
@@ -76,9 +81,9 @@ promo:{name:'تهنئة ترقية وإنجاز',desc:'ترقية أو منصب 
     pro:{head:1,paras:[runs(run(v.intro),run(v.authority)),runs(run(v.pre),run(v.titleP)),...nameLines(N),runs(run(v.toPre),run(v.rank),run(v.spec&&v.specPre),run(v.spec)),v.extra?runs(run(v.extra)):[],runs(run(v.congr)),runs(run(v.dua))]}};}},
 
 condolence:{name:'حالة وفاة',sub:'تعزية',desc:'نعي وتعزية بوقار',gender:1,genderLabels:['الفقيد','الفقيدة'],genderTitle:'النعي لمن؟',pals:['charcoal','pine','slate','bronze'],
-  maxPhotos:(st,v)=>st.gender==='f'||!v.withPhoto?0:1,photoToggle:'withPhoto',noPhotoFemale:1,
+  maxPhotos:st=>st.gender==='f'?0:1,onePhoto:1,photoFirst:1,noPhotoFemale:1,
   fields:[
-    {k:'titleP',label:'الصفة (اختياري)',hint:'مثل: العم',def:'',half:1},{k:'kunya',label:'الكنية (اختياري)',hint:'مثل: أبو عبدالله',def:'',half:1},
+    {k:'titleP',label:'الصفة',def:'',opts:TITLES},{k:'kunya',label:'الكنية (اختياري)',hint:'مثل: أبو عبدالله',def:''},
     {k:'name',label:gd('اسم المتوفى','اسم المتوفاة'),ph:gd('اسم الفقيد','اسم الفقيدة'),req:1,g:0},
     {k:'showPray',type:'toggle',label:'الصلاة',def:true},
     {k:'mosque',label:'الجامع',ph:'اسم الجامع',req:1,sec:'showPray',half:1},{k:'prayTime',label:'وقت الصلاة',ph:'وقت الصلاة',hint:'مثل: بعد صلاة العصر يوم ...',req:1,sec:'showPray',half:1},
@@ -90,7 +95,6 @@ condolence:{name:'حالة وفاة',sub:'تعزية',desc:'نعي وتعزية 
     {k:'map',label:'رابط الموقع على الخريطة (يطلع باركود)',def:'',ltr:1,hint:'https://maps.app.goo.gl/...'},
     {k:'showTel',type:'toggle',label:'أرقام التواصل',def:true},
     {k:'menTel',label:'رقم الرجال',ph:'رقم الجوال',req:1,sec:'showTel',half:1,tel:1},{k:'womenTel',label:'رقم النساء',ph:'رقم الجوال',req:1,sec:'showTel',half:1,tel:1},
-    {k:'withPhoto',type:'toggle',label:'إضافة صورة',def:false,grp:'photo'},
     {k:'ayah',type:'toggle',label:'إضافة الآية الكريمة «يا أيتها النفس المطمئنة»',def:false,grp:'word'},
     {k:'lead',label:'السطر الأول',def:'بقلوب مؤمنة بقضاء الله وقدره',grp:'word'},
     {k:'lead2',label:'السطر الثاني',def:gd('تنعى أسرة العجلان والعيد فقيدها','تنعى أسرة العجلان والعيد فقيدتها'),g:1,grp:'word'},
@@ -109,6 +113,7 @@ condolence:{name:'حالة وفاة',sub:'تعزية',desc:'نعي وتعزية 
 
 graduate:{name:'تبريكات خريج',desc:'تهنئة تليق بالإنجاز',gender:1,plural:'more',genderLabels:['خريج','خريجة'],genderTitle:'التهنئة لمن؟',maxPhotos:()=>3,proPhotos:9,pals:['navy','emerald','night','ruby','ivory'],
   fields:[
+    {k:'titleP',label:'اللقب',def:'',opts:TITLES},
     {k:'name',label:gd('اسم الخريج','اسم الخريجة'),ph:gd('اسم الخريج','اسم الخريجة'),req:1},{...NAMES,rah:0},
     {k:'degree',label:'الدرجة',ph:'الدرجة العلمية',hint:'مثل: البكالوريوس',req:1,half:1},{k:'major',label:'التخصص',ph:'التخصص',req:1,half:1},
     {k:'university',label:'الجامعة',ph:'اسم الجامعة',req:1},
@@ -118,8 +123,8 @@ graduate:{name:'تبريكات خريج',desc:'تهنئة تليق بالإنج�
     {k:'line',label:'قبل الدرجة',def:gp('بمناسبة حصوله على','بمناسبة حصولها على','بمناسبة حصولهما على','بمناسبة حصولهما على','بمناسبة حصولهم على','بمناسبة حصولهن على'),g:1,grp:'word'},
     {k:'close',label:'الدعاء في الختام',def:gp('وفقه الله وسدد خطاه','وفقها الله وسدد خطاها','وفقهما الله وسدد خطاهما','وفقهما الله وسدد خطاهما','وفقهم الله وسدد خطاهم','وفقهن الله وسدد خطاهن'),g:1,grp:'word'}],
   photos:[],
-  doc(v){const N=[v.name,...v.more.map(x=>x.t)];return{kick:v.title,seq:[{r:'lead',t:v.lead},{r:'hero',t:N.join(' و')},{r:'pre',t:v.line}],facts:[['الدرجة',v.degree,1],['التخصص',v.major],['الجامعة',v.university]],close:v.close,sign:v.from?'المهنئون: '+v.from:'',
-    pro:{head:1,kick:v.title,paras:[runs(run(v.lead)),...nameLines(N),runs(run(v.line),run(v.degree,1),run('في تخصص'),run(v.major,1),run('من'),run(v.university,1))],close:v.close,sign:v.from?'المهنئون: '+v.from:''}};}},
+  doc(v){const N=[v.name,...v.more.map(x=>x.t)];return{kick:v.title,seq:[{r:'lead',t:join2(v.lead,v.titleP)},{r:'hero',t:N.join(' و')},{r:'pre',t:v.line}],facts:[['الدرجة',v.degree,1],['التخصص',v.major],['الجامعة',v.university]],close:v.close,sign:v.from?'المهنئون: '+v.from:'',
+    pro:{head:1,kick:v.title,paras:[runs(run(v.lead),run(v.titleP)),...nameLines(N),runs(run(v.line),run(v.degree,1),run('في تخصص'),run(v.major,1),run('من'),run(v.university,1))],close:v.close,sign:v.from?'المهنئون: '+v.from:''}};}},
 
 baby:{name:'تبريكات مولود',desc:'بشرى هادئة وناعمة',gender:1,genderLabels:['مولود','مولودة'],genderTitle:'نوع المولود',maxPhotos:()=>3,pals:['sand','sky','rose','sage'],genderPal:{m:'sky',f:'rose'},
   fields:[
@@ -150,8 +155,8 @@ general:{name:'مناسبة عامة',desc:'أي مناسبة عائلية',maxP
 
 schedule:{name:'جدول المناسبات',desc:'مواعيد مناسبات الأسرة',maxPhotos:()=>0,noPhotos:1,pals:['ivory','navy','emerald','night'],
   fields:[
-    {k:'title',label:'العنوان',def:'عائلة العجلان والعيد'},
-    {k:'sub',label:'العنوان الفرعي',def:'جدول مواعيد مناسبات واحتفالات الأسرة'},
+    {k:'title',label:'العنوان',def:'عائلة العجلان والعيد',keep:1},
+    {k:'sub',label:'العنوان الفرعي',def:'جدول مواعيد مناسبات واحتفالات الأسرة',keep:1},
     {k:'rows',type:'list',card:1,label:'المناسبات',add:'＋ إضافة مناسبة',item:[{k:'host',label:'اسم الداعي',ph:'اسم الداعي'},{k:'type',label:'نوع المناسبة',ph:'زواج',half:1},{k:'time',label:'الوقت',ph:'مساءً',half:1},{k:'hijri',label:'التاريخ الهجري',ph:'١٤٤٨/٠٥/٠٣هـ',half:1},{k:'greg',label:'التاريخ الميلادي',ph:'٢٠٢٦/١٠/١٤م',half:1},{k:'place',label:'المكان',ph:'المكان'},{k:'map',label:'رابط الموقع (يطلع باركود)',ph:'https://maps.app.goo.gl/...',ltr:1}],
       fresh:{type:'زواج',time:'مساءً'},def:[
       ['محمد بن إبراهيم بن عجلان العجلان','١٤٤٨/٠٥/٠٣هـ','٢٠٢٦/١٠/١٤م','فندق الريتز كارلتون'],
@@ -170,8 +175,6 @@ schedule:{name:'جدول المناسبات',desc:'مواعيد مناسبات �
       ].map(([host,hijri,greg,place])=>({host,type:'زواج',hijri,greg,time:'مساءً',place,map:''}))},
     {k:'noteT',label:'التنويه',def:'في حال الرغبة بإضافة مناسبتكم التواصل معنا لتحديث الجدول',type:'area',grp:'word'},
     {k:'phone',label:'رقم التواصل',def:'٠٥٣٣٣٣٩٨٩١',half:1,grp:'word'},
-    {k:'by',label:'إعداد',def:'علي بن صالح بن محمد العجلان',grp:'word'},
-    {k:'byRole',label:'صفة المعد',def:'مدير موقع أسرة العجلان والعيد',grp:'word',half:1},
     {k:'bySite',label:'الموقع',def:'www.alajlanandaleid.com',ltr:1,grp:'word',half:1},
     {k:'cheer',label:'عبارة التهنئة',def:'ألف مبروك',grp:'word',half:1}],
   photos:[],
@@ -205,5 +208,12 @@ function vals(id,st,foot){const v={};for(const f of OCC[id].fields){const r=raw(
 // الحقول المطلوبة الفاضية (تحذير قبل التحميل)
 function missing(id,st){const v={};OCC[id].fields.forEach(f=>{if(f.type==='toggle')v[f.k]=!!raw(id,st,f);});return OCC[id].fields.filter(f=>f.req&&(!f.sec||v[f.sec])&&!String(raw(id,st,f)).trim());}
 function blank(id){return{design:null,pal:null,gender:'m',f:{},photos:structuredClone(OCC[id].photos)};}
-window.OCC_DATA={OCC,ORDER,raw,vals,missing,blank,fkey,gk,phOf,labelOf,VERSE_ISTIRJA,VERSE_NAFS};
+// بيانات الشخص والمناسبة فقط: خانات الصيغة والمفاتيح والخانات الثابتة (keep) ما تدخل
+const isData=f=>!f.grp&&!f.keep&&f.type!=='toggle';
+// فيه شي كتبه المستخدم؟ بيانات المثال ما تُحسب
+function hasData(id,st){const typed=OCC[id].fields.filter(f=>isData(f)&&!f.opts).some(f=>{const v=st.f[f.k];if(v===undefined)return false;if(Array.isArray(v))return v.some(x=>Object.keys(x).some(k=>x[k]&&x[k]!==(f.fresh||{})[k]));return String(v).trim()&&v!==f.def;});
+  return typed||(st.photos.length>0&&JSON.stringify(st.photos)!==JSON.stringify(OCC[id].photos));}
+// نموذج فاضي بنفس التصميم واللون والصيغة
+function clearData(id,st){OCC[id].fields.filter(isData).forEach(f=>{delete st.f[f.k+'_r'];if(f.opts)delete st.f[f.k];else st.f[f.k]=f.type==='list'?(f.card?[{...(f.fresh||{})}]:[]):'';});st.photos=[];st.page=0;delete st.lay;delete st.pub;delete st.rem;}
+window.OCC_DATA={OCC,ORDER,raw,vals,missing,blank,hasData,clearData,fkey,gk,phOf,labelOf,VERSE_ISTIRJA,VERSE_NAFS};
 })();

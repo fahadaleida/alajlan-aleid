@@ -1,0 +1,27 @@
+[data-sky=night] .vseg button{color:#d6dbff}
+[data-sky=night] .vseg button:hover{background:rgba(22,27,62,0.80)}
+[data-sky=night] .vsel select{color:#d6dbff}
+[data-sky=night] .vq{background:rgba(22,27,62,0.75)}
+@media (max-width:899px){
+[data-sky=night] .vf-t{background:rgba(22,27,62,0.72)}
+}
+[data-sky=night] .vmast i{background:rgba(227,182,107,0.16)}
+[data-sky=night] .vmos .vmt.e{background:repeating-linear-gradient(45deg,rgba(227,182,107,0.12) 0 1px,transparent 1px 2cqw),#221A62}
+[data-sky=night] .vph{background:rgba(22,27,62,1.00)}
+[data-sky=night] .vph.fit{background:rgba(22,27,62,.86)}
+[data-sky=night] .vs h3{color:#d6dbff}
+[data-sky=night] .vs p{color:#d6dbff}
+[data-sky=night] .vmeta time{color:#efcf94}
+[data-sky=night] .vmag{color:#d6dbff;background:rgba(22,27,62,.86)}
+@media (hover:hover){
+[data-sky=night] .vs:hover h3{color:#d6dbff}
+}
+[data-sky=night] .vyh>b{color:#d6dbff}
+[data-sky=night] .vyh span{color:#d6dbff}
+[data-sky=night] .vct h2{color:#d6dbff}
+[data-sky=night] .vct p{color:#d6dbff}
+[data-sky=night] .vtoc b{color:#d6dbff}
+[data-sky=night] .vtoc span{color:#d6dbff}
+[data-sky=night] .vcats b{color:#d6dbff}
+[data-sky=night] .lempty h3{color:#d6dbff}
+[data-sky=night] .lempty p{color:#d6dbff}

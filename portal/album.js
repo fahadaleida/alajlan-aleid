@@ -122,7 +122,7 @@
     <div class="cvshade"></div>
     <header class="mast">
       <div class="mtop"><span>${wed ? 'عدد خاص · أفراح الأسرة' : eid ? 'عدد خاص · أعياد الأسرة' : 'عدد خاص · مناسبات الأسرة'}</span><i></i><span>${esc(gDate)}</span></div>
-      <div class="mname"><img src="img/logo-mark.png" alt=""><h2><b>أسرة العجلان</b> <b>والعيد</b></h2></div>
+      <div class="mname"><img src="img/logo-mark.png" alt=""><h2><b>أسرة العجلان</b> <b>والعيــد</b></h2></div>
     </header>
     <div class="cvt">
       <div class="cline"><span>تغطية خاصة</span></div>
@@ -186,7 +186,7 @@
   pages.push({cls: 'cv back', hard: 1, imgs: [], html: `<div class="bkin">
       <div class="bkpat"></div>
       <img class="bklogo" src="img/logo-mark.png" alt="">
-      <h2><b>أسرة العجلان</b> <b>والعيد</b></h2>
+      <h2><b>أسرة العجلان</b> <b>والعيــد</b></h2>
       <div class="bkrule"><i></i><b></b><i></i></div>
       <p class="bkbl">${esc(blessing)}</p>
       <p class="bkt">${esc(T.short)}</p>

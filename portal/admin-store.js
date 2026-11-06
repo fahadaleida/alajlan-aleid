@@ -67,13 +67,16 @@ const Store = (() => {
       const f = new FormData(); Object.entries(to).forEach(([k, v]) => f.append(k, v)); f.append('file', blob, 'photo');
       return (await api('upload.php', {method: 'POST', form: f})).path;
     },
-    menList: async () => JSON.parse(await pub(`../v7/photos/index.json?t=${Date.now()}`, {cache: 'no-store'}) || '{}'),
+    menList: async () => JSON.parse(await pub(`api/tree-photo.php?admin=1&index=1&t=${Date.now()}`, {cache: 'no-store', credentials: 'same-origin'}) || '{}'),
     async menSave(id, blob) {
       const f = new FormData(); f.append('op', 'save'); f.append('id', id); f.append('file', blob, 'photo.jpg');
       return (await api('portrait.php', {method: 'POST', form: f})).ver;
     },
     async menRemove(id) {const f = new FormData(); f.append('op', 'remove'); f.append('id', id); await api('portrait.php', {method: 'POST', form: f});},
-    menUrl: (id, ver) => `../v7/photos/${id}.jpg?v=${ver}`,
+    menUrl: (id, ver) => `api/tree-photo.php?admin=1&id=${id}&v=${ver}`,
+    members: () => api('member-admin.php'),
+    decide: (phone, action) => api('member-admin.php', {method: 'POST', json: {op: 'decide', phone, action}}),
+    waSave: c => api('member-admin.php', {method: 'POST', json: {op: 'wa', ...c}}),
     changePassword: async (cur, next) => {
       try {await api('password.php', {method: 'POST', json: {cur, next}}); return true;}
       catch (e) {if (e.code === 'wrong') return false; throw e;}
@@ -85,7 +88,7 @@ const Store = (() => {
   };
 
   // ===== نسخة العرض: طبقة فوق ملفات الموقع في IndexedDB، والموقع نفسه لا يتغير =====
-  const FLAG = 'ajlan-demo', SESSION = 'ajlan-demo-in', full = e => new StoreFail(-1, 'مساحة هذا المتصفح لا تكفي لحفظ هذا التعديل.');
+  const GATE_DB = 'ajlan-gate-demo', FLAG = 'ajlan-demo', SESSION = 'ajlan-demo-in', full = e => new StoreFail(-1, 'مساحة هذا المتصفح لا تكفي لحفظ هذا التعديل.');
   const over = new Map(), urls = new Map();   // over: مسار ← نص، أو null لو محذوف.  urls: مسار ← رابط الصورة في هذا المتصفح
   let dbp = null, auth = null;
   const db = () => dbp || (dbp = new Promise((res, rej) => {
@@ -168,6 +171,13 @@ const Store = (() => {
       if (urls.has(path)) {URL.revokeObjectURL(urls.get(path)); urls.delete(path);}
     },
     menUrl: id => urls.get(`men/${id}.jpg`) || '',
+    // طلبات الأسرة في نسخة العرض: نفس مخزن v7/gate.js في هذا المتصفح
+    async members() {let d = {}; try {d = JSON.parse(localStorage.getItem(GATE_DB)) || {};} catch (e) {}
+      const all = Object.values(d.members || {}), ok = new Map(all.filter(r => r.status === 'approved').map(r => [r.pid, r.phone]));
+      return {rows: all.map(({phone, pid, name, chain, status, created, decided, share}) => ({phone, pid, name, chain, status, created, decided: decided || 0, share: !!share, dup: ok.has(pid) && ok.get(pid) !== phone})), wa: false};},
+    async decide(phone, action) {const d = JSON.parse(localStorage.getItem(GATE_DB) || '{}'), r = d.members && d.members[phone]; if (!r) throw new StoreFail(404, 'هذا الطلب غير موجود.');
+      r.status = {approve: 'approved', reject: 'rejected', revoke: 'revoked'}[action]; r.decided = Math.floor(Date.now() / 1000); if (action !== 'approve') {r.ver = (r.ver || 0) + 1; delete r.code; delete r.share;} localStorage.setItem(GATE_DB, JSON.stringify(d));},
+    waSave: async () => {throw new StoreFail(-1, 'إعداد واتساب يكون بعد نقل الموقع إلى الدومين.');},
     changePassword: async () => {throw new StoreFail(-1, 'في نسخة العرض كلمة المرور ثابتة. تتغير من هنا بعد نقل الموقع إلى الدومين.');},
     async disk() {
       const e = navigator.storage && navigator.storage.estimate ? await navigator.storage.estimate().catch(() => ({})) : {};
@@ -203,6 +213,7 @@ const Store = (() => {
     changePassword: (c, n) => A.changePassword(c, n), disk: () => A.disk(), setQuota: g => A.setQuota(g),
     src: u => A.src(u), reset: () => A.reset(),
     genderOf, menList: () => A.menList(), menSave: (id, b) => A.menSave(id, b), menRemove: id => A.menRemove(id), menUrl: (id, v) => A.menUrl(id, v),
+    members: () => A.members(), decide: (p, a) => A.decide(p, a), waSave: c => A.waSave(c),
     // build(snap) يبني التغيير فوق آخر نسخة ويرجّع {files: {مسار: نص أو null للحذف}}. لو تغيّر الموقع في الأثناء نعيد البناء من جديد
     async commit(build) {
       let last;

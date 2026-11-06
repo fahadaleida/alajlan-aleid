@@ -1,0 +1,24 @@
+[data-sky=night] .amb .sun{background:radial-gradient(circle,rgba(227,182,107,0.16),rgba(227,182,107,0.14) 38%,transparent 66%)}
+[data-sky=night] .rback{color:#d6dbff;background:rgba(22,27,62,0.72)}
+[data-sky=night] .bname b:last-child{color:#d6dbff}
+[data-sky=night] .tools{background:rgba(22,27,62,0.72)}
+[data-sky=night] .ib{color:#d6dbff}
+[data-sky=night] .rissue select{color:#d6dbff}
+[data-sky=night] .rissue select:hover{background-color:rgba(22,27,62,.86)}
+[data-sky=night] .bookzone .glow{background:radial-gradient(ellipse 50% 50% at 34% 46%,rgba(227,182,107,0.16),rgba(227,182,107,0.12) 50%,transparent 74%)}
+[data-sky=night] .pg{background:rgba(22,27,62,1.00)}
+[data-sky=night] .pg:not(:has(img[src])){background:linear-gradient(110deg,rgba(22,27,62,1.00) 30%,rgba(22,27,62,1.00) 50%,rgba(22,27,62,1.00) 70%) 0 0/300% 100%}
+[data-sky=night] .arr{color:#d6dbff;background:rgba(22,27,62,0.78);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .icard{color:#d6dbff;background:rgba(22,27,62,0.86);border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .hint{color:#d6dbff}
+[data-sky=night] #prog::-webkit-slider-thumb{background:rgba(22,27,62,.86)}
+[data-sky=night] #prog::-moz-range-thumb{background:rgba(22,27,62,.86)}
+[data-sky=night] .thumbs{background:rgba(22,27,62,0.80)}
+[data-sky=night] .tg img{background:rgba(22,27,62,1.00)}
+[data-sky=night] .tg small{color:#d6dbff}
+[data-sky=night] .zbar{color:#d6dbff}
+[data-sky=night] .zin img{background:rgba(22,27,62,.86)}
+[data-sky=night] body.fs .rbar{background:linear-gradient(180deg,rgba(22,27,62,0.72),rgba(22,27,62,0.72))}
+@media (max-width:639px){
+[data-sky=night] .stage .arr{background:rgba(22,27,62,0.72)}
+}

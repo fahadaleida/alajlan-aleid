@@ -1,0 +1,10 @@
+[data-sky=night] .nm-c{background:linear-gradient(180deg,rgba(22,27,62,1.00),var(--paper))}
+[data-sky=night] .nm-ph{background:rgba(22,27,62,1.00)}
+[data-sky=night] .nm-ph.fit{background:rgba(22,27,62,.86)}
+[data-sky=night] .nm-c h3{color:#d6dbff}
+[data-sky=night] .nm-c p{color:#d6dbff}
+[data-sky=night] .nm-meta time{color:#efcf94}
+[data-sky=night] .nm-mag{color:#d6dbff;background:rgba(22,27,62,.86)}
+[data-sky=night] .nm-vol{color:#d6dbff;background:rgba(22,27,62,0.95)}
+[data-sky=night] .nm-vol svg{color:#efcf94}
+[data-sky=night] .nm-vol:hover{background:rgba(22,27,62,.86)}

@@ -9,11 +9,11 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202611021830">
-<link rel="stylesheet" href="home.css?v=202611040130">
-<link rel="stylesheet" href="admin.css?v=202611051800">
+<link rel="stylesheet" href="style.css?v=202611061100">
+<link rel="stylesheet" href="home.css?v=202611061100">
+<link rel="stylesheet" href="admin.css?v=202611061100">
 <link rel="stylesheet" href="admin-editor.css?v=202611051800">
-<link rel="stylesheet" href="admin-panel.css?v=202611061530">
+<link rel="stylesheet" href="admin-panel.css?v=202611071400">
 <link rel="stylesheet" href="admin-men.css?v=202611061000">
 </head>
 <body class="far adminp">
@@ -53,17 +53,17 @@
   </nav>
 </div>
 
-<script src="common.js?v=202611051800"></script>
+<script src="common.js?v=202611060930"></script>
 <script src="rockets.js?v=202611031900"></script>
-<script src="admin-store.js?v=202611061000"></script>
+<script src="admin-store.js?v=202611071400"></script>
 <script src="admin-photos.js?v=202611051800"></script>
-<script src="admin-editor.js?v=202611061530"></script>
-<script src="admin-sections.js?v=202611061530"></script>
+<script src="admin-editor.js?v=202611062100"></script>
+<script src="admin-sections.js?v=202611071400"></script>
 <script src="admin-men.js?v=202611061000"></script>
 <script>
 (() => {
   // بصمة كلمة مرور نسخة العرض فقط. على الخادم الدخول يتحقق في الخادم ولا تُستخدم هذه البصمة
-  const AUTH = {user: 'fahad', salt: 'S9IQbdpIDSmmIXEIQTu4Qg==', iter: 200000, hash: 'q6jUDtOz1YxlZesfxh403ua3Z/0NEV46f+Uis0mo8EQ='};
+  const AUTH = {user: 'fahad', salt: 'NaYwAcOI/cCSur+HZzRrHA==', iter: 200000, hash: 'nvxJVz+O+Yted9ALQhxzL+6n7WOnoz6mlzV5unqA+Rw='};
   const ready = Store.init(AUTH), S = Editor.S, err = t => {$('#err').textContent = t; $('#err').hidden = false;};
 
   async function openDash() {

@@ -2,7 +2,7 @@
 const Panel = (() => {
   const {view, head, say, verb, ing, modal, closeModal, confirmBox, progress, done, norm, clean} = Editor.ui, S = Editor.S, R = Editor.routes;
   const NAV = [['', 'الرئيسية', 'home'], ['news', 'الأخبار والمناسبات', 'news'], ['covers', 'مجلات التغطيات', 'film'], ['mags', 'مكتبة المجلات', 'mag'], ['home', 'الصفحة الرئيسية', 'vision'],
-    ['pages', 'صفحات الموقع', 'box'], ['tree', 'شجرة العائلة', 'tree'], ['invite', 'مصمم المناسبات', 'mail'], ['account', 'الحساب', 'people']];
+    ['pages', 'صفحات الموقع', 'box'], ['tree', 'شجرة العائلة', 'tree'], ['requests', 'طلبات الأسرة', 'people'], ['invite', 'مصمم المناسبات', 'mail'], ['account', 'الحساب', 'people']];
   const size = b => b >= 1073741824 ? `${(b / 1073741824).toLocaleString('ar-SA', {maximumFractionDigits: 1})} جيجا` : b < 1048576 ? 'أقل من ١ ميجا' : `${ar(b / 1048576)} ميجا`;
 
   // ===== النظرة العامة =====
@@ -238,7 +238,7 @@ const Panel = (() => {
   R.tree = (id, sub) => id === 'men' ? Men.show(sub) : id ? personView(id) : treeSearch();
 
   // ===== مصمم الدعوات =====
-  R.invite = () => {view().innerHTML = `${head('مصمم المناسبات', '', 'صمّم بطاقة لأي مناسبة ونزّلها')}<section class="pcard pmid">${svg('mail', 34)}<p>مصمم المناسبات صفحة مستقلة، وربطه باللوحة يأتي لاحقاً.</p><a class="ebtn big gold" href="invite.html" target="_blank" rel="noopener">فتح مصمم المناسبات</a></section>`;};
+  R.invite = () => {view().innerHTML = `${head('مصمم المناسبات', '', 'صمّم بطاقة لأي مناسبة وانشرها')}<section class="pcard pmid">${svg('mail', 34)}<p>صمّم البطاقة، ومن خطوة «النشر» ترسلها خبراً في الموقع أو إلى واتساب وتيليجرام. وزر «لوحة التحكم» أعلى المصمم يرجعك هنا.</p><a class="ebtn big gold" href="invite.html?from=admin">فتح مصمم المناسبات</a></section>`;};
 
   // ===== الحساب =====
   R.account = () => {
@@ -279,10 +279,48 @@ const Panel = (() => {
     }
   };
 
+  // ===== طلبات الأسرة: من سجل في موقع الشجرة ينتظر الموافقة، والصور لا تفتح إلا بعدها =====
+  const dateOf = s => s ? new Date(s * 1000).toLocaleDateString('ar-SA', {dateStyle: 'medium'}) : '';
+  const treeUrl = () => new URL('../v7/index.html', location.href).href;
+  const waOf = r => `https://wa.me/966${r.phone.slice(1)}?text=${encodeURIComponent(r.status === 'approved' ? `السلام عليكم ${r.name}، تمت الموافقة على طلبك وتقدر تدخل الآن إلى شجرة العائلة برقم جوالك: ${treeUrl()}` : `السلام عليكم ${r.name}، معك إدارة موقع أسرة العجلان والعيد. وصلنا طلبك للدخول إلى شجرة العائلة، ونبي نتأكد من بياناتك قبل الموافقة: هل هذا اسمك الكامل؟ ${r.chain}`)}`;
+  const reqBadge = n => {const a = $('#snav a[data-k="requests"]'); if (!a) return; let b = a.querySelector('.rbadge'); if (!n) {if (b) b.remove(); return;} if (!b) {b = document.createElement('b'); b.className = 'rbadge'; a.append(b);} b.textContent = ar(n);};
+  // صفوف مختصرة لأن الطلبات قد تصل الآلاف: الاسم الكامل والجوال والقرار في سطر واحد
+  const WA_ICON = '<svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+  const REQ_ACTS = {wait: [['approve', 'قبول', 'yes'], ['reject', 'رفض', 'no']], ok: [['revoke', 'إلغاء', 'no']], off: [['approve', 'قبول', 'yes']]}, REQ_TABS = [['wait', 'بانتظار الموافقة', ['pending']], ['ok', 'المقبولون', ['approved']], ['off', 'المرفوضون', ['rejected', 'revoked']]], REQ_PAGE = 50;
+  const reqRow = (r, tab) => `<div class="rrow"><span class="rnm" title="${esc(r.chain)}">${esc(r.chain || r.name)}${r.dup ? ' <em title="هذا الاسم له حساب مقبول برقم آخر، تأكد قبل الموافقة">اسم مكرر</em>' : ''}${r.share ? ' <em class="on" title="وافق على إظهار رقمه للأعضاء المقبولين">رقمه ظاهر</em>' : ''}</span><span class="rph" dir="ltr">${esc(r.phone)}</span><span class="racts">${REQ_ACTS[tab].map(([k, t, c]) => `<button class="rb ${c}" data-do="${k}" data-ph="${esc(r.phone)}">${t}</button>`).join('')}<a class="rwa" target="_blank" rel="noopener" href="${esc(waOf(r))}" title="${r.status === 'approved' ? 'أبلغه: تقدر تدخل الآن' : 'تواصل واتساب'}" aria-label="واتساب ${esc(r.name)}">${WA_ICON}</a></span></div>`;
+  R.requests = async () => {
+    view().innerHTML = `${head('طلبات الأسرة', '', 'الموافقة تفتح الصور لمن سجل في موقع الشجرة')}<div id="rq"><section class="pcard">جارٍ التحميل…</section></div>`;
+    let d; try {d = await Store.members();} catch (e) {$('#rq').innerHTML = `<section class="pcard">${esc(say(e))}</section>`; return;}
+    const pend = () => d.rows.filter(r => r.status === 'pending').length; reqBadge(pend());
+    let tab = 'wait', find = '', shown = REQ_PAGE;
+    $('#rq').innerHTML = `${Store.demo ? '<div class="enote">نسخة عرض: الطلبات هنا من هذا المتصفح فقط، وملفات الصور على الرابط الحالي عامة. الحماية الحقيقية تبدأ بعد نقل الموقع إلى الدومين.</div>' : ''}
+      <div class="rbar"><div class="rtabs" id="rTabs"></div><input id="rFind" type="search" placeholder="ابحث بالاسم أو الجوال" aria-label="بحث في الطلبات"></div><div class="rlist" id="rList"></div>
+      ${Store.demo ? '' : `<h3 class="ph3">رمز واتساب</h3><section class="pcard"><form id="waF" class="pstack"><p>${d.wa ? 'الخدمة مفعّلة.' : 'الخدمة غير مفعّلة: الطلبات تصلك هنا، لكن دخول الأعضاء برمز واتساب لا يعمل حتى تعبئة البيانات.'}</p><label class="ef"><span>معرّف رقم الهاتف</span><input id="waP" dir="ltr"></label><label class="ef"><span>اسم القالب</span><input id="waT" dir="ltr"></label><label class="ef"><span>التوكن</span><input id="waK" type="password" dir="ltr" autocomplete="off"><small>يُحفظ في الخادم ولا يظهر هنا مرة ثانية.</small></label><button class="ebtn gold">حفظ</button></form></section>`}`;
+    const paint = () => {
+      const of = st => d.rows.filter(r => st.includes(r.status));
+      $('#rTabs').innerHTML = REQ_TABS.map(([k, t, st]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${t} <b>${ar(of(st).length)}</b></button>`).join('');
+      const v = norm(find), rows = of(REQ_TABS.find(x => x[0] === tab)[2]).filter(r => !v || norm(`${r.name} ${r.chain} ${r.phone}`).includes(v)).sort((a, b) => b.created - a.created);
+      $('#rList').innerHTML = rows.length ? rows.slice(0, shown).map(r => reqRow(r, tab)).join('') + (rows.length > shown ? `<button class="rmore" data-more>عرض المزيد (${ar(rows.length - shown)})</button>` : '') : `<p class="rnone">${v ? 'لا توجد نتائج.' : tab === 'wait' ? 'لا توجد طلبات جديدة.' : 'لا يوجد أحد هنا.'}</p>`;
+    };
+    paint();
+    $('#rFind').oninput = e => {find = e.target.value; shown = REQ_PAGE; paint();};
+    $('#rq').onclick = async e => {
+      const t = e.target.closest('[data-tab]'); if (t) {tab = t.dataset.tab; shown = REQ_PAGE; paint(); return;}
+      if (e.target.closest('[data-more]')) {shown += REQ_PAGE; paint(); return;}
+      const b = e.target.closest('[data-do]'); if (!b) return;
+      const r = d.rows.find(x => x.phone === b.dataset.ph), k = b.dataset.do;
+      if (k !== 'approve' && !await confirmBox(k === 'reject' ? 'رفض الطلب' : 'إلغاء الصلاحية', `${r.name}: لن يرى الصور بعد الآن.`, k === 'reject' ? 'رفض' : 'إلغاء الصلاحية')) return;
+      b.disabled = true; try {await Store.decide(r.phone, k);} catch (x) {b.disabled = false; $('#rq').insertAdjacentHTML('afterbegin', `<div class="enote">${esc(say(x))}</div>`); return;}
+      r.status = k === 'approve' ? 'approved' : k === 'reject' ? 'rejected' : 'revoked'; reqBadge(pend()); paint();
+    };
+    const w = $('#waF'); if (w) w.onsubmit = async e => {e.preventDefault(); try {await Store.waSave({phone_id: $('#waP').value, template: $('#waT').value, token: $('#waK').value}); R.requests();} catch (x) {w.querySelector('p').textContent = say(x);}};
+  };
+
   // ===== القائمة الجانبية =====
   function build() {
     $('#snav').innerHTML = NAV.map(([h, t, i]) => `<a href="#${h}" data-k="${h}">${svg(i, 21)}<span>${t}</span></a>`).join('');
     $('#demoTag').hidden = !Store.demo;
+    Store.members().then(d => reqBadge(d.rows.filter(r => r.status === 'pending').length)).catch(() => {});
     const side = $('#side'), open = v => {side.classList.toggle('open', v); $('#scrim').hidden = !v; $('#burger').setAttribute('aria-expanded', v);};
     $('#burger').onclick = () => open(!side.classList.contains('open'));
     const tabs = () => {const h = location.hash.replace(/^#/, ''), k = h === '' ? 'home' : /^(news|new|edit|draft|card)/.test(h) ? 'occ' : h.split('/')[0] === 'invite' ? 'invite' : ''; document.querySelectorAll('#adtabs [data-k]').forEach(e => e.dataset.k === k ? e.setAttribute('aria-current', 'page') : e.removeAttribute('aria-current'));};

@@ -8,7 +8,7 @@
 <link rel="icon" href="img/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=El+Messiri:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="invite.css?v=5">
+<link rel="stylesheet" href="invite.css?v=8">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body data-step="1">
@@ -21,7 +21,7 @@
   <button data-go="1"><b>١</b><span>المناسبة</span></button>
   <button data-go="2"><b>٢</b><span>التصميم</span></button>
   <button data-go="3"><b>٣</b><span>البيانات</span></button>
-  <button data-go="4"><b>٤</b><span>التحميل</span></button>
+  <button data-go="4"><b>٤</b><span>النشر</span></button>
 </nav>
 
 <main>
@@ -32,7 +32,7 @@
   </section>
 
   <section class="view" id="v2" hidden>
-    <h2 class="lead-h" id="v2h"></h2>
+    <div class="v2top"><h2 class="lead-h" id="v2h"></h2><button class="btn gold" id="newBtn"></button></div>
     <p class="lead-p">اضغط على الشكل اللي يعجبك. كل التصاميم تعرض نصك وصورك الحالية.</p>
     <div class="tools">
       <div class="t"><span>المقاس</span><div class="seg" data-size></div></div>
@@ -49,10 +49,30 @@
     </div>
     <div class="pane" id="p3"></div>
     <div class="pane" id="p4" hidden>
-      <div class="card"><h3>جاهز للتحميل؟</h3><div class="body">
+      <div class="card"><h3>جاهز للنشر؟</h3><div class="body">
         <div id="status"></div>
         <div><div class="hint" style="margin-bottom:6px">المقاس</div><div class="seg" data-size></div></div>
-        <div class="acts"><button class="btn gold" data-act="png">⬇ تحميل الصورة</button><button class="btn ghost" data-act="share">مشاركة</button></div>
+        <button class="linkb" data-pub="story" id="pubStory">لحالة واتساب: حوّلها إلى ستوري</button>
+        <p class="hint" id="pubSize"></p>
+      </div></div>
+      <div class="card"><h3>نص النشر</h3><div class="body">
+        <label class="f">عنوان الخبر<input id="pubTitle" maxlength="160"></label>
+        <label class="f">النص<textarea id="pubText" rows="9"></textarea></label>
+        <p class="miss" id="pubOld" hidden>عدّلت النص بنفسك، والبيانات تغيّرت بعدها. اضغط «إعادة توليد» إذا تبي النص الجديد.</p>
+        <div class="row2 pubrow"><button class="btn ghost" data-pub="copy">نسخ النص</button><button class="btn ghost" data-pub="regen">↻ إعادة توليد</button></div>
+        <p class="hint">النص من بياناتك، وتعديلك يبقى كما هو إلى أن تضغط «إعادة توليد».</p>
+      </div></div>
+      <div class="card"><h3>وين تنشره؟</h3><div class="body">
+        <div class="dests">
+          <button class="dest wa" data-pub="wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 00-7.7 13.6L3 21l4.5-1.2A9 9 0 1012 3z"/><path d="M9 8.5c-.6.6-.6 1.8.3 3.3s2.2 2.6 3.6 3c.9.2 1.8-.2 2.1-1l-1.5-1.1-.9.6c-.8-.4-1.6-1.2-2-2l.6-.9L10 8.3c-.3-.1-.7 0-1 .2z"/></svg><b>واتساب</b></button>
+          <button class="dest tg" data-pub="tg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11.5l6 2 2 6 3.2-4 4.8 3.5L21 4z"/><path d="M9 13.5L21 4"/></svg><b>تيليجرام</b></button>
+          <button class="dest nw" data-pub="news"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a1 1 0 011 1v14a1 1 0 001 1H6a2 2 0 01-2-2V5a1 1 0 011-1z"/><path d="M17 9h3v9a2 2 0 01-2 2M7.5 8h6M7.5 12h6M7.5 16h4"/></svg><b>تعديل قبل النشر</b></button>
+        </div>
+        <p class="pubhint" id="pubHint" hidden></p>
+        <p class="hint" id="pubNews"></p>
+      </div></div>
+      <div class="card"><div class="body pubend">
+        <button class="btn ghost" data-act="png">⬇ تحميل الصورة</button>
         <button class="btn ghost" data-act="again">صمّم مناسبة أخرى</button>
       </div></div>
     </div>
@@ -63,13 +83,18 @@
 <dialog id="zoom" aria-label="تكبير التصميم"><div class="zbar"><b id="zoomName"></b><button class="btn ghost" id="zoomClose">إغلاق</button></div>
   <div class="zbody"><button class="zarrow" id="zoomPrev" aria-label="التصميم السابق">›</button><canvas id="zoomCv"></canvas><button class="zarrow" id="zoomNext" aria-label="التصميم التالي">‹</button></div>
   <button class="btn gold" id="zoomPick">اختيار هذا التصميم</button></dialog>
+<dialog id="newDlg"><h3 id="newH"></h3><p>عندك بيانات مكتوبة في هذا النموذج. إذا بدأت من جديد تنمسح الأسماء والتواريخ والصور.</p>
+  <div class="row"><button class="btn gold" id="newKeep"></button><button class="btn ghost" id="newGo">ابدأ من جديد</button></div></dialog>
+<dialog id="pubDlg"><h3 id="pubDlgH"></h3><p id="pubDlgT"></p><p class="hint" id="pubDlgN"></p>
+  <div class="row"><button class="btn gold" id="pubYes"></button><button class="btn ghost" id="pubEdit">تعديل قبل النشر</button><button class="btn ghost" id="pubNo">إلغاء</button></div></dialog>
 <dialog id="warn"><h3>فيه بيانات ناقصة</h3><p>هذي الحقول لسا فاضية وبتطلع في الصورة كنص مؤقت:</p><ul id="warnList"></ul>
-  <div class="row"><button class="btn gold" id="warnFix">أكمل البيانات</button><button class="btn ghost" id="warnGo">تحميل كما هو</button></div></dialog>
+  <div class="row"><button class="btn gold" id="warnFix">أكمل البيانات</button><button class="btn ghost" id="warnGo">متابعة كما هو</button></div></dialog>
 
 <script src="invite-engine.js?v=2"></script>
-<script src="invite-occasions.js?v=2"></script>
-<script src="invite-designs.js?v=2"></script>
-<script src="invite-pro.js?v=1"></script>
-<script src="invite-app.js?v=3"></script>
+<script src="invite-occasions.js?v=7"></script>
+<script src="invite-designs.js?v=3"></script>
+<script src="invite-pro.js?v=3"></script>
+<script src="invite-publish.js?v=4"></script>
+<script src="invite-app.js?v=8"></script>
 </body>
 </html>

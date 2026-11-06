@@ -69,7 +69,7 @@ function buildChrome(site) {
   const cur = h => (here === h || (h === 'index.html' && (here === '' || here === 'index.html'))) ? ' aria-current="page"' : '';
   document.body.insertAdjacentHTML('afterbegin', `
   <header class="nav" id="nav"><div class="wrap">
-    <a class="brand" href="index.html" aria-label="أسرة العجلان والعيد"><img src="img/logo-mark.png" alt=""><span class="bname"><b>العجلان</b><b>والعيد</b></span></a>
+    <a class="brand" href="index.html" aria-label="أسرة العجلان والعيد"><img src="img/logo-mark.png" alt=""><span class="bname"><b>العجلان</b><b>والعيــد</b></span></a>
     <nav class="menu" aria-label="الأقسام">
       <a href="index.html"${cur('index.html')}>الرئيسية</a><a href="news.html"${cur('news.html')}>الأخبار</a>
       ${dd('الأسرة', ['vision', 'people', 'tribe', 'film'])}
@@ -132,7 +132,7 @@ function withTree(el) {
     <div class="st" id="st"><div class="ground"></div><div class="gbar" id="gbar"></div>
       <img src="img/tree-cut.webp" srcset="img/tree-cut-sm.webp 895w, img/tree-cut.webp 1790w" sizes="400px" alt="شجرة عائلة العجلان والعيد" id="treeImg">
       <img class="soilimg" src="img/soil.webp?v=2" alt="" aria-hidden="true"><canvas id="rockets"></canvas></div>
-    <span class="live" id="live" hidden></span><a class="tlink" href="${TREE_URL}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>ابحث عن اسمك</a>
+    <span class="live" id="live" hidden></span>
   </aside>`);
   if (typeof startRockets === 'function') startRockets();
 }

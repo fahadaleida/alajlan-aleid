@@ -1,0 +1,26 @@
+/* الوضع الليلي لموقع الشجرة */
+#skyHost{display:contents}
+.skybtn{width:46px;height:46px;display:inline-grid;place-items:center;padding:0;border-radius:50%;border:2px solid var(--gold2);background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(10px);color:#7a5a12;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.2);transition:transform .25s}
+.skybtn:hover{transform:rotate(-12deg) scale(1.06)}
+.skybtn:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+@media (max-width:760px){.skybtn{display:none}}
+@media (prefers-reduced-motion:reduce){.skybtn{transition:none}}
+.sky-go body *{transition:background-color 1s ease,color 1s ease,border-color 1s ease}
+@media (prefers-reduced-motion:reduce){.sky-go body *{transition:none}}
+[data-sky=night]{--bg:#0a0e26;--panel:#141838;--ink:#eef0f8;--muted:#b9bfd6;--line:rgba(255,255,255,.16);color-scheme:dark}
+[data-sky=night] #gl{background:#0a0e26}
+[data-sky=night] .skybtn{color:#f3d9a4}
+
+/* نافذة الدخول */
+[data-sky=night] #gate .gc{background:linear-gradient(180deg,#191f47,#11153a);border-color:rgba(227,182,107,.45)}
+[data-sky=night] #gate h2,[data-sky=night] #gate .gp b{color:#f3d9a4}
+[data-sky=night] #gate p,[data-sky=night] #gate label,[data-sky=night] #gate .gr small{color:#c6cbe0}
+[data-sky=night] #gate .gx{background:rgba(255,255,255,.1);color:#eef0f8}
+[data-sky=night] #gate button.gb:not(.main){background:rgba(255,255,255,.07);color:#eef0f8;border-color:rgba(227,182,107,.45)}
+[data-sky=night] #gate .gk{color:#efcf94}
+[data-sky=night] #gate input{background:rgba(255,255,255,.08);color:#eef0f8;border-color:rgba(255,255,255,.22)}
+[data-sky=night] #gate .gn{background:rgba(255,255,255,.07);color:#c6cbe0}
+[data-sky=night] #gate .gd{background:rgba(227,182,107,.14);color:#f3d9a4}
+[data-sky=night] #gate .ge{background:rgba(179,38,30,.22);color:#f6b4ae}
+[data-sky=night] #gate .gr button,[data-sky=night] #gate .gp{background:rgba(255,255,255,.07);color:#eef0f8;border-color:rgba(255,255,255,.18)}
+[data-sky=night] #gate .gi{background:rgba(227,182,107,.16)}

@@ -1,0 +1,45 @@
+[data-sky=night] .ps-teas img{border:2px solid rgba(255,255,255,0.14)}
+[data-sky=night] .ps-teas img{border:2px solid rgba(255,255,255,0.14)}
+[data-sky=night] .ps-btn{border:1px solid rgba(255,255,255,0.14);background:rgba(22,27,62,0.10)}
+[data-sky=night] .ps-btn:hover{background:rgba(22,27,62,0.20)}
+[data-sky=night] .ps-cover img{background:rgba(22,27,62,0.06)}
+[data-sky=night] .ps-read{border:1px solid rgba(255,255,255,0.14)}
+[data-sky=night] .ps-fact{background:rgba(22,27,62,.86)}
+[data-sky=night] .ps-body{color:#d6dbff}
+[data-sky=night] .ps-sbtn{background:rgba(22,27,62,.86);color:#d6dbff}
+[data-sky=night] .ps-sbtn.wa{border-color:rgba(255,255,255,0.14)}
+[data-sky=night] .ps-ph{background:rgba(22,27,62,0.06)}
+[data-sky=night] .ps-sk{background:linear-gradient(100deg,rgba(22,27,62,0.05) 30%,rgba(22,27,62,0.13) 50%,rgba(22,27,62,0.05) 70%) 0 0/300% 100%}
+[data-sky=night] .ps-gmore .bar{background:rgba(22,27,62,0.12)}
+[data-sky=night] .ps-np a{border:1px solid rgba(255,255,255,0.14)}
+@media (max-width:639px){
+[data-sky=night] .ps-teas img{border:2px solid rgba(255,255,255,0.14)}
+}
+[data-sky=night] .pv-ib{background:rgba(22,27,62,0.10)}
+[data-sky=night] .pv-ib:hover{background:rgba(227,182,107,0.16);color:#d6dbff}
+[data-sky=night] .pv-spin{border:3px solid rgba(255,255,255,0.14)}
+[data-sky=night] .pv-arr{border:1px solid rgba(255,255,255,0.14);background:rgba(22,27,62,0.08)}
+[data-sky=night] .pv-arr:hover{background:rgba(227,182,107,0.16);color:#d6dbff}
+[data-sky=night] .pv-strip button{background:rgba(22,27,62,0.08)}
+[data-sky=night] .pv-toast{background:rgba(227,182,107,0.16);color:#d6dbff}
+[data-sky=night] .ps-btn.ps-magbtn{background:linear-gradient(180deg,rgba(22,27,62,1.00),rgba(22,27,62,1.00));color:#d6dbff}
+[data-sky=night] .ps-btn.ps-magbtn svg{color:#efcf94}
+[data-sky=night] .ps-btn.ps-magbtn:hover{background:rgba(22,27,62,.86)}
+[data-sky=night] .ps-magcard{color:#d6dbff;background:linear-gradient(120deg,rgba(22,27,62,0.96),rgba(22,27,62,0.94))}
+[data-sky=night] .mc-t small{color:#d6dbff;background:linear-gradient(180deg,rgba(227,182,107,0.16),rgba(227,182,107,0.16))}
+[data-sky=night] .mc-tx small{color:#efcf94}
+[data-sky=night] .mc-tx b{color:#d6dbff}
+[data-sky=night] .mc-tx>span{color:#d6dbff}
+[data-sky=night] .ps-gbtns .ps-btn[aria-pressed=true]{background:rgba(22,27,62,0.22)}
+[data-sky=night] .ps-table{background:radial-gradient(ellipse 60% 55% at 50% 42%,rgba(227,182,107,0.16),rgba(227,182,107,0.08) 55%,transparent 75%),
+    radial-gradient(ellipse 120% 90% at 50% 50%,transparent 55%,rgba(10,4,0,.55)),
+    repeating-linear-gradient(176deg,rgba(227,182,107,0.04) 0 2px,transparent 2px 7px),
+    linear-gradient(180deg,#4A2E1C,#2E1B10)}
+[data-sky=night] .cn-tt small i{background:rgba(227,182,107,0.16)}
+[data-sky=night] .cn-yt svg{color:#f2a9a2}
+[data-sky=night] .cn-frame{background:linear-gradient(180deg,rgba(22,27,62,0.07),rgba(22,27,62,0.02))}
+[data-sky=night] .cn-btn{background:radial-gradient(circle at 35% 30%,rgba(227,182,107,0.16),rgba(227,182,107,0.16) 45%,#9A6A26);color:#d6dbff}
+[data-sky=night] .ps-cine.max .cn-x{border:1px solid rgba(255,255,255,0.14)}
+@media (max-width:639px){
+[data-sky=night] .ps-cine::after{background:linear-gradient(90deg,transparent,rgba(227,182,107,0.16),transparent)}
+}
